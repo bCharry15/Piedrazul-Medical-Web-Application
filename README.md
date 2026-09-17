@@ -23,7 +23,6 @@ PiedraAzul currently consists of:
 
 The application is deployed as a single backend unit while its internal business logic is separated into independent domain modules.
 
-```text
 PiedraAzul/
 ├── PiedraAzul/                     # Legacy JavaFX client
 ├── piedraazul-agenda-service/      # Modular Monolith Backend
@@ -31,7 +30,7 @@ PiedraAzul/
 ├── docs/                           # Architecture and project documentation
 └── docker-compose.yml              # Local infrastructure
 
-Backend Modules
+# Backend Modules
 
 The backend is organized by business domain instead of independent deployable services.
 
@@ -45,8 +44,8 @@ piedraazul-agenda-service/
     ├── notifications/
     ├── configuration/
     └── shared/
-Appointments
 
+# Appointments
 Responsible for:
 
 Appointment creation.
@@ -55,8 +54,8 @@ Appointment status changes.
 Rescheduling.
 Rescheduling history.
 Appointment-related business validations.
-Availability
 
+# Availability
 Responsible for:
 
 Doctor and therapist working days.
@@ -64,30 +63,30 @@ Working time ranges.
 Appointment intervals.
 Scheduling windows.
 Available time slot calculation.
-Doctors
 
+# Doctors
 Responsible for:
 
 Doctor and therapist management.
 Doctor information.
 Medical specialty information.
-Patients
 
+# Patients
 Responsible for:
 
 Patient information.
 Patient registration data.
 Patient lookup.
-Identity
 
+# Identity
 Responsible for:
 
 Users.
 Roles.
 Authentication integration.
 Keycloak synchronization.
-Notifications
 
+# Notifications
 Responsible for:
 
 Appointment notification processing.
@@ -118,7 +117,7 @@ Log Port   Email Port
 
 No HTTP communication is required between these modules.
 
-Hexagonal Architecture
+# Hexagonal Architecture
 
 Business modules maintain Hexagonal Architecture internally.
 
@@ -161,8 +160,8 @@ Spring Data JPA.
 MariaDB.
 Keycloak.
 Spring Mail.
-Inter-Module Communication
 
+# Inter-Module Communication
 Modules must not depend directly on the internal implementation of another module.
 
 Communication is performed using:
@@ -179,7 +178,7 @@ and the notifications module consumes that event without knowing the internal im
 
 This reduces coupling and prevents the modular monolith from becoming a traditional tightly coupled monolith.
 
-Technologies
+# Technologies
 Java 17
 Spring Boot
 Spring MVC
@@ -198,7 +197,7 @@ Modular Monolith Architecture
 
 The legacy frontend currently uses JavaFX and will be replaced by Angular.
 
-Authentication and Authorization
+# Authentication and Authorization
 
 Authentication is managed by Keycloak.
 
@@ -210,21 +209,14 @@ DOCTOR
 PATIENT
 
 The backend works as an OAuth2 Resource Server and validates JWT access tokens issued by Keycloak.
-
 The authentication configuration will be migrated to the SPA authentication flow using:
-
 Authorization Code + PKCE
-
 when the Angular frontend is introduced.
 
-Persistence
-
+# Persistence
 The modular monolith uses a single MariaDB database:
-
 piedraazul_agenda
-
 Current main tables include:
-
 appointments
 availabilities_doctor
 doctors
@@ -235,10 +227,8 @@ users
 
 Each module owns the application logic associated with its data even though the modules share the same physical database.
 
-Notification Flow
-
+# Notification Flow
 When an appointment is successfully created:
-
 CreateAppointmentService completes the appointment creation.
 The appointments module publishes an AppointmentCreatedEvent.
 Spring dispatches the event inside the same application process.
@@ -246,46 +236,30 @@ AppointmentCreatedEventListener receives the event.
 NotificationService processes the notification.
 The notification is persisted in notifications_log.
 If email delivery is enabled, the email adapter sends the message.
-
 When email delivery is disabled for local development, notifications are recorded with:
 
 SIMULADO
 
 instead of sending a real email.
 
-Design Patterns
-Factory
-
-UserFactory
-
-Centralizes user creation according to user role.
-
-Observer
-
+# Design Patterns
+. Factory
+UserFactory - Centralizes user creation according to user role.
+. Observer
 The project uses event-based communication to decouple appointment creation from notification processing.
-
-Builder
-
-AppointmentResponseBuilder
-
-Provides controlled construction of appointment response objects.
-
-Adapter
-
+. Builder
+AppointmentResponseBuilder - Provides controlled construction of appointment response objects.
+. Adapter
 Infrastructure implementations use adapters to connect application ports with:
-
 MariaDB.
 Keycloak.
 Email.
 REST infrastructure.
-Strategy
-
+. Strategy
 Availability calculation uses interchangeable strategy logic for appointment time slots.
 
-Business Rules
-
+# Business Rules
 The scheduling domain includes validations such as:
-
 Available appointment slots.
 Appointment intervals.
 Scheduling window.
@@ -295,10 +269,9 @@ Doctor availability.
 Rescheduling rules.
 Appointment status transitions.
 General consultation requirements before selected specialized services.
-
 Existing business rules are preserved during the modular-monolith migration.
 
-Running the Project
+# Running the Project
 Requirements
 Java 17
 Maven
@@ -374,7 +347,7 @@ Final architecture documentation.
 C4 diagrams.
 Next Architecture Target
 
-The final project architecture will be:
+# The final project architecture will be:
 
                 Angular SPA
                     |
@@ -398,12 +371,11 @@ The final project architecture will be:
              Keycloak
                 |
                 +---- OAuth2 / OIDC ---- Angular SPA
-Authors
-
+# Authors
 Academic project developed for Software Engineering III.
-
 Development team:
 
-Charry Vela Brayan
-Puentes Figueroa Jhoiner
-Ruiz Segura Sebastian
+ING Charry Vela Brayan
+ING Puentes Figueroa Jhoiner
+ING Majé Bonilla Santiago
+ING Narvaez Canchala Julian
