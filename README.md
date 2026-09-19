@@ -121,7 +121,7 @@ PiedraAzul
 └── docker-compose.yml
 
 # Authors
-ING Charry Vela Brayan
-ING Puentes Figueroa Jhoiner
-ING Majé Bonilla Santiago
-ING Narvaez Canchala Julian
+.ING Charry Vela Brayan
+.ING Puentes Figueroa Jhoiner
+.ING Majé Bonilla Santiago
+.ING Narvaez Canchala Julian
