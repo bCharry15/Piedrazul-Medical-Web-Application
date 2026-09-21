@@ -12,7 +12,7 @@ The current version uses an Angular web application as the frontend and a Spring
 
 Project documentation:
 
-[Google Docs - PiedraAzul](https://docs.google.com/document/d/1sPHt0zLF7bGqXfEkfuj3O59Gnp1NG1h-SVsOveMMYvk/edit?usp=sharing)
+[Google Docs - PiedraAzul](https://docs.google.com/document/d/1C-UVo5VodQ6efjuM3hs427Jah9dSHliqgyZF1kPODr8/edit?usp=sharing)
 
 ---
 
