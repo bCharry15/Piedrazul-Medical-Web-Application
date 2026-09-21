@@ -1,0 +1,1494 @@
+:host {
+  display: block;
+}
+
+
+.public-home {
+  width: 100%;
+
+  overflow: hidden;
+
+  background: #f8fcff;
+
+  color: #183a63;
+}
+
+
+#inicio,
+#servicios,
+#como-funciona,
+#nosotros,
+#contacto {
+  scroll-margin-top: 110px;
+}
+
+
+.section {
+  max-width: 1240px;
+
+  margin: 0 auto;
+
+  padding:
+    88px
+    24px;
+}
+
+
+/* ==============================
+   TÍTULOS
+   ============================== */
+
+.section-heading {
+  max-width: 760px;
+
+  margin:
+    0 auto
+    44px;
+
+  text-align: center;
+}
+
+
+.section-label,
+.hero-label {
+  display: inline-flex;
+
+  padding:
+    7px
+    13px;
+
+  border-radius: 999px;
+
+  background: #e6f5ff;
+
+  color: #258ed3;
+
+  font-size: 0.82rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.05em;
+}
+
+
+.section-heading h2 {
+  margin:
+    14px 0
+    12px;
+
+  color: #16375f;
+
+  font-size:
+    clamp(
+      2rem,
+      4vw,
+      3rem
+    );
+
+  letter-spacing: -0.03em;
+}
+
+
+.section-heading p {
+  margin: 0;
+
+  color: #52718e;
+
+  font-size: 1.06rem;
+
+  line-height: 1.75;
+}
+
+
+/* ==============================
+   BOTONES
+   ============================== */
+
+.primary-button {
+  padding:
+    16px
+    28px;
+
+  border: none;
+
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #61bff7,
+      #288ed6
+    );
+
+  color: #ffffff;
+
+  font-size: 1rem;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 12px 24px
+    rgba(
+      40,
+      142,
+      214,
+      0.22
+    );
+
+  transition:
+    transform 0.17s ease,
+    box-shadow 0.17s ease;
+}
+
+
+.primary-button:hover {
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 18px 30px
+    rgba(
+      40,
+      142,
+      214,
+      0.28
+    );
+}
+
+
+.secondary-button {
+  padding:
+    15px
+    26px;
+
+  border:
+    1px solid
+    #b9daef;
+
+  border-radius: 17px;
+
+  background: #ffffff;
+
+  color: #2389d3;
+
+  font-size: 1rem;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.17s ease,
+    box-shadow 0.17s ease,
+    background 0.17s ease;
+}
+
+
+.secondary-button:hover {
+  transform:
+    translateY(-2px);
+
+  background: #fafdff;
+
+  box-shadow:
+    0 11px 22px
+    rgba(
+      41,
+      118,
+      164,
+      0.08
+    );
+}
+
+
+/* ==============================
+   HERO
+   ============================== */
+
+.hero {
+  position: relative;
+
+  min-height: 670px;
+
+  padding:
+    72px
+    24px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(
+        89,
+        190,
+        243,
+        0.14
+      ),
+      transparent 29%
+    ),
+    radial-gradient(
+      circle at 85% 75%,
+      rgba(
+        77,
+        176,
+        228,
+        0.12
+      ),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      #eef9ff 0%,
+      #f8fcff 62%,
+      #ffffff 100%
+    );
+}
+
+
+/* ==============================
+   DECORACIÓN HERO
+   ============================== */
+
+.hero-shape {
+  position: absolute;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+
+.shape-one {
+  width: 420px;
+
+  height: 420px;
+
+  top: -230px;
+
+  left: -120px;
+
+  background:
+    rgba(
+      93,
+      189,
+      240,
+      0.09
+    );
+
+  animation:
+    floatShape
+    8s
+    ease-in-out
+    infinite;
+}
+
+
+.shape-two {
+  width: 310px;
+
+  height: 310px;
+
+  right: -105px;
+
+  bottom: -145px;
+
+  border:
+    1px solid
+    rgba(
+      55,
+      151,
+      210,
+      0.1
+    );
+
+  animation:
+    floatShape
+    10s
+    ease-in-out
+    infinite reverse;
+}
+
+
+.shape-three {
+  width: 150px;
+
+  height: 150px;
+
+  right: 15%;
+
+  top: 18%;
+
+  background:
+    rgba(
+      67,
+      175,
+      230,
+      0.055
+    );
+
+  animation:
+    floatShape
+    7s
+    ease-in-out
+    infinite;
+}
+
+
+@keyframes floatShape {
+
+  0%,
+  100% {
+    transform:
+      translateY(0);
+  }
+
+  50% {
+    transform:
+      translateY(-14px);
+  }
+
+}
+
+
+/* ==============================
+   CONTENIDO HERO
+   ============================== */
+
+.hero-content {
+  position: relative;
+
+  z-index: 2;
+
+  width: 100%;
+
+  max-width: 980px;
+
+  margin: 0 auto;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  text-align: center;
+}
+
+
+.hero-logo-wrapper {
+  width: 230px;
+
+  min-height: 130px;
+
+  margin-bottom: 8px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+.hero-logo {
+  width: 100%;
+
+  height: 130px;
+
+  display: block;
+
+  object-fit: contain;
+}
+
+
+.hero-label {
+  margin-top: 3px;
+}
+
+
+.hero h1 {
+  max-width: 850px;
+
+  margin:
+    21px 0
+    18px;
+
+  color: #123a63;
+
+  font-size:
+    clamp(
+      2.8rem,
+      5vw,
+      4.8rem
+    );
+
+  line-height: 1.02;
+
+  letter-spacing: -0.045em;
+}
+
+
+.hero-description {
+  max-width: 720px;
+
+  margin:
+    0 0
+    29px;
+
+  color: #557895;
+
+  font-size: 1.08rem;
+
+  line-height: 1.72;
+}
+
+
+.hero-actions {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-wrap: wrap;
+
+  gap: 12px;
+
+  margin-bottom: 38px;
+}
+
+
+.hero .primary-button,
+.hero .secondary-button {
+  min-width: 190px;
+
+  min-height: 52px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+/* ==============================
+   BENEFICIOS HERO
+   ============================== */
+
+.hero-benefits {
+  width: 100%;
+
+  max-width: 900px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap: 14px;
+}
+
+
+.hero-benefit {
+  min-height: 76px;
+
+  padding:
+    13px
+    15px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  text-align: left;
+
+  border:
+    1px solid
+    #d7eaf5;
+
+  border-radius: 17px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.74
+    );
+
+  box-shadow:
+    0 8px 20px
+    rgba(
+      34,
+      102,
+      148,
+      0.045
+    );
+
+  transition:
+    transform 0.17s ease,
+    border-color 0.17s ease,
+    box-shadow 0.17s ease;
+}
+
+
+.hero-benefit:hover {
+  transform:
+    translateY(-3px);
+
+  border-color: #add8ed;
+
+  box-shadow:
+    0 13px 25px
+    rgba(
+      34,
+      102,
+      148,
+      0.08
+    );
+}
+
+
+.benefit-icon {
+  width: 42px;
+
+  height: 42px;
+
+  flex:
+    0 0
+    42px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: #e5f5fd;
+
+  color: #2089cb;
+
+  font-size: 1rem;
+
+  font-weight: 900;
+}
+
+
+.hero-benefit > div:last-child {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+
+.hero-benefit strong {
+  color: #244d6d;
+
+  font-size: 0.87rem;
+}
+
+
+.hero-benefit span {
+  color: #7691a5;
+
+  font-size: 0.74rem;
+
+  line-height: 1.35;
+}
+
+
+/* ==============================
+   CARRUSEL
+   ============================== */
+
+.carousel {
+  display: grid;
+
+  grid-template-columns:
+    auto
+    minmax(
+      0,
+      880px
+    )
+    auto;
+
+  gap: 20px;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+.carousel-arrow {
+  width: 52px;
+
+  height: 52px;
+
+  border:
+    1px solid
+    #cee4f3;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  color: #268ed4;
+
+  font-size: 2rem;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 9px 20px
+    rgba(
+      38,
+      107,
+      160,
+      0.1
+    );
+
+  transition:
+    transform 0.16s ease,
+    background 0.16s ease;
+}
+
+
+.carousel-arrow:hover {
+  transform:
+    translateY(-2px);
+
+  background: #f2faff;
+}
+
+
+.service-card {
+  min-height: 350px;
+
+  display: grid;
+
+  grid-template-columns:
+    0.9fr
+    1.1fr;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    #d2e7f4;
+
+  border-radius: 32px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 18px 36px
+    rgba(
+      35,
+      103,
+      158,
+      0.1
+    );
+}
+
+
+.service-illustration {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 34px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f0faff,
+      #dcefff
+    );
+}
+
+
+.service-illustration svg {
+  width: 100%;
+
+  max-width: 270px;
+
+  display: block;
+}
+
+
+.service-content {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  padding: 44px;
+}
+
+
+.service-content h3 {
+  margin:
+    15px 0
+    12px;
+
+  color: #17385f;
+
+  font-size: 2rem;
+}
+
+
+.service-content p {
+  color: #52718e;
+
+  line-height: 1.75;
+
+  font-size: 1.04rem;
+}
+
+
+.service-link {
+  align-self: flex-start;
+
+  margin-top: 10px;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #2389d3;
+
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+
+.carousel-dots {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-top: 24px;
+}
+
+
+.carousel-dot {
+  width: 10px;
+
+  height: 10px;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #c5ddea;
+
+  cursor: pointer;
+
+  transition:
+    width 0.17s ease,
+    background 0.17s ease;
+}
+
+
+.carousel-dot.active {
+  width: 32px;
+
+  border-radius: 999px;
+
+  background: #4ab2f2;
+}
+
+
+/* ==============================
+   EXPERIENCIA
+   ============================== */
+
+.experience-section {
+  padding-top: 58px;
+}
+
+
+.experience-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      1fr
+    );
+
+  gap: 23px;
+}
+
+
+.experience-card {
+  padding: 23px;
+
+  border:
+    1px solid
+    #d5e8f4;
+
+  border-radius: 28px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 13px 26px
+    rgba(
+      41,
+      108,
+      160,
+      0.07
+    );
+
+  transition:
+    transform 0.17s ease,
+    box-shadow 0.17s ease;
+}
+
+
+.experience-card:hover {
+  transform:
+    translateY(-4px);
+
+  box-shadow:
+    0 18px 32px
+    rgba(
+      41,
+      108,
+      160,
+      0.11
+    );
+}
+
+
+.experience-image {
+  margin-bottom: 19px;
+
+  padding: 12px;
+
+  border-radius: 22px;
+
+  background: #f0f9ff;
+}
+
+
+.experience-image svg {
+  width: 100%;
+
+  display: block;
+}
+
+
+.experience-card h3 {
+  margin:
+    0 0
+    10px;
+
+  color: #17385f;
+
+  font-size: 1.22rem;
+}
+
+
+.experience-card p {
+  margin: 0;
+
+  color: #52718e;
+
+  line-height: 1.7;
+}
+
+
+/* ==============================
+   PROCESO
+   ============================== */
+
+.process-section {
+  background:
+    linear-gradient(
+      180deg,
+      #edf8ff,
+      #f8fcff
+    );
+}
+
+
+.process-content {
+  max-width: 1240px;
+}
+
+
+.steps {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      1fr
+    );
+
+  gap: 22px;
+}
+
+
+.step-card {
+  padding: 30px;
+
+  border:
+    1px solid
+    #d4e8f5;
+
+  border-radius: 25px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 10px 22px
+    rgba(
+      35,
+      102,
+      155,
+      0.07
+    );
+
+  transition:
+    transform 0.17s ease,
+    box-shadow 0.17s ease;
+}
+
+
+.step-card:hover {
+  transform:
+    translateY(-4px);
+
+  box-shadow:
+    0 16px 29px
+    rgba(
+      35,
+      102,
+      155,
+      0.1
+    );
+}
+
+
+.step-number {
+  width: 55px;
+
+  height: 55px;
+
+  margin-bottom: 24px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 17px;
+
+  background: #e5f4fe;
+
+  color: #258ed3;
+
+  font-weight: 900;
+}
+
+
+.step-card h3 {
+  color: #17385f;
+}
+
+
+.step-card p {
+  color: #52718e;
+
+  line-height: 1.7;
+}
+
+
+/* ==============================
+   NOSOTROS
+   ============================== */
+
+.about-card {
+  display: grid;
+
+  grid-template-columns:
+    0.9fr
+    1.1fr;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    #d2e7f4;
+
+  border-radius: 32px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 18px 36px
+    rgba(
+      35,
+      103,
+      158,
+      0.1
+    );
+}
+
+
+.about-logo-panel {
+  min-height: 430px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 40px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #edf9ff,
+      #d8efff
+    );
+}
+
+
+.about-logo {
+  width:
+    min(
+      100%,
+      340px
+    );
+
+  display: block;
+
+  object-fit: contain;
+
+  border-radius: 28px;
+}
+
+
+.about-content {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  padding: 52px;
+}
+
+
+.about-content h2 {
+  margin:
+    16px 0;
+
+  color: #17385f;
+
+  font-size:
+    clamp(
+      2rem,
+      4vw,
+      3rem
+    );
+
+  line-height: 1.1;
+}
+
+
+.about-content p {
+  color: #52718e;
+
+  line-height: 1.8;
+
+  font-size: 1.04rem;
+}
+
+
+/* ==============================
+   CTA
+   ============================== */
+
+.cta-card {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 40px;
+
+  padding:
+    42px
+    48px;
+
+  border:
+    1px solid
+    #d0e7f4;
+
+  border-radius: 30px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e3f5ff,
+      #f6fcff
+    );
+}
+
+
+.cta-card h2 {
+  margin:
+    12px 0
+    8px;
+
+  color: #17385f;
+
+  font-size: 2rem;
+}
+
+
+.cta-card p {
+  margin: 0;
+
+  color: #52718e;
+}
+
+
+/* ==============================
+   FOOTER
+   ============================== */
+
+.public-footer {
+  padding:
+    62px
+    24px
+    0;
+
+  border-top:
+    1px solid
+    #cfe5f3;
+
+  background: #eaf6fd;
+
+  color: #365b78;
+}
+
+
+.footer-content {
+  max-width: 1240px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns:
+    1.45fr
+    1fr
+    1fr
+    1fr;
+
+  gap: 42px;
+}
+
+
+.footer-brand-section {
+  padding-right: 30px;
+}
+
+
+.footer-logo {
+  width: 170px;
+
+  height: 170px;
+
+  margin:
+    -32px 0
+    -10px;
+
+  object-fit: contain;
+
+  display: block;
+
+  border-radius: 25px;
+}
+
+
+.footer-brand-section p {
+  max-width: 380px;
+
+  margin: 0;
+
+  color: #53738e;
+
+  line-height: 1.7;
+}
+
+
+.footer-column h3 {
+  margin:
+    0 0
+    18px;
+
+  color: #17385f;
+
+  font-size: 1.05rem;
+}
+
+
+.footer-column p {
+  margin:
+    0 0
+    11px;
+
+  color: #52718e;
+
+  line-height: 1.6;
+
+  font-size: 0.93rem;
+}
+
+
+.footer-column strong {
+  color: #315774;
+}
+
+
+.footer-bottom {
+  max-width: 1240px;
+
+  margin:
+    45px auto
+    0;
+
+  padding:
+    20px 0;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  border-top:
+    1px solid
+    #cbdfea;
+
+  color: #648098;
+
+  font-size: 0.87rem;
+}
+
+
+/* ==============================
+   RESPONSIVE
+   ============================== */
+
+@media (
+  max-width: 1050px
+) {
+
+  .experience-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .footer-content {
+    grid-template-columns:
+      repeat(
+        2,
+        1fr
+      );
+  }
+
+}
+
+
+@media (
+  max-width: 850px
+) {
+
+  .service-card,
+  .about-card {
+    grid-template-columns: 1fr;
+  }
+
+
+  .carousel {
+    grid-template-columns: 1fr;
+  }
+
+
+  .carousel-arrow {
+    display: none;
+  }
+
+
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+
+  .about-logo-panel {
+    min-height: 320px;
+  }
+
+
+  .cta-card {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+}
+
+
+@media (
+  max-width: 760px
+) {
+
+  .hero {
+    min-height: auto;
+
+    padding:
+      55px
+      18px;
+  }
+
+
+  .hero-logo-wrapper {
+    width: 190px;
+
+    min-height: 110px;
+  }
+
+
+  .hero-logo {
+    height: 110px;
+  }
+
+
+  .hero h1 {
+    font-size: 3rem;
+  }
+
+
+  .hero-benefits {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (
+  max-width: 620px
+) {
+
+  .section {
+    padding:
+      65px
+      18px;
+  }
+
+
+  .service-content {
+    padding:
+      28px
+      23px;
+  }
+
+
+  .about-content {
+    padding:
+      32px
+      24px;
+  }
+
+
+  .cta-card {
+    padding:
+      32px
+      25px;
+  }
+
+
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+
+
+  .footer-bottom {
+    flex-direction: column;
+  }
+
+}
+
+
+@media (
+  max-width: 480px
+) {
+
+  .hero-actions {
+    width: 100%;
+
+    flex-direction: column;
+  }
+
+
+  .hero-actions button {
+    width: 100%;
+  }
+
+
+  .hero h1 {
+    font-size: 2.55rem;
+  }
+
+
+  .cta-card button {
+    width: 100%;
+  }
+
+}

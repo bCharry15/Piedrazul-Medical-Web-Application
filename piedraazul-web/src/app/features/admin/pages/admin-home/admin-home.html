@@ -1,0 +1,2048 @@
+<main class="admin-page">
+
+  <!-- ===================================================== -->
+  <!-- HERO -->
+  <!-- ===================================================== -->
+
+  <section class="admin-hero">
+
+    <div class="hero-copy">
+
+      <span class="eyebrow">
+        {{ i18n.t('adminPortal') }}
+      </span>
+
+      <h1>
+        {{ i18n.t('adminPortal') }}
+      </h1>
+
+      <p>
+        {{ i18n.t('adminPortalSubtitle') }}
+      </p>
+
+    </div>
+
+    <div class="hero-actions">
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="openCreateForm()"
+      >
+        ＋
+        {{ i18n.t('registerDoctor') }}
+      </button>
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="openSchedulerForm()"
+      >
+        ＋
+        Registrar agendador
+      </button>
+
+      <a
+        href="#availability-management"
+        class="secondary-button link-button"
+      >
+        ⚙
+        {{ i18n.t('availabilityManagement') }}
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================== -->
+  <!-- RESUMEN -->
+  <!-- ===================================================== -->
+
+  <section class="dashboard-stats">
+
+    <article class="stat-card">
+
+      <div class="stat-icon doctor-stat">
+        👨‍⚕️
+      </div>
+
+      <div class="stat-content">
+
+        <span class="stat-label">
+          {{ i18n.t('doctorManagement') }}
+        </span>
+
+        <strong class="stat-number">
+          {{ doctors.length }}
+        </strong>
+
+        <span class="stat-detail">
+          {{ i18n.t('doctorManagementDescription') }}
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-icon scheduler-stat">
+        🗓️
+      </div>
+
+      <div class="stat-content">
+
+        <span class="stat-label">
+          Gestión de agendadores
+        </span>
+
+        <strong class="stat-number">
+          {{ schedulers.length }}
+        </strong>
+
+        <span class="stat-detail">
+          Crea y consulta usuarios agendadores
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-icon availability-stat">
+        📅
+      </div>
+
+      <div class="stat-content">
+
+        <span class="stat-label">
+          {{ i18n.t('availabilityManagement') }}
+        </span>
+
+        <strong class="stat-number">
+          {{ availabilityConfigurations.length }}
+        </strong>
+
+        <span class="stat-detail">
+
+          @if (availabilityLoaded) {
+
+            {{ i18n.t('consultAvailabilityConfiguration') }}
+
+          } @else {
+
+            {{ i18n.t('selectDoctor') }}
+
+          }
+
+        </span>
+
+      </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-icon selected-stat">
+        🩺
+      </div>
+
+      <div class="stat-content">
+
+        <span class="stat-label">
+          {{ i18n.t('doctor') }}
+        </span>
+
+        @if (selectedAvailabilityDoctor()) {
+
+          <strong class="stat-name">
+            {{
+              selectedAvailabilityDoctor()
+                ?.fullName
+            }}
+          </strong>
+
+          <span class="stat-detail">
+            {{
+              selectedAvailabilityDoctor()
+                ?.specialty
+            }}
+          </span>
+
+        } @else {
+
+          <strong class="stat-empty">
+            —
+          </strong>
+
+          <span class="stat-detail">
+            {{ i18n.t('selectDoctor') }}
+          </span>
+
+        }
+
+      </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-icon control-stat">
+        ⚙️
+      </div>
+
+      <div class="stat-content">
+
+        <span class="stat-label">
+          {{ i18n.t('status') }}
+        </span>
+
+        <strong class="system-status">
+          <span></span>
+          {{ i18n.t('active') }}
+        </strong>
+
+        <span class="stat-detail">
+          PiedraAzul
+        </span>
+
+      </div>
+
+    </article>
+
+  </section>
+
+
+  <!-- ===================================================== -->
+  <!-- MENSAJES -->
+  <!-- ===================================================== -->
+
+  @if (success) {
+
+    <div class="message success-message">
+
+      <span>✓</span>
+
+      {{ success }}
+
+    </div>
+
+  }
+
+
+  @if (error) {
+
+    <div class="message error-message">
+
+      <span>!</span>
+
+      {{ error }}
+
+    </div>
+
+  }
+
+
+  <!-- ===================================================== -->
+  <!-- GESTIÓN DE MÉDICOS -->
+  <!-- ===================================================== -->
+
+  <section
+    class="card"
+    id="doctor-management"
+  >
+
+    <div class="section-heading">
+
+      <div class="heading-group">
+
+        <div class="heading-icon">
+          👨‍⚕️
+        </div>
+
+        <div>
+
+          <span class="section-label">
+            {{ i18n.t('doctorManagement') }}
+          </span>
+
+          <h2>
+            {{ i18n.t('doctorManagement') }}
+          </h2>
+
+          <p>
+            {{
+              i18n.t(
+                'doctorManagementDescription'
+              )
+            }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="header-actions">
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="loadDoctors()"
+          [disabled]="loadingDoctors"
+        >
+          ↻
+          {{ i18n.t('refresh') }}
+        </button>
+
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="openCreateForm()"
+        >
+          ＋
+          {{ i18n.t('registerDoctor') }}
+        </button>
+
+      </div>
+
+    </div>
+
+
+    @if (loadingDoctors) {
+
+      <div class="loading-state">
+
+        <div class="spinner"></div>
+
+        {{ i18n.t('loadingDoctors') }}
+
+      </div>
+
+    } @else if (doctors.length > 0) {
+
+      <div class="doctor-grid">
+
+        @for (
+          doctor of doctors;
+          track doctor.id
+        ) {
+
+          <article class="doctor-card">
+
+            <div class="doctor-card-header">
+
+              <div class="doctor-avatar">
+                +
+              </div>
+
+              <span
+                class="status-badge"
+                [class.status-active]="
+                  doctor.active &&
+                  doctor.userStatus ===
+                  'ACTIVE'
+                "
+                [class.status-inactive]="
+                  !doctor.active ||
+                  doctor.userStatus !==
+                  'ACTIVE'
+                "
+              >
+
+                <span class="status-dot"></span>
+
+                {{
+                  doctorStatus(
+                    doctor
+                  )
+                }}
+
+              </span>
+
+            </div>
+
+
+            <div class="doctor-card-content">
+
+              <span class="doctor-id">
+                #{{ doctor.id }}
+              </span>
+
+              <h3>
+                {{ doctor.fullName }}
+              </h3>
+
+              <p class="doctor-specialty">
+                {{ doctor.specialty }}
+              </p>
+
+
+              <div class="doctor-information">
+
+                <div>
+
+                  <span>
+                    {{ i18n.t('username') }}
+                  </span>
+
+                  <strong>
+                    {{ doctor.username }}
+                  </strong>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    {{
+                      i18n.t(
+                        'appointmentDuration'
+                      )
+                    }}
+                  </span>
+
+                  <strong>
+
+                    {{
+                      doctor.intervalMinutes
+                    }}
+
+                    {{ i18n.t('minutes') }}
+
+                  </strong>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="doctor-card-actions">
+
+              <button
+                type="button"
+                class="secondary-button"
+                (click)="
+                  startEdit(
+                    doctor
+                  )
+                "
+              >
+                ✎
+                {{ i18n.t('edit') }}
+              </button>
+
+
+              <button
+                type="button"
+                class="danger-button"
+                (click)="
+                  deleteDoctor(
+                    doctor
+                  )
+                "
+                [disabled]="
+                  deletingDoctorId ===
+                  doctor.id
+                "
+              >
+
+                {{
+                  deletingDoctorId ===
+                  doctor.id
+                    ? i18n.t(
+                        'deleting'
+                      )
+                    : i18n.t(
+                        'delete'
+                      )
+                }}
+
+              </button>
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    } @else {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          👨‍⚕️
+        </div>
+
+        <h3>
+          {{
+            i18n.t(
+              'noDoctorsRegistered'
+            )
+          }}
+        </h3>
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="openCreateForm()"
+        >
+          ＋
+          {{ i18n.t('registerDoctor') }}
+        </button>
+
+      </div>
+
+    }
+
+  </section>
+
+
+  <!-- ===================================================== -->
+  <!-- GESTIÓN DE AGENDADORES -->
+  <!-- ===================================================== -->
+
+  <section
+    class="card"
+    id="scheduler-management"
+  >
+
+    <div class="section-heading">
+
+      <div class="heading-group">
+
+        <div class="heading-icon scheduler-icon">
+          🗓️
+        </div>
+
+        <div>
+
+          <span class="section-label">
+            Gestión de agendadores
+          </span>
+
+          <h2>
+            Gestión de agendadores
+          </h2>
+
+          <p>
+            Registra y consulta las cuentas que pueden gestionar las citas de PiedraAzul.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="header-actions">
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="loadSchedulers()"
+          [disabled]="loadingSchedulers"
+        >
+          ↻
+          {{ i18n.t('refresh') }}
+        </button>
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="openSchedulerForm()"
+        >
+          ＋
+          Registrar agendador
+        </button>
+
+      </div>
+
+    </div>
+
+
+    @if (schedulerSuccess) {
+
+      <div class="message success-message">
+
+        <span>✓</span>
+
+        {{ schedulerSuccess }}
+
+      </div>
+
+    }
+
+
+    @if (schedulerError) {
+
+      <div class="message error-message">
+
+        <span>!</span>
+
+        {{ schedulerError }}
+
+      </div>
+
+    }
+
+
+    @if (loadingSchedulers) {
+
+      <div class="loading-state">
+
+        <div class="spinner"></div>
+
+        Cargando agendadores...
+
+      </div>
+
+    } @else if (schedulers.length > 0) {
+
+      <div class="doctor-grid">
+
+        @for (
+          scheduler of schedulers;
+          track scheduler.id
+        ) {
+
+          <article class="doctor-card scheduler-card">
+
+            <div class="doctor-card-header">
+
+              <div class="doctor-avatar scheduler-avatar">
+                🗓
+              </div>
+
+              <span
+                class="status-badge"
+                [class.status-active]="
+                  scheduler.status === 'ACTIVE'
+                "
+                [class.status-inactive]="
+                  scheduler.status !== 'ACTIVE'
+                "
+              >
+
+                <span class="status-dot"></span>
+
+                {{ schedulerStatus(scheduler) }}
+
+              </span>
+
+            </div>
+
+
+            <div class="doctor-card-content">
+
+              <span class="doctor-id">
+                #{{ scheduler.id }}
+              </span>
+
+              <h3>
+                {{ scheduler.username }}
+              </h3>
+
+              <p class="doctor-specialty">
+                Agendador de citas
+              </p>
+
+
+              <div class="doctor-information">
+
+                <div>
+
+                  <span>
+                    {{ i18n.t('username') }}
+                  </span>
+
+                  <strong>
+                    {{ scheduler.username }}
+                  </strong>
+
+                </div>
+
+                <div>
+
+                  <span>
+                    Rol
+                  </span>
+
+                  <strong>
+                    {{ scheduler.role }}
+                  </strong>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    } @else {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          🗓️
+        </div>
+
+        <h3>
+          No hay agendadores registrados
+        </h3>
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="openSchedulerForm()"
+        >
+          ＋
+          Registrar agendador
+        </button>
+
+      </div>
+
+    }
+
+  </section>
+
+
+  <!-- ===================================================== -->
+  <!-- REGISTRAR AGENDADOR -->
+  <!-- ===================================================== -->
+
+  @if (showSchedulerForm) {
+
+    <section class="card form-card scheduler-form-card">
+
+      <div class="section-heading">
+
+        <div class="heading-group">
+
+          <div class="heading-icon scheduler-icon">
+            ＋
+          </div>
+
+          <div>
+
+            <span class="section-label">
+              Registrar agendador
+            </span>
+
+            <h2>
+              Nuevo agendador
+            </h2>
+
+            <p>
+              Crea las credenciales que utilizará el agendador para ingresar a su portal.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="closeSchedulerForm()"
+          [disabled]="savingScheduler"
+        >
+          ✕
+          {{ i18n.t('close') }}
+        </button>
+
+      </div>
+
+
+      @if (schedulerError) {
+
+        <div class="message error-message">
+
+          <span>!</span>
+
+          {{ schedulerError }}
+
+        </div>
+
+      }
+
+
+      <div class="form-section-title">
+
+        <span>1</span>
+
+        <div>
+
+          <strong>
+            Credenciales del agendador
+          </strong>
+
+          <p>
+            El rol SCHEDULER se asigna automáticamente desde el backend.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid scheduler-form-grid">
+
+        <div class="form-field">
+
+          <label for="schedulerUsername">
+            {{ i18n.t('username') }}
+          </label>
+
+          <input
+            id="schedulerUsername"
+            type="text"
+            autocomplete="off"
+            [(ngModel)]="schedulerForm.username"
+          />
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="schedulerPassword">
+            {{ i18n.t('password') }}
+          </label>
+
+          <input
+            id="schedulerPassword"
+            type="password"
+            autocomplete="new-password"
+            [(ngModel)]="schedulerForm.password"
+          />
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="schedulerConfirmPassword">
+            Confirmar contraseña
+          </label>
+
+          <input
+            id="schedulerConfirmPassword"
+            type="password"
+            autocomplete="new-password"
+            [(ngModel)]="schedulerForm.confirmPassword"
+          />
+
+        </div>
+
+      </div>
+
+
+      <div class="info-message">
+
+        <span>ℹ</span>
+
+        La contraseña debe tener mínimo 6 caracteres.
+
+      </div>
+
+
+      <div class="form-actions scheduler-form-actions">
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="createScheduler()"
+          [disabled]="savingScheduler"
+        >
+          {{
+            savingScheduler
+              ? 'Registrando...'
+              : 'Registrar agendador'
+          }}
+        </button>
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="closeSchedulerForm()"
+          [disabled]="savingScheduler"
+        >
+          {{ i18n.t('close') }}
+        </button>
+
+      </div>
+
+    </section>
+
+  }
+
+
+  <!-- ===================================================== -->
+  <!-- REGISTRAR MÉDICO -->
+  <!-- ===================================================== -->
+
+  @if (showCreateForm) {
+
+    <section class="card form-card">
+
+      <div class="section-heading">
+
+        <div class="heading-group">
+
+          <div class="heading-icon create-icon">
+            ＋
+          </div>
+
+          <div>
+
+            <span class="section-label">
+              {{ i18n.t('registerDoctor') }}
+            </span>
+
+            <h2>
+              {{ i18n.t('registerDoctor') }}
+            </h2>
+
+            <p>
+              {{
+                i18n.t(
+                  'registerDoctorDescription'
+                )
+              }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="closeCreateForm()"
+        >
+          ✕
+          {{ i18n.t('close') }}
+        </button>
+
+      </div>
+
+
+      <div class="form-section-title">
+
+        <span>1</span>
+
+        <div>
+
+          <strong>
+            {{ i18n.t('doctorInformation') }}
+          </strong>
+
+          <p>
+            {{
+              i18n.t(
+                'doctorManagementDescription'
+              )
+            }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-field">
+
+          <label for="createFullName">
+            {{ i18n.t('name') }}
+          </label>
+
+          <input
+            id="createFullName"
+            type="text"
+            [(ngModel)]="
+              createForm.fullName
+            "
+          />
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="createSpecialty">
+            {{ i18n.t('specialty') }}
+          </label>
+
+          <input
+            id="createSpecialty"
+            type="text"
+            [(ngModel)]="
+              createForm.specialty
+            "
+          />
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="createInterval">
+
+            {{
+              i18n.t(
+                'appointmentDurationMinutes'
+              )
+            }}
+
+          </label>
+
+          <input
+            id="createInterval"
+            type="number"
+            min="1"
+            [(ngModel)]="
+              createForm.intervalMinutes
+            "
+          />
+
+        </div>
+
+      </div>
+
+
+      <div class="form-divider"></div>
+
+
+      <div class="form-section-title">
+
+        <span>2</span>
+
+        <div>
+
+          <strong>
+            {{ i18n.t('username') }}
+          </strong>
+
+          <p>
+            {{
+              i18n.t(
+                'doctorCredentialsNotEditable'
+              )
+            }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid credentials-grid">
+
+        <div class="form-field">
+
+          <label for="createUsername">
+            {{ i18n.t('username') }}
+          </label>
+
+          <input
+            id="createUsername"
+            type="text"
+            autocomplete="off"
+            [(ngModel)]="
+              createForm.username
+            "
+          />
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="createPassword">
+            {{ i18n.t('password') }}
+          </label>
+
+          <input
+            id="createPassword"
+            type="password"
+            autocomplete="new-password"
+            [(ngModel)]="
+              createForm.password
+            "
+          />
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="createDoctor()"
+          [disabled]="savingDoctor"
+        >
+
+          {{
+            savingDoctor
+              ? i18n.t(
+                  'creatingDoctor'
+                )
+              : i18n.t(
+                  'createDoctor'
+                )
+          }}
+
+        </button>
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="closeCreateForm()"
+          [disabled]="savingDoctor"
+        >
+          {{ i18n.t('close') }}
+        </button>
+
+      </div>
+
+    </section>
+
+  }
+
+
+  <!-- ===================================================== -->
+  <!-- EDITAR MÉDICO -->
+  <!-- ===================================================== -->
+
+  @if (editingDoctor) {
+
+    <section class="card form-card">
+
+      <div class="section-heading">
+
+        <div class="heading-group">
+
+          <div class="heading-icon edit-icon">
+            ✎
+          </div>
+
+          <div>
+
+            <span class="section-label">
+              {{ i18n.t('editDoctor') }}
+            </span>
+
+            <h2>
+              {{ i18n.t('editDoctor') }}
+              #{{ editingDoctor.id }}
+            </h2>
+
+            <p>
+              {{ editingDoctor.fullName }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="cancelEdit()"
+        >
+          ✕
+          {{ i18n.t('close') }}
+        </button>
+
+      </div>
+
+
+      <div class="selected-profile">
+
+        <div class="doctor-avatar large">
+          +
+        </div>
+
+        <div>
+
+          <span>
+            {{ i18n.t('username') }}
+          </span>
+
+          <strong>
+            {{ editingDoctor.username }}
+          </strong>
+
+          <p>
+            {{ editingDoctor.specialty }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="info-message">
+
+        <span>
+          ℹ
+        </span>
+
+        {{
+          i18n.t(
+            'doctorCredentialsNotEditable'
+          )
+        }}
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-field">
+
+          <label for="editFullName">
+            {{ i18n.t('name') }}
+          </label>
+
+          <input
+            id="editFullName"
+            type="text"
+            [(ngModel)]="
+              editForm.fullName
+            "
+          />
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="editSpecialty">
+            {{ i18n.t('specialty') }}
+          </label>
+
+          <input
+            id="editSpecialty"
+            type="text"
+            [(ngModel)]="
+              editForm.specialty
+            "
+          />
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="editInterval">
+
+            {{
+              i18n.t(
+                'appointmentDurationMinutes'
+              )
+            }}
+
+          </label>
+
+          <input
+            id="editInterval"
+            type="number"
+            min="1"
+            [(ngModel)]="
+              editForm.intervalMinutes
+            "
+          />
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="updateDoctor()"
+          [disabled]="savingDoctor"
+        >
+
+          {{
+            savingDoctor
+              ? i18n.t(
+                  'savingChanges'
+                )
+              : i18n.t(
+                  'saveChanges'
+                )
+          }}
+
+        </button>
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="cancelEdit()"
+          [disabled]="savingDoctor"
+        >
+          {{ i18n.t('close') }}
+        </button>
+
+      </div>
+
+    </section>
+
+  }
+
+
+  <!-- ===================================================== -->
+  <!-- DISPONIBILIDAD -->
+  <!-- ===================================================== -->
+
+  <section
+    class="card availability-card"
+    id="availability-management"
+  >
+
+    <div class="section-heading">
+
+      <div class="heading-group">
+
+        <div class="heading-icon availability-icon">
+          📅
+        </div>
+
+        <div>
+
+          <span class="section-label">
+            {{
+              i18n.t(
+                'availabilityManagement'
+              )
+            }}
+          </span>
+
+          <h2>
+            {{
+              i18n.t(
+                'availabilityManagement'
+              )
+            }}
+          </h2>
+
+          <p>
+            {{
+              i18n.t(
+                'availabilityManagementDescription'
+              )
+            }}
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    @if (availabilitySuccess) {
+
+      <div class="message success-message">
+
+        <span>✓</span>
+
+        {{ availabilitySuccess }}
+
+      </div>
+
+    }
+
+
+    @if (availabilityError) {
+
+      <div class="message error-message">
+
+        <span>!</span>
+
+        {{ availabilityError }}
+
+      </div>
+
+    }
+
+
+    <div class="availability-controls">
+
+      <div class="form-field availability-doctor-field">
+
+        <label for="availabilityDoctor">
+
+          {{
+            i18n.t(
+              'doctorOrTherapist'
+            )
+          }}
+
+        </label>
+
+
+        <select
+          id="availabilityDoctor"
+          [(ngModel)]="
+            selectedAvailabilityDoctorId
+          "
+          (ngModelChange)="
+            onAvailabilityDoctorChange()
+          "
+        >
+
+          <option [ngValue]="null">
+
+            {{
+              i18n.t(
+                'selectDoctor'
+              )
+            }}
+
+          </option>
+
+
+          @for (
+            doctor of doctors;
+            track doctor.id
+          ) {
+
+            <option
+              [ngValue]="doctor.id"
+            >
+
+              {{ doctor.fullName }}
+              -
+              {{ doctor.specialty }}
+
+            </option>
+
+          }
+
+        </select>
+
+      </div>
+
+
+      <div class="availability-control-actions">
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="
+            loadAvailabilityConfigurations()
+          "
+          [disabled]="
+            selectedAvailabilityDoctorId ===
+              null ||
+            loadingAvailabilityConfigurations
+          "
+        >
+
+          {{
+            loadingAvailabilityConfigurations
+              ? i18n.t(
+                  'loadingAvailabilityConfigurations'
+                )
+              : i18n.t(
+                  'consultAvailabilityConfiguration'
+                )
+          }}
+
+        </button>
+
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="
+            openAvailabilityCreateForm()
+          "
+          [disabled]="
+            selectedAvailabilityDoctorId ===
+            null
+          "
+        >
+          ＋
+          {{
+            i18n.t(
+              'addAvailability'
+            )
+          }}
+        </button>
+
+      </div>
+
+    </div>
+
+
+    @if (
+      selectedAvailabilityDoctor()
+    ) {
+
+      <div class="selected-profile availability-profile">
+
+        <div class="doctor-avatar large">
+          +
+        </div>
+
+        <div>
+
+          <span>
+            {{ i18n.t('doctor') }}
+          </span>
+
+          <strong>
+            {{
+              selectedAvailabilityDoctor()
+                ?.fullName
+            }}
+          </strong>
+
+          <p>
+            {{
+              selectedAvailabilityDoctor()
+                ?.specialty
+            }}
+          </p>
+
+        </div>
+
+      </div>
+
+    }
+
+
+    @if (
+      loadingAvailabilityConfigurations
+    ) {
+
+      <div class="loading-state">
+
+        <div class="spinner"></div>
+
+        {{
+          i18n.t(
+            'loadingAvailabilityConfigurations'
+          )
+        }}
+
+      </div>
+
+    } @else if (
+      availabilityLoaded &&
+      availabilityConfigurations.length >
+        0
+    ) {
+
+      <div class="schedule-grid">
+
+        @for (
+          configuration
+            of availabilityConfigurations;
+          track configuration.id
+        ) {
+
+          <article class="schedule-card">
+
+            <div class="schedule-card-header">
+
+              <div class="day-badge">
+
+                {{
+                  dayLabel(
+                    configuration.dayOfWeek
+                  )
+                }}
+
+              </div>
+
+
+              <span
+                class="status-badge"
+                [class.status-active]="
+                  configuration.active
+                "
+                [class.status-inactive]="
+                  !configuration.active
+                "
+              >
+
+                <span class="status-dot"></span>
+
+                {{
+                  availabilityStatus(
+                    configuration
+                  )
+                }}
+
+              </span>
+
+            </div>
+
+
+            <div class="schedule-time">
+
+              <span>
+                🕐
+              </span>
+
+              <strong>
+
+                {{
+                  configuration.startTime
+                }}
+
+                -
+
+                {{
+                  configuration.endTime
+                }}
+
+              </strong>
+
+            </div>
+
+
+            <div class="schedule-details">
+
+              <div>
+
+                <span>
+                  {{
+                    i18n.t(
+                      'appointmentInterval'
+                    )
+                  }}
+                </span>
+
+                <strong>
+
+                  {{
+                    configuration
+                      .intervalMinutes
+                  }}
+
+                  {{ i18n.t('minutes') }}
+
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  {{
+                    i18n.t(
+                      'schedulingWindow'
+                    )
+                  }}
+                </span>
+
+                <strong>
+
+                  {{
+                    configuration
+                      .weekWindow
+                  }}
+
+                  {{ i18n.t('weeks') }}
+
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="secondary-button schedule-edit-button"
+              (click)="
+                startAvailabilityEdit(
+                  configuration
+                )
+              "
+            >
+              ✎
+              {{ i18n.t('edit') }}
+            </button>
+
+          </article>
+
+        }
+
+      </div>
+
+    } @else if (
+      availabilityLoaded
+    ) {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          📅
+        </div>
+
+        <h3>
+          {{
+            i18n.t(
+              'noAvailabilityConfigured'
+            )
+          }}
+        </h3>
+
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="
+            openAvailabilityCreateForm()
+          "
+        >
+          ＋
+          {{
+            i18n.t(
+              'addAvailability'
+            )
+          }}
+        </button>
+
+      </div>
+
+    } @else {
+
+      <div class="empty-state compact">
+
+        <div class="empty-icon">
+          🩺
+        </div>
+
+        <p>
+          {{
+            i18n.t(
+              'selectDoctorToConsultAvailability'
+            )
+          }}
+        </p>
+
+      </div>
+
+    }
+
+  </section>
+
+
+  <!-- ===================================================== -->
+  <!-- CREAR / EDITAR DISPONIBILIDAD -->
+  <!-- ===================================================== -->
+
+  @if (showAvailabilityForm) {
+
+    <section class="card form-card availability-form-card">
+
+      <div class="section-heading">
+
+        <div class="heading-group">
+
+          <div class="heading-icon availability-icon">
+            🕐
+          </div>
+
+          <div>
+
+            <span class="section-label">
+
+              {{
+                editingAvailability
+                  ? i18n.t(
+                      'editAvailability'
+                    )
+                  : i18n.t(
+                      'addAvailability'
+                    )
+              }}
+
+            </span>
+
+            <h2>
+
+              {{
+                editingAvailability
+                  ? i18n.t(
+                      'editAvailability'
+                    )
+                  : i18n.t(
+                      'addAvailability'
+                    )
+              }}
+
+            </h2>
+
+
+            @if (
+              selectedAvailabilityDoctor()
+            ) {
+
+              <p>
+
+                {{
+                  selectedAvailabilityDoctor()
+                    ?.fullName
+                }}
+
+                ·
+
+                {{
+                  selectedAvailabilityDoctor()
+                    ?.specialty
+                }}
+
+              </p>
+
+            }
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="
+            closeAvailabilityForm()
+          "
+        >
+          ✕
+          {{ i18n.t('close') }}
+        </button>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-field">
+
+          <label for="availabilityDay">
+
+            {{
+              i18n.t(
+                'dayOfWeek'
+              )
+            }}
+
+          </label>
+
+          <select
+            id="availabilityDay"
+            [(ngModel)]="
+              availabilityForm.dayOfWeek
+            "
+          >
+
+            @for (
+              day of dayOptions;
+              track day.value
+            ) {
+
+              <option
+                [ngValue]="day.value"
+              >
+
+                {{
+                  i18n.t(
+                    day.labelKey
+                  )
+                }}
+
+              </option>
+
+            }
+
+          </select>
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="availabilityStartTime">
+
+            {{
+              i18n.t(
+                'startTime'
+              )
+            }}
+
+          </label>
+
+          <input
+            id="availabilityStartTime"
+            type="time"
+            [(ngModel)]="
+              availabilityForm.startTime
+            "
+          />
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="availabilityEndTime">
+
+            {{
+              i18n.t(
+                'endTime'
+              )
+            }}
+
+          </label>
+
+          <input
+            id="availabilityEndTime"
+            type="time"
+            [(ngModel)]="
+              availabilityForm.endTime
+            "
+          />
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="availabilityInterval">
+
+            {{
+              i18n.t(
+                'appointmentIntervalMinutes'
+              )
+            }}
+
+          </label>
+
+          <input
+            id="availabilityInterval"
+            type="number"
+            min="1"
+            [(ngModel)]="
+              availabilityForm.intervalMinutes
+            "
+          />
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label for="availabilityWeekWindow">
+
+            {{
+              i18n.t(
+                'schedulingWindowWeeks'
+              )
+            }}
+
+          </label>
+
+          <input
+            id="availabilityWeekWindow"
+            type="number"
+            min="1"
+            [(ngModel)]="
+              availabilityForm.weekWindow
+            "
+          />
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="
+            saveAvailabilityConfiguration()
+          "
+          [disabled]="
+            savingAvailabilityConfiguration
+          "
+        >
+
+          {{
+            savingAvailabilityConfiguration
+              ? i18n.t(
+                  'savingChanges'
+                )
+              : editingAvailability
+                ? i18n.t(
+                    'saveChanges'
+                  )
+                : i18n.t(
+                    'saveAvailability'
+                  )
+          }}
+
+        </button>
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="
+            closeAvailabilityForm()
+          "
+          [disabled]="
+            savingAvailabilityConfiguration
+          "
+        >
+          {{ i18n.t('close') }}
+        </button>
+
+      </div>
+
+    </section>
+
+  }
+
+</main>

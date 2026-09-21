@@ -1,0 +1,883 @@
+<main class="register-page">
+
+  <section class="register-shell">
+
+
+    <!-- LADO INSTITUCIONAL -->
+
+    <aside class="register-brand">
+
+      <button
+        type="button"
+        class="back-home"
+        (click)="goHome()"
+      >
+        ←
+        {{
+          text(
+            'Volver al inicio',
+            'Back to home'
+          )
+        }}
+      </button>
+
+
+      <img
+        src="/assets/piedra_azul__.png"
+        alt="Piedra Azul Clínica"
+        class="register-logo"
+      />
+
+
+      <div class="brand-content">
+
+        <span class="brand-label">
+          {{
+            text(
+              'NUEVO PACIENTE',
+              'NEW PATIENT'
+            )
+          }}
+        </span>
+
+        <h1>
+          {{
+            text(
+              'Crea tu cuenta en PiedraAzul',
+              'Create your PiedraAzul account'
+            )
+          }}
+        </h1>
+
+        <p>
+          {{
+            text(
+              'Regístrate para consultar disponibilidad, gestionar tus citas y acceder a tu portal de paciente.',
+              'Register to check availability, manage your appointments and access your patient portal.'
+            )
+          }}
+        </p>
+
+
+        <div class="benefits">
+
+          <div class="benefit">
+
+            <span>
+              ✓
+            </span>
+
+            {{
+              text(
+                'Consulta profesionales disponibles',
+                'Check available professionals'
+              )
+            }}
+
+          </div>
+
+
+          <div class="benefit">
+
+            <span>
+              ✓
+            </span>
+
+            {{
+              text(
+                'Agenda y administra tus citas',
+                'Schedule and manage appointments'
+              )
+            }}
+
+          </div>
+
+
+          <div class="benefit">
+
+            <span>
+              ✓
+            </span>
+
+            {{
+              text(
+                'Acceso seguro mediante PiedraAzul',
+                'Secure access through PiedraAzul'
+              )
+            }}
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </aside>
+
+
+    <!-- FORMULARIO -->
+
+    <section
+      class="register-card"
+      *ngIf="!success"
+    >
+
+      <div class="form-heading">
+
+        <span class="form-step">
+          {{
+            text(
+              'Registro de paciente',
+              'Patient registration'
+            )
+          }}
+        </span>
+
+        <h2>
+          {{
+            text(
+              'Crear mi cuenta',
+              'Create my account'
+            )
+          }}
+        </h2>
+
+        <p>
+          {{
+            text(
+              'Completa tus datos para empezar a utilizar PiedraAzul.',
+              'Complete your information to start using PiedraAzul.'
+            )
+          }}
+        </p>
+
+      </div>
+
+
+      <div
+        class="alert alert-error"
+        *ngIf="error"
+      >
+        {{ error }}
+      </div>
+
+
+      <!-- DATOS PERSONALES -->
+
+      <div class="form-section">
+
+        <div class="section-title">
+
+          <div class="section-icon">
+            1
+          </div>
+
+          <div>
+
+            <h3>
+              {{
+                text(
+                  'Información personal',
+                  'Personal information'
+                )
+              }}
+            </h3>
+
+            <p>
+              {{
+                text(
+                  'Datos básicos del paciente.',
+                  'Basic patient information.'
+                )
+              }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+
+          <label class="field">
+
+            <span>
+              {{
+                text(
+                  'Nombres',
+                  'First names'
+                )
+              }}
+              *
+            </span>
+
+            <input
+              type="text"
+              name="nombres"
+              [(ngModel)]="
+                form.nombres
+              "
+              autocomplete="given-name"
+              placeholder="Carlos Andres"
+            />
+
+          </label>
+
+
+          <label class="field">
+
+            <span>
+              {{
+                text(
+                  'Apellidos',
+                  'Last names'
+                )
+              }}
+              *
+            </span>
+
+            <input
+              type="text"
+              name="apellidos"
+              [(ngModel)]="
+                form.apellidos
+              "
+              autocomplete="family-name"
+              placeholder="Perez Gomez"
+            />
+
+          </label>
+
+
+          <label class="field">
+
+            <span>
+              {{
+                text(
+                  'Tipo de documento',
+                  'Document type'
+                )
+              }}
+              *
+            </span>
+
+            <select
+              name="documentType"
+              [(ngModel)]="
+                form.documentType
+              "
+            >
+
+              <option value="CC">
+                CC
+              </option>
+
+              <option value="TI">
+                TI
+              </option>
+
+              <option value="CE">
+                CE
+              </option>
+
+              <option value="PASAPORTE">
+                {{
+                  text(
+                    'Pasaporte',
+                    'Passport'
+                  )
+                }}
+              </option>
+
+            </select>
+
+          </label>
+
+
+          <label class="field">
+
+            <span>
+              {{
+                text(
+                  'Número de documento',
+                  'Document number'
+                )
+              }}
+              *
+            </span>
+
+            <input
+              type="text"
+              name="documentNumber"
+              [(ngModel)]="
+                form.documentNumber
+              "
+              autocomplete="off"
+              placeholder="1000123456"
+            />
+
+          </label>
+
+
+          <label class="field">
+
+            <span>
+              {{
+                text(
+                  'Fecha de nacimiento',
+                  'Birth date'
+                )
+              }}
+            </span>
+
+            <input
+              type="date"
+              name="dateNacimiento"
+              [(ngModel)]="
+                form.dateNacimiento
+              "
+            />
+
+          </label>
+
+
+          <label class="field">
+
+            <span>
+              {{
+                text(
+                  'Género',
+                  'Gender'
+                )
+              }}
+              *
+            </span>
+
+            <select
+              name="gender"
+              [(ngModel)]="
+                form.gender
+              "
+            >
+
+              <option value="">
+                {{
+                  text(
+                    'Seleccione',
+                    'Select'
+                  )
+                }}
+              </option>
+
+              <option value="HOMBRE">
+                {{
+                  text(
+                    'Hombre',
+                    'Male'
+                  )
+                }}
+              </option>
+
+              <option value="MUJER">
+                {{
+                  text(
+                    'Mujer',
+                    'Female'
+                  )
+                }}
+              </option>
+
+              <option value="OTRO">
+                {{
+                  text(
+                    'Otro',
+                    'Other'
+                  )
+                }}
+              </option>
+
+            </select>
+
+          </label>
+
+
+          <label class="field">
+
+            <span>
+              {{
+                text(
+                  'Teléfono',
+                  'Phone'
+                )
+              }}
+              *
+            </span>
+
+            <input
+              type="tel"
+              name="phone"
+              [(ngModel)]="
+                form.phone
+              "
+              autocomplete="tel"
+              placeholder="3001234567"
+            />
+
+          </label>
+
+
+          <label class="field">
+
+            <span>
+              {{
+                text(
+                  'Correo electrónico',
+                  'Email'
+                )
+              }}
+              *
+            </span>
+
+            <input
+              type="email"
+              name="email"
+              [(ngModel)]="
+                form.email
+              "
+              autocomplete="email"
+              placeholder="nombre@correo.com"
+            />
+
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <!-- DATOS DE ACCESO -->
+
+      <div class="form-section">
+
+        <div class="section-title">
+
+          <div class="section-icon">
+            2
+          </div>
+
+          <div>
+
+            <h3>
+              {{
+                text(
+                  'Datos de acceso',
+                  'Access information'
+                )
+              }}
+            </h3>
+
+            <p>
+              {{
+                text(
+                  'Estas credenciales serán utilizadas para iniciar sesión.',
+                  'These credentials will be used to sign in.'
+                )
+              }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+          <label class="field field-full">
+
+            <span>
+              {{
+                text(
+                  'Nombre de usuario',
+                  'Username'
+                )
+              }}
+              *
+            </span>
+
+            <input
+              type="text"
+              name="username"
+              [(ngModel)]="
+                form.username
+              "
+              autocomplete="username"
+              placeholder="carlos.perez"
+            />
+
+            <small>
+              {{
+                text(
+                  'Mínimo 4 caracteres. Puedes usar letras, números, punto, guion y guion bajo.',
+                  'Minimum 4 characters. Letters, numbers, dots, dashes and underscores are allowed.'
+                )
+              }}
+            </small>
+
+          </label>
+
+
+          <label class="field">
+
+            <span>
+              {{
+                text(
+                  'Contraseña',
+                  'Password'
+                )
+              }}
+              *
+            </span>
+
+            <div class="password-field">
+
+              <input
+                [type]="
+                  showPassword
+                    ? 'text'
+                    : 'password'
+                "
+                name="password"
+                [(ngModel)]="
+                  form.password
+                "
+                autocomplete="new-password"
+              />
+
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="
+                  togglePassword()
+                "
+                [attr.aria-label]="
+                  text(
+                    'Mostrar contraseña',
+                    'Show password'
+                  )
+                "
+              >
+                {{
+                  showPassword
+                    ? 'Ocultar'
+                    : 'Ver'
+                }}
+              </button>
+
+            </div>
+
+          </label>
+
+
+          <label class="field">
+
+            <span>
+              {{
+                text(
+                  'Confirmar contraseña',
+                  'Confirm password'
+                )
+              }}
+              *
+            </span>
+
+            <div class="password-field">
+
+              <input
+                [type]="
+                  showConfirmPassword
+                    ? 'text'
+                    : 'password'
+                "
+                name="confirmPassword"
+                [(ngModel)]="
+                  form.confirmPassword
+                "
+                autocomplete="new-password"
+              />
+
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="
+                  toggleConfirmPassword()
+                "
+              >
+                {{
+                  showConfirmPassword
+                    ? 'Ocultar'
+                    : 'Ver'
+                }}
+              </button>
+
+            </div>
+
+          </label>
+
+        </div>
+
+
+        <!-- REQUISITOS -->
+
+        <div class="password-requirements">
+
+          <span
+            [class.valid]="
+              passwordHasMinLength
+            "
+          >
+            {{
+              passwordHasMinLength
+                ? '✓'
+                : '○'
+            }}
+
+            {{
+              text(
+                'Mínimo 8 caracteres',
+                'Minimum 8 characters'
+              )
+            }}
+          </span>
+
+
+          <span
+            [class.valid]="
+              passwordHasUppercase
+            "
+          >
+            {{
+              passwordHasUppercase
+                ? '✓'
+                : '○'
+            }}
+
+            {{
+              text(
+                'Una mayúscula',
+                'One uppercase letter'
+              )
+            }}
+          </span>
+
+
+          <span
+            [class.valid]="
+              passwordHasLowercase
+            "
+          >
+            {{
+              passwordHasLowercase
+                ? '✓'
+                : '○'
+            }}
+
+            {{
+              text(
+                'Una minúscula',
+                'One lowercase letter'
+              )
+            }}
+          </span>
+
+
+          <span
+            [class.valid]="
+              passwordHasNumber
+            "
+          >
+            {{
+              passwordHasNumber
+                ? '✓'
+                : '○'
+            }}
+
+            {{
+              text(
+                'Un número',
+                'One number'
+              )
+            }}
+          </span>
+
+
+          <span
+            [class.valid]="
+              passwordsMatch
+            "
+          >
+            {{
+              passwordsMatch
+                ? '✓'
+                : '○'
+            }}
+
+            {{
+              text(
+                'Las contraseñas coinciden',
+                'Passwords match'
+              )
+            }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- ACCIONES -->
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="create-button"
+          [disabled]="loading"
+          (click)="register()"
+        >
+
+          <span *ngIf="!loading">
+            {{
+              text(
+                'Crear mi cuenta',
+                'Create my account'
+              )
+            }}
+          </span>
+
+          <span *ngIf="loading">
+            {{
+              text(
+                'Creando cuenta...',
+                'Creating account...'
+              )
+            }}
+          </span>
+
+        </button>
+
+
+        <p class="login-link">
+
+          {{
+            text(
+              '¿Ya tienes una cuenta?',
+              'Already have an account?'
+            )
+          }}
+
+          <button
+            type="button"
+            (click)="login()"
+          >
+            {{
+              text(
+                'Iniciar sesión',
+                'Sign in'
+              )
+            }}
+          </button>
+
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ÉXITO -->
+
+    <section
+      class="register-card success-card"
+      *ngIf="success"
+    >
+
+      <div class="success-icon">
+        ✓
+      </div>
+
+      <span class="success-label">
+        {{
+          text(
+            'REGISTRO COMPLETADO',
+            'REGISTRATION COMPLETE'
+          )
+        }}
+      </span>
+
+      <h2>
+        {{
+          text(
+            '¡Bienvenido a PiedraAzul!',
+            'Welcome to PiedraAzul!'
+          )
+        }}
+      </h2>
+
+      <p>
+        {{
+          successMessage
+        }}
+      </p>
+
+
+      <div class="success-information">
+
+        <strong>
+          {{
+            text(
+              'Tu usuario:',
+              'Your username:'
+            )
+          }}
+        </strong>
+
+        <span>
+          {{ form.username }}
+        </span>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="create-button"
+        (click)="login()"
+      >
+        {{
+          text(
+            'Iniciar sesión',
+            'Sign in'
+          )
+        }}
+      </button>
+
+
+      <button
+        type="button"
+        class="secondary-success-button"
+        (click)="goHome()"
+      >
+        {{
+          text(
+            'Volver al inicio',
+            'Back to home'
+          )
+        }}
+      </button>
+
+    </section>
+
+  </section>
+
+</main>

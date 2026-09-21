@@ -1,0 +1,15 @@
+package co.edu.unicauca.piedraazul.agenda.identity.internal.adapter.out.persistence;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import co.edu.unicauca.piedraazul.agenda.identity.internal.domain.model.User;
+import co.edu.unicauca.piedraazul.agenda.identity.internal.domain.model.UserRole;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findByUsername(String username);
+
+    List<User> findByRoleOrderByUsernameAsc(UserRole role);
+}

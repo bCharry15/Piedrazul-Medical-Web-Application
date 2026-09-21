@@ -1,0 +1,1298 @@
+<main class="doctor-page">
+
+  @if (loadingDoctor) {
+
+    <section class="loading-card">
+
+      <div class="spinner"></div>
+
+      <div>
+        <strong>
+          {{
+            text(
+              'Preparando tu portal médico',
+              'Preparing your medical portal'
+            )
+          }}
+        </strong>
+
+        <p>
+          {{
+            i18n.t(
+              'loadingDoctors'
+            )
+          }}
+        </p>
+      </div>
+
+    </section>
+
+  }
+
+
+  @if (doctor) {
+
+    <!-- ====================================
+         HERO
+         ==================================== -->
+
+    <section class="doctor-hero">
+
+      <div class="hero-copy">
+
+        <span class="eyebrow">
+          {{
+            text(
+              'PORTAL MÉDICO',
+              'DOCTOR PORTAL'
+            )
+          }}
+        </span>
+
+        <h1>
+          {{
+            text(
+              'Hola',
+              'Hello'
+            )
+          }},
+          {{ doctorFirstName }}
+          <span class="wave"></span>
+        </h1>
+
+        <p>
+          {{
+            text(
+              'Gestiona tu agenda, confirma consultas y lleva el control de la atención de tus pacientes.',
+              'Manage your schedule, confirm appointments and keep track of your patient care.'
+            )
+          }}
+        </p>
+
+      </div>
+
+
+      <div class="hero-actions">
+
+        <button
+          type="button"
+          class="primary-button hero-button"
+          (click)="goToToday()"
+        >
+          📅
+          {{
+            text(
+              'Agenda de hoy',
+              'Today\'s schedule'
+            )
+          }}
+        </button>
+
+
+        <button
+          type="button"
+          class="secondary-button hero-button"
+          (click)="loadAppointments()"
+          [disabled]="loadingAppointments"
+        >
+          ↻
+          {{
+            text(
+              'Actualizar',
+              'Refresh'
+            )
+          }}
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- ====================================
+         INDICADORES
+         ==================================== -->
+
+    <section class="dashboard-stats">
+
+      <article class="stat-card">
+
+        <div class="stat-icon calendar">
+          📅
+        </div>
+
+        <div class="stat-content">
+
+          <span class="stat-label">
+            {{
+              selectedDateIsToday
+                ? text(
+                    'Citas de hoy',
+                    'Today\'s appointments'
+                  )
+                : text(
+                    'Citas del día',
+                    'Appointments'
+                  )
+            }}
+          </span>
+
+          <strong class="stat-number">
+            {{ totalAppointments }}
+          </strong>
+
+          <span class="stat-detail">
+            {{
+              formatDate(
+                selectedDate
+              )
+            }}
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <div class="stat-icon pending">
+          ⏳
+        </div>
+
+        <div class="stat-content">
+
+          <span class="stat-label">
+            {{
+              text(
+                'Por confirmar',
+                'To confirm'
+              )
+            }}
+          </span>
+
+          <strong class="stat-number">
+            {{ scheduledAppointments }}
+          </strong>
+
+          <span class="stat-detail">
+            {{
+              text(
+                'Citas programadas',
+                'Scheduled appointments'
+              )
+            }}
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <div class="stat-icon confirmed">
+          ✓
+        </div>
+
+        <div class="stat-content">
+
+          <span class="stat-label">
+            {{
+              text(
+                'Confirmadas',
+                'Confirmed'
+              )
+            }}
+          </span>
+
+          <strong class="stat-number">
+            {{ confirmedAppointments }}
+          </strong>
+
+          <span class="stat-detail">
+            {{
+              text(
+                'Listas para atención',
+                'Ready for care'
+              )
+            }}
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <div class="stat-icon attended">
+          🩺
+        </div>
+
+        <div class="stat-content">
+
+          <span class="stat-label">
+            {{
+              text(
+                'Atendidas',
+                'Attended'
+              )
+            }}
+          </span>
+
+          <strong class="stat-number">
+            {{ attendedAppointments }}
+          </strong>
+
+          <span class="stat-detail">
+            {{
+              text(
+                'Atenciones realizadas',
+                'Completed visits'
+              )
+            }}
+          </span>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- ====================================
+         INFORMACIÓN PROFESIONAL
+         ==================================== -->
+
+    <section class="card professional-card">
+
+      <div class="card-heading">
+
+        <div class="heading-icon doctor-icon">
+          👨‍⚕️
+        </div>
+
+        <div>
+
+          <span class="section-label">
+            {{
+              text(
+                'MI INFORMACIÓN',
+                'MY INFORMATION'
+              )
+            }}
+          </span>
+
+          <h2>
+            {{
+              text(
+                'Información profesional',
+                'Professional information'
+              )
+            }}
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <div class="professional-grid">
+
+        <div class="professional-item">
+
+          <span>
+            {{ i18n.t('name') }}
+          </span>
+
+          <strong>
+            {{ doctor.fullName }}
+          </strong>
+
+        </div>
+
+
+        <div class="professional-item">
+
+          <span>
+            {{ i18n.t('specialty') }}
+          </span>
+
+          <strong>
+            {{ doctor.specialty }}
+          </strong>
+
+        </div>
+
+
+        <div class="professional-item">
+
+          <span>
+            {{
+              i18n.t(
+                'appointmentDuration'
+              )
+            }}
+          </span>
+
+          <strong>
+            {{ doctor.intervalMinutes }}
+            {{ i18n.t('minutes') }}
+          </strong>
+
+        </div>
+
+
+        <div class="professional-item">
+
+          <span>
+            {{
+              text(
+                'Estado',
+                'Status'
+              )
+            }}
+          </span>
+
+          <strong class="active-status">
+            <span></span>
+
+            {{
+              text(
+                'Disponible',
+                'Available'
+              )
+            }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ====================================
+         CONSULTA DE AGENDA
+         ==================================== -->
+
+    <section
+      class="card schedule-search-card"
+      id="agenda-medica"
+    >
+
+      <div class="card-heading">
+
+        <div class="heading-icon calendar-icon">
+          📆
+        </div>
+
+        <div>
+
+          <span class="section-label">
+            {{
+              text(
+                'AGENDA MÉDICA',
+                'MEDICAL SCHEDULE'
+              )
+            }}
+          </span>
+
+          <h2>
+            {{
+              i18n.t(
+                'appointmentsForDate'
+              )
+            }}
+          </h2>
+
+          <p>
+            {{
+              text(
+                'Selecciona una fecha para revisar las consultas asignadas.',
+                'Select a date to review your assigned appointments.'
+              )
+            }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="search-row">
+
+        <div class="form-field">
+
+          <label for="doctorDate">
+            {{ i18n.t('date') }}
+          </label>
+
+          <input
+            id="doctorDate"
+            type="date"
+            [(ngModel)]="selectedDate"
+          />
+
+        </div>
+
+
+        <button
+          type="button"
+          class="primary-button search-button"
+          (click)="loadAppointments()"
+          [disabled]="
+            loadingAppointments ||
+            !selectedDate
+          "
+        >
+          {{
+            loadingAppointments
+              ? i18n.t(
+                  'consultingAppointments'
+                )
+              : i18n.t(
+                  'consultAppointments'
+                )
+          }}
+        </button>
+
+      </div>
+
+    </section>
+
+  }
+
+
+  <!-- ====================================
+       MENSAJES
+       ==================================== -->
+
+  @if (error) {
+
+    <div class="message error-message">
+
+      <span>!</span>
+
+      {{ error }}
+
+    </div>
+
+  }
+
+
+  @if (success) {
+
+    <div class="message success-message">
+
+      <span>✓</span>
+
+      {{ success }}
+
+    </div>
+
+  }
+
+
+  <!-- ====================================
+       CITAS
+       ==================================== -->
+
+  @if (
+    doctor &&
+    !loadingAppointments
+  ) {
+
+    <section class="card appointments-card">
+
+      <div class="section-heading">
+
+        <div class="card-heading compact-heading">
+
+          <div class="heading-icon appointments-icon">
+            🩺
+          </div>
+
+          <div>
+
+            <span class="section-label">
+              {{
+                text(
+                  'ATENCIÓN DEL DÍA',
+                  'DAILY CARE'
+                )
+              }}
+            </span>
+
+            <h2>
+              {{
+                text(
+                  'Agenda de pacientes',
+                  'Patient schedule'
+                )
+              }}
+            </h2>
+
+            <p>
+              {{
+                formatDate(
+                  selectedDate
+                )
+              }}
+
+              ·
+
+              {{ totalAppointments }}
+
+              {{
+                totalAppointments === 1
+                  ? text(
+                      'cita',
+                      'appointment'
+                    )
+                  : text(
+                      'citas',
+                      'appointments'
+                    )
+              }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="loadAppointments()"
+        >
+          ↻
+          {{ i18n.t('refresh') }}
+        </button>
+
+      </div>
+
+
+      @if (
+        appointments.length > 0
+      ) {
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  {{ i18n.t('id') }}
+                </th>
+
+                <th>
+                  {{
+                    i18n.t(
+                      'patientName'
+                    )
+                  }}
+                </th>
+
+                <th>
+                  {{ i18n.t('time') }}
+                </th>
+
+                <th>
+                  {{ i18n.t('status') }}
+                </th>
+
+                <th>
+                  {{ i18n.t('notes') }}
+                </th>
+
+                <th>
+                  {{ i18n.t('actions') }}
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (
+                appointment
+                  of appointments;
+                track appointment.id
+              ) {
+
+                <tr>
+
+                  <td class="appointment-id">
+                    #{{ appointment.id }}
+                  </td>
+
+
+                  <td>
+
+                    <div class="patient-cell">
+
+                      <div class="patient-avatar">
+                        {{
+                          patientInitials(
+                            appointment.patientName
+                          )
+                        }}
+                      </div>
+
+                      <div>
+
+                        <strong>
+                          {{
+                            appointment.patientName
+                          }}
+                        </strong>
+
+                        <span>
+                          {{
+                            text(
+                              'Paciente',
+                              'Patient'
+                            )
+                          }}
+                        </span>
+
+                      </div>
+
+                    </div>
+
+                  </td>
+
+
+                  <td>
+
+                    <span class="time-pill">
+                      🕐
+                      {{
+                        formatTime(
+                          appointment.time
+                        )
+                      }}
+                    </span>
+
+                  </td>
+
+
+                  <td>
+
+                    <span
+                      class="status-badge"
+                      [class.status-programada]="
+                        appointment.status ===
+                        'PROGRAMADA'
+                      "
+                      [class.status-confirmada]="
+                        appointment.status ===
+                        'CONFIRMADA'
+                      "
+                      [class.status-atendida]="
+                        appointment.status ===
+                        'ATENDIDA' ||
+                        appointment.status ===
+                        'COMPLETADA'
+                      "
+                      [class.status-cancelada]="
+                        appointment.status ===
+                        'CANCELADA'
+                      "
+                    >
+                      {{
+                        i18n.status(
+                          appointment.status
+                        )
+                      }}
+                    </span>
+
+                  </td>
+
+
+                  <td class="notes-cell">
+
+  @if (
+    getObservationEntries(
+      appointment.notes
+    ).length > 0
+  ) {
+
+    <div class="observation-timeline">
+
+      @for (
+        observation
+          of getObservationEntries(
+            appointment.notes
+          );
+        track $index
+      ) {
+
+        <div
+          class="observation-entry"
+          [class.original-observation]="
+            $index === 0
+          "
+        >
+
+          <div class="observation-marker">
+
+            @if (
+              $index === 0
+            ) {
+              📝
+            } @else {
+              ✓
+            }
+
+          </div>
+
+
+          <div class="observation-content">
+
+            @if (
+              $index === 0
+            ) {
+
+              <span class="observation-type">
+
+                {{
+                  text(
+                    'Motivo / observación inicial',
+                    'Initial note'
+                  )
+                }}
+
+              </span>
+
+            } @else {
+
+              <span class="observation-type status-change-label">
+
+                {{
+                  text(
+                    'Actualización de la cita',
+                    'Appointment update'
+                  )
+                }}
+
+              </span>
+
+            }
+
+
+            <p>
+              {{ observation }}
+            </p>
+
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  } @else {
+
+    <span class="no-notes">
+
+      {{
+        i18n.t(
+          'noNotes'
+        )
+      }}
+
+    </span>
+
+  }
+
+</td>
+
+
+                  <td>
+
+                    @if (
+                      hasActions(
+                        appointment
+                      )
+                    ) {
+
+                      <div class="action-buttons">
+
+                        @if (
+                          canConfirm(
+                            appointment
+                          )
+                        ) {
+
+                          <button
+                            type="button"
+                            class="
+                              primary-button
+                              table-button
+                            "
+                            (click)="
+                              startStatusChange(
+                                appointment,
+                                'CONFIRMADA'
+                              )
+                            "
+                          >
+                            ✓
+
+                            {{
+                              i18n.t(
+                                'confirmScheduledAppointment'
+                              )
+                            }}
+                          </button>
+
+                        }
+
+
+                        @if (
+                          canMarkAsAttended(
+                            appointment
+                          )
+                        ) {
+
+                          <button
+                            type="button"
+                            class="
+                              attended-button
+                              table-button
+                            "
+                            (click)="
+                              startStatusChange(
+                                appointment,
+                                'ATENDIDA'
+                              )
+                            "
+                          >
+                            🩺
+
+                            {{
+                              i18n.t(
+                                'markAsAttended'
+                              )
+                            }}
+                          </button>
+
+                        }
+
+
+                        @if (
+                          canCancel(
+                            appointment
+                          )
+                        ) {
+
+                          <button
+                            type="button"
+                            class="
+                              danger-button
+                              table-button
+                            "
+                            (click)="
+                              startStatusChange(
+                                appointment,
+                                'CANCELADA'
+                              )
+                            "
+                          >
+                            {{
+                              i18n.t(
+                                'cancelAppointment'
+                              )
+                            }}
+                          </button>
+
+                        }
+
+                      </div>
+
+                    } @else {
+
+                      <span class="no-action">
+
+                        ✓
+
+                        {{
+                          i18n.t(
+                            'notAvailable'
+                          )
+                        }}
+
+                      </span>
+
+                    }
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      } @else {
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            📅
+          </div>
+
+          <h3>
+            {{
+              text(
+                'No tienes citas para esta fecha',
+                'You have no appointments for this date'
+              )
+            }}
+          </h3>
+
+          <p>
+            {{
+              i18n.t(
+                'noAppointmentsForDate'
+              )
+            }}
+          </p>
+
+          @if (!selectedDateIsToday) {
+
+            <button
+              type="button"
+              class="primary-button"
+              (click)="goToToday()"
+            >
+              {{
+                text(
+                  'Ver agenda de hoy',
+                  'View today\'s schedule'
+                )
+              }}
+            </button>
+
+          }
+
+        </div>
+
+      }
+
+
+      <!-- ==================================
+           PANEL DE CAMBIO DE ESTADO
+           ================================== -->
+
+      @if (
+        statusActionAppointment
+      ) {
+
+        <div
+          class="status-panel"
+          id="status-panel"
+          [class.danger-panel]="
+            targetStatus ===
+            'CANCELADA'
+          "
+        >
+
+          <div class="status-panel-header">
+
+            <div>
+
+              <span
+                class="panel-label"
+                [class.danger-label]="
+                  targetStatus ===
+                  'CANCELADA'
+                "
+              >
+                {{
+                  targetStatus ===
+                  'CONFIRMADA'
+                    ? text(
+                        'CONFIRMAR CITA',
+                        'CONFIRM APPOINTMENT'
+                      )
+                    : targetStatus ===
+                        'ATENDIDA'
+                      ? text(
+                          'REGISTRAR ATENCIÓN',
+                          'RECORD CARE'
+                        )
+                      : text(
+                          'CANCELAR CITA',
+                          'CANCEL APPOINTMENT'
+                        )
+                }}
+              </span>
+
+
+              <h3>
+                {{
+                  getStatusActionTitle()
+                }}
+
+                #{{ statusActionAppointment.id }}
+              </h3>
+
+
+              <p class="panel-description">
+                {{
+                  getStatusActionDescription()
+                }}
+              </p>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="secondary-button close-button"
+              (click)="cancelStatusChange()"
+            >
+              ✕
+              {{ i18n.t('close') }}
+            </button>
+
+          </div>
+
+
+          <div class="appointment-preview">
+
+            <div class="preview-patient">
+
+              <div class="large-patient-avatar">
+                {{
+                  patientInitials(
+                    statusActionAppointment
+                      .patientName
+                  )
+                }}
+              </div>
+
+              <div>
+
+                <span>
+                  {{
+                    i18n.t(
+                      'patientName'
+                    )
+                  }}
+                </span>
+
+                <strong>
+                  {{
+                    statusActionAppointment
+                      .patientName
+                  }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <div class="preview-item">
+
+              <span>
+                {{ i18n.t('date') }}
+              </span>
+
+              <strong>
+                {{
+                  formatDate(
+                    statusActionAppointment
+                      .date
+                  )
+                }}
+              </strong>
+
+            </div>
+
+
+            <div class="preview-item">
+
+              <span>
+                {{ i18n.t('time') }}
+              </span>
+
+              <strong>
+                {{
+                  formatTime(
+                    statusActionAppointment
+                      .time
+                  )
+                }}
+              </strong>
+
+            </div>
+
+
+            <div class="preview-item">
+
+              <span>
+                {{ i18n.t('status') }}
+              </span>
+
+              <strong>
+                {{
+                  i18n.status(
+                    statusActionAppointment
+                      .status
+                  )
+                }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-field">
+
+            <label for="statusObservation">
+
+              {{
+                targetStatus ===
+                'CANCELADA'
+                  ? text(
+                      'Motivo de cancelación',
+                      'Cancellation reason'
+                    )
+                  : i18n.t(
+                      'observation'
+                    )
+              }}
+
+              @if (
+                targetStatus ===
+                'CANCELADA'
+              ) {
+                <span class="required">
+                  *
+                </span>
+              }
+
+            </label>
+
+
+            <textarea
+              id="statusObservation"
+              rows="4"
+              [(ngModel)]="statusNotes"
+              [placeholder]="
+                i18n.t(
+                  'observationPlaceholder'
+                )
+              "
+            ></textarea>
+
+          </div>
+
+
+          @if (statusError) {
+
+            <div class="message error-message">
+
+              <span>!</span>
+
+              {{ statusError }}
+
+            </div>
+
+          }
+
+
+          <div class="status-actions">
+
+            <button
+              type="button"
+              [class.danger-button]="
+                targetStatus ===
+                'CANCELADA'
+              "
+              [class.primary-button]="
+                targetStatus !==
+                'CANCELADA'
+              "
+              [class.strong-danger]="
+                targetStatus ===
+                'CANCELADA'
+              "
+              (click)="confirmStatusChange()"
+              [disabled]="updatingStatus"
+            >
+
+              {{
+                updatingStatus
+                  ? i18n.t(
+                      'updatingStatus'
+                    )
+                  : i18n.t(
+                      'confirmStatusChange'
+                    )
+              }}
+
+            </button>
+
+
+            <button
+              type="button"
+              class="secondary-button"
+              (click)="cancelStatusChange()"
+              [disabled]="updatingStatus"
+            >
+              {{ i18n.t('close') }}
+            </button>
+
+          </div>
+
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+
+  @if (
+    doctor &&
+    loadingAppointments
+  ) {
+
+    <section class="card loading-agenda">
+
+      <div class="spinner"></div>
+
+      <strong>
+        {{
+          text(
+            'Consultando agenda médica...',
+            'Loading medical schedule...'
+          )
+        }}
+      </strong>
+
+    </section>
+
+  }
+
+</main>

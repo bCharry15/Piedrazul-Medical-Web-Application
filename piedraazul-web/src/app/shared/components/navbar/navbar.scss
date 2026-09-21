@@ -1,0 +1,491 @@
+:host {
+  display: block;
+}
+
+
+.navbar {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 100;
+
+  width: 100%;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.96
+    );
+
+  border-bottom:
+    1px solid
+    #d6e9f5;
+
+  box-shadow:
+    0 8px 24px
+    rgba(
+      31,
+      101,
+      154,
+      0.055
+    );
+
+  backdrop-filter:
+    blur(16px);
+}
+
+
+.navbar-content {
+  max-width: 1500px;
+
+  min-height: 94px;
+
+  margin: 0 auto;
+
+  padding:
+    10px
+    34px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 26px;
+}
+
+
+/* ======================
+   MARCA
+   ====================== */
+
+.brand {
+  min-width: 265px;
+
+  padding: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  text-align: left;
+}
+
+
+.brand-logo {
+  width: 76px;
+
+  height: 76px;
+
+  object-fit: contain;
+
+  display: block;
+
+  border-radius: 16px;
+}
+
+
+.brand-copy {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+
+.brand-copy strong {
+  color: #16385e;
+
+  font-size: 1.4rem;
+
+  font-weight: 900;
+
+  letter-spacing: -0.02em;
+}
+
+
+.brand-copy span {
+  max-width: 255px;
+
+  color: #55758f;
+
+  font-size: 0.84rem;
+
+  line-height: 1.35;
+}
+
+
+/* ======================
+   NAVEGACIÓN
+   ====================== */
+
+.main-navigation {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 3px;
+}
+
+
+.main-navigation button {
+  padding:
+    10px
+    11px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: transparent;
+
+  color: #395f7d;
+
+  font-size: 0.91rem;
+
+  font-weight: 750;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+
+.main-navigation button:hover {
+  background: #eaf7ff;
+
+  color: #2189d4;
+
+  transform:
+    translateY(-1px);
+}
+
+
+/* ======================
+   ACCIONES
+   ====================== */
+
+.navbar-actions {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+}
+
+
+.language-selector {
+  display: flex;
+
+  padding: 4px;
+
+  border:
+    1px solid
+    #cde4f3;
+
+  border-radius: 999px;
+
+  background: #f8fcff;
+}
+
+
+.language-button {
+  min-width: 40px;
+
+  padding:
+    7px
+    9px;
+
+  border: none;
+
+  border-radius: 999px;
+
+  background: transparent;
+
+  color: #56768f;
+
+  font-weight: 850;
+
+  cursor: pointer;
+}
+
+
+.language-button.active {
+  background:
+    linear-gradient(
+      135deg,
+      #61bef7,
+      #2c90d8
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 5px 13px
+    rgba(
+      44,
+      144,
+      216,
+      0.2
+    );
+}
+
+
+.guest-actions,
+.authenticated-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+}
+
+
+.login-button,
+.portal-button {
+  padding:
+    12px
+    18px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4eafea,
+      #2187d1
+    );
+
+  color: #ffffff;
+
+  font-weight: 850;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  box-shadow:
+    0 9px 19px
+    rgba(
+      43,
+      143,
+      215,
+      0.2
+    );
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+.login-button:hover,
+.portal-button:hover {
+  transform:
+    translateY(-1px);
+
+  box-shadow:
+    0 13px 24px
+    rgba(
+      43,
+      143,
+      215,
+      0.27
+    );
+}
+
+
+.user-pill {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  padding:
+    9px
+    12px;
+
+  border:
+    1px solid
+    #cee4f2;
+
+  border-radius: 999px;
+
+  background: #f7fcff;
+
+  color: #355e7c;
+
+  font-size: 0.87rem;
+
+  font-weight: 750;
+}
+
+
+.user-dot {
+  width: 8px;
+
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #32aa74;
+}
+
+
+.logout-button {
+  padding:
+    10px
+    14px;
+
+  border:
+    1px solid
+    #d9e7ef;
+
+  border-radius: 13px;
+
+  background: #ffffff;
+
+  color: #58768d;
+
+  font-weight: 750;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
+}
+
+
+.logout-button:hover {
+  background: #f4f9fc;
+
+  transform:
+    translateY(-1px);
+}
+
+
+/* ======================
+   RESPONSIVE
+   ====================== */
+
+@media (
+  max-width: 1220px
+) {
+
+  .brand-copy span {
+    display: none;
+  }
+
+
+  .brand {
+    min-width: auto;
+  }
+
+
+  .main-navigation button {
+    padding:
+      10px
+      7px;
+
+    font-size: 0.86rem;
+  }
+
+}
+
+
+@media (
+  max-width: 980px
+) {
+
+  .navbar-content {
+    flex-wrap: wrap;
+
+    padding:
+      10px
+      18px;
+  }
+
+
+  .main-navigation {
+    order: 3;
+
+    width: 100%;
+
+    justify-content: flex-start;
+
+    overflow-x: auto;
+  }
+
+}
+
+
+@media (
+  max-width: 680px
+) {
+
+  .navbar-content {
+    gap: 11px;
+  }
+
+
+  .brand-logo {
+    width: 56px;
+
+    height: 56px;
+  }
+
+
+  .brand-copy strong {
+    font-size: 1.1rem;
+  }
+
+
+  .guest-actions {
+    gap: 5px;
+  }
+
+
+  .login-button {
+    padding:
+      9px
+      11px;
+
+    font-size: 0.8rem;
+  }
+
+
+  .language-button {
+    min-width: 35px;
+
+    padding:
+      6px
+      7px;
+  }
+
+}
