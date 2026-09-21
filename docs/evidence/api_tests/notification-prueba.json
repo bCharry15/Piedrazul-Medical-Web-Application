@@ -1,0 +1,11 @@
+{
+  "appointmentId": 999,
+  "patientId": 999,
+  "patient": "Patient Prueba Simulada",
+  "emailPatient": "prueba@example.com",
+  "phonePatient": "3001234567",
+  "doctorId": 5,
+  "doctor": "Doctor Samuel Prueba",
+  "date": "2026-06-01",
+  "time": "10:30:00"
+}

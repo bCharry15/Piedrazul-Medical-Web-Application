@@ -1,0 +1,1183 @@
+<main class="public-home">
+
+  <!-- ===================================================
+       INICIO
+       =================================================== -->
+
+  <section
+    id="inicio"
+    class="hero"
+  >
+
+    <div class="hero-shape shape-one"></div>
+    <div class="hero-shape shape-two"></div>
+    <div class="hero-shape shape-three"></div>
+
+
+    <div class="hero-content">
+
+
+      <!-- LOGO -->
+
+      <div class="hero-logo-wrapper">
+
+        <img
+          src="/assets/piedra_azul__.png"
+          alt="Piedra Azul Clínica"
+          class="hero-logo"
+        />
+
+      </div>
+
+
+      <!-- ETIQUETA -->
+
+      <span class="hero-label">
+
+        {{
+          text(
+            'BIENVENIDO A PIEDRAAZUL',
+            'WELCOME TO PIEDRAAZUL'
+          )
+        }}
+
+      </span>
+
+
+      <!-- TÍTULO -->
+
+      <h1>
+
+        {{
+          text(
+            'Tu salud, tu tiempo, tu cita.',
+            'Your health, your time, your appointment.'
+          )
+        }}
+
+      </h1>
+
+
+      <!-- DESCRIPCIÓN -->
+
+      <p class="hero-description">
+
+        {{
+          text(
+            'Una forma más sencilla de consultar servicios médicos, encontrar disponibilidad y gestionar tus citas desde un solo lugar.',
+            'A simpler way to discover medical services, find availability and manage your appointments from one place.'
+          )
+        }}
+
+      </p>
+
+
+      <!-- ACCIONES -->
+
+      <div class="hero-actions">
+
+        <button
+          type="button"
+          class="primary-button"
+          (click)="login()"
+        >
+
+          {{
+            text(
+              'Iniciar sesión',
+              'Sign in'
+            )
+          }}
+
+        </button>
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="scrollTo('servicios')"
+        >
+
+          {{
+            text(
+              'Conocer PiedraAzul',
+              'Discover PiedraAzul'
+            )
+          }}
+
+        </button>
+
+      </div>
+
+
+      <!-- BENEFICIOS -->
+
+      <div class="hero-benefits">
+
+        <div class="hero-benefit">
+
+          <div class="benefit-icon">
+            ✓
+          </div>
+
+          <div>
+
+            <strong>
+              {{
+                text(
+                  'Consulta disponibilidad',
+                  'Check availability'
+                )
+              }}
+            </strong>
+
+            <span>
+              {{
+                text(
+                  'Encuentra horarios fácilmente',
+                  'Find available times easily'
+                )
+              }}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="hero-benefit">
+
+          <div class="benefit-icon">
+            +
+          </div>
+
+          <div>
+
+            <strong>
+              {{
+                text(
+                  'Gestiona tus citas',
+                  'Manage appointments'
+                )
+              }}
+            </strong>
+
+            <span>
+              {{
+                text(
+                  'Todo desde tu portal',
+                  'Everything from your portal'
+                )
+              }}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="hero-benefit">
+
+          <div class="benefit-icon">
+            ♡
+          </div>
+
+          <div>
+
+            <strong>
+              {{
+                text(
+                  'Atención organizada',
+                  'Organized care'
+                )
+              }}
+            </strong>
+
+            <span>
+              {{
+                text(
+                  'Una experiencia clara y sencilla',
+                  'A clear and simple experience'
+                )
+              }}
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================
+       SERVICIOS
+       =================================================== -->
+
+  <section
+    id="servicios"
+    class="section"
+  >
+
+    <div class="section-heading">
+
+      <span class="section-label">
+        {{
+          text(
+            'SERVICIOS',
+            'SERVICES'
+          )
+        }}
+      </span>
+
+      <h2>
+        {{
+          text(
+            'Nuestros servicios',
+            'Our services'
+          )
+        }}
+      </h2>
+
+      <p>
+        {{
+          text(
+            'Conoce algunas de las áreas de atención disponibles en PiedraAzul.',
+            'Discover some of the care areas available at PiedraAzul.'
+          )
+        }}
+      </p>
+
+    </div>
+
+
+    <div class="carousel">
+
+      <button
+        type="button"
+        class="carousel-arrow"
+        (click)="previousService()"
+        aria-label="Anterior"
+      >
+        ‹
+      </button>
+
+
+      <article class="service-card">
+
+        <div
+          class="service-illustration"
+          [ngSwitch]="currentServiceIndex"
+        >
+
+          <!-- TERAPIA NEURAL -->
+
+          <svg
+            *ngSwitchCase="0"
+            viewBox="0 0 200 170"
+            aria-hidden="true"
+          >
+
+            <circle
+              cx="100"
+              cy="85"
+              r="70"
+              fill="#dff3ff"
+            />
+
+            <path
+              d="M45 88h30l13-24 20 48 15-32h32"
+              fill="none"
+              stroke="#278fd6"
+              stroke-width="8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <circle
+              cx="102"
+              cy="88"
+              r="13"
+              fill="#65bff7"
+            />
+
+          </svg>
+
+
+          <!-- QUIROPRÁCTICA -->
+
+          <svg
+            *ngSwitchCase="1"
+            viewBox="0 0 200 170"
+            aria-hidden="true"
+          >
+
+            <circle
+              cx="100"
+              cy="85"
+              r="70"
+              fill="#e4f6ff"
+            />
+
+            <path
+              d="M86 36c-13 21-11 40 1 57"
+              stroke="#278fd6"
+              stroke-width="8"
+              stroke-linecap="round"
+              fill="none"
+            />
+
+            <path
+              d="M108 30c-13 25-10 50 5 70"
+              stroke="#65bff7"
+              stroke-width="8"
+              stroke-linecap="round"
+              fill="none"
+            />
+
+            <rect
+              x="67"
+              y="103"
+              width="70"
+              height="30"
+              rx="15"
+              fill="#94d5fb"
+            />
+
+          </svg>
+
+
+          <!-- FISIOTERAPIA -->
+
+          <svg
+            *ngSwitchDefault
+            viewBox="0 0 200 170"
+            aria-hidden="true"
+          >
+
+            <circle
+              cx="100"
+              cy="85"
+              r="70"
+              fill="#dff3ff"
+            />
+
+            <circle
+              cx="100"
+              cy="51"
+              r="15"
+              fill="#278fd6"
+            />
+
+            <path
+              d="M100 69v38"
+              stroke="#278fd6"
+              stroke-width="9"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M100 80l-29 16"
+              stroke="#65bff7"
+              stroke-width="9"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M100 80l30 12"
+              stroke="#65bff7"
+              stroke-width="9"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M100 106l-20 31"
+              stroke="#278fd6"
+              stroke-width="9"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M100 106l23 31"
+              stroke="#278fd6"
+              stroke-width="9"
+              stroke-linecap="round"
+            />
+
+          </svg>
+
+        </div>
+
+
+        <div class="service-content">
+
+          <span class="section-label">
+            {{
+              text(
+                'Servicio PiedraAzul',
+                'PiedraAzul service'
+              )
+            }}
+          </span>
+
+          <h3>
+            {{
+              serviceTitle(
+                currentService
+              )
+            }}
+          </h3>
+
+          <p>
+            {{
+              serviceDescription(
+                currentService
+              )
+            }}
+          </p>
+
+          <button
+            type="button"
+            class="service-link"
+            (click)="login()"
+          >
+
+            {{
+              text(
+                'Consultar disponibilidad',
+                'Check availability'
+              )
+            }}
+
+            →
+
+          </button>
+
+        </div>
+
+      </article>
+
+
+      <button
+        type="button"
+        class="carousel-arrow"
+        (click)="nextService()"
+        aria-label="Siguiente"
+      >
+        ›
+      </button>
+
+    </div>
+
+
+    <div class="carousel-dots">
+
+      <button
+        *ngFor="
+          let service of services;
+          let i = index
+        "
+        type="button"
+        class="carousel-dot"
+        [class.active]="
+          i === currentServiceIndex
+        "
+        (click)="selectService(i)"
+      >
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================
+       EXPERIENCIA
+       =================================================== -->
+
+  <section class="section experience-section">
+
+    <div class="section-heading">
+
+      <span class="section-label">
+        {{
+          text(
+            'EXPERIENCIA DIGITAL',
+            'DIGITAL EXPERIENCE'
+          )
+        }}
+      </span>
+
+      <h2>
+        {{
+          text(
+            'Todo en un solo lugar',
+            'Everything in one place'
+          )
+        }}
+      </h2>
+
+      <p>
+        {{
+          text(
+            'Una plataforma pensada para facilitar la atención de pacientes y el trabajo del personal de PiedraAzul.',
+            'A platform designed to make patient care and PiedraAzul staff work easier.'
+          )
+        }}
+      </p>
+
+    </div>
+
+
+    <div class="experience-grid">
+
+
+      <!-- PACIENTE -->
+
+      <article class="experience-card">
+
+        <div class="experience-image patient-image">
+
+          <svg
+            viewBox="0 0 220 150"
+            aria-hidden="true"
+          >
+
+            <circle
+              cx="70"
+              cy="55"
+              r="20"
+              fill="#4eb3f3"
+            />
+
+            <path
+              d="M34 120c7-30 25-44 36-44s29 14 36 44"
+              fill="#9ed8fb"
+            />
+
+            <rect
+              x="118"
+              y="40"
+              width="72"
+              height="14"
+              rx="7"
+              fill="#8ed1fa"
+            />
+
+            <rect
+              x="118"
+              y="68"
+              width="60"
+              height="14"
+              rx="7"
+              fill="#bee7ff"
+            />
+
+            <rect
+              x="118"
+              y="96"
+              width="46"
+              height="14"
+              rx="7"
+              fill="#8ed1fa"
+            />
+
+          </svg>
+
+        </div>
+
+        <h3>
+          {{
+            text(
+              'Portal del paciente',
+              'Patient portal'
+            )
+          }}
+        </h3>
+
+        <p>
+          {{
+            text(
+              'Consulta disponibilidad, agenda citas y revisa el estado de tus próximas atenciones.',
+              'Check availability, schedule appointments and review upcoming care.'
+            )
+          }}
+        </p>
+
+      </article>
+
+
+      <!-- MÉDICO -->
+
+      <article class="experience-card">
+
+        <div class="experience-image doctor-image">
+
+          <svg
+            viewBox="0 0 220 150"
+            aria-hidden="true"
+          >
+
+            <circle
+              cx="70"
+              cy="50"
+              r="20"
+              fill="#278fd6"
+            />
+
+            <path
+              d="M38 116c8-29 23-42 32-42s25 13 32 42"
+              fill="#70c3f6"
+            />
+
+            <path
+              d="M132 46h45"
+              stroke="#8ed1fa"
+              stroke-width="13"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M132 74h62"
+              stroke="#bee7ff"
+              stroke-width="13"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M132 102h38"
+              stroke="#8ed1fa"
+              stroke-width="13"
+              stroke-linecap="round"
+            />
+
+          </svg>
+
+        </div>
+
+        <h3>
+          {{
+            text(
+              'Portal médico',
+              'Medical portal'
+            )
+          }}
+        </h3>
+
+        <p>
+          {{
+            text(
+              'Consulta las citas del día y lleva un mejor control de las atenciones programadas.',
+              'Review daily appointments and better manage scheduled care.'
+            )
+          }}
+        </p>
+
+      </article>
+
+
+      <!-- ADMINISTRACIÓN -->
+
+      <article class="experience-card">
+
+        <div class="experience-image administration-image">
+
+          <svg
+            viewBox="0 0 220 150"
+            aria-hidden="true"
+          >
+
+            <rect
+              x="30"
+              y="28"
+              width="160"
+              height="95"
+              rx="20"
+              fill="#e0f3ff"
+            />
+
+            <rect
+              x="48"
+              y="48"
+              width="124"
+              height="12"
+              rx="6"
+              fill="#91d3fa"
+            />
+
+            <rect
+              x="48"
+              y="75"
+              width="34"
+              height="28"
+              rx="9"
+              fill="#4eb3f3"
+            />
+
+            <rect
+              x="94"
+              y="75"
+              width="34"
+              height="28"
+              rx="9"
+              fill="#79c7f6"
+            />
+
+            <rect
+              x="140"
+              y="75"
+              width="32"
+              height="28"
+              rx="9"
+              fill="#278fd6"
+            />
+
+          </svg>
+
+        </div>
+
+        <h3>
+          {{
+            text(
+              'Gestión administrativa',
+              'Administrative management'
+            )
+          }}
+        </h3>
+
+        <p>
+          {{
+            text(
+              'Administra profesionales, disponibilidad y procesos de agendamiento desde una interfaz centralizada.',
+              'Manage professionals, availability and scheduling from a centralized interface.'
+            )
+          }}
+        </p>
+
+      </article>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================
+       CÓMO FUNCIONA
+       =================================================== -->
+
+  <section
+    id="como-funciona"
+    class="process-section"
+  >
+
+    <div class="section process-content">
+
+      <div class="section-heading">
+
+        <span class="section-label">
+          {{
+            text(
+              'AGENDA DIGITAL',
+              'DIGITAL SCHEDULING'
+            )
+          }}
+        </span>
+
+        <h2>
+          {{
+            text(
+              'Agenda sin complicaciones',
+              'Scheduling made simple'
+            )
+          }}
+        </h2>
+
+        <p>
+          {{
+            text(
+              'Gestiona tu atención en pocos pasos.',
+              'Manage your care in just a few steps.'
+            )
+          }}
+        </p>
+
+      </div>
+
+
+      <div class="steps">
+
+
+        <article class="step-card">
+
+          <span class="step-number">
+            01
+          </span>
+
+          <h3>
+            {{
+              text(
+                'Elige profesional',
+                'Choose a professional'
+              )
+            }}
+          </h3>
+
+          <p>
+            {{
+              text(
+                'Selecciona el médico o terapeuta disponible.',
+                'Select an available doctor or therapist.'
+              )
+            }}
+          </p>
+
+        </article>
+
+
+        <article class="step-card">
+
+          <span class="step-number">
+            02
+          </span>
+
+          <h3>
+            {{
+              text(
+                'Selecciona fecha y hora',
+                'Select date and time'
+              )
+            }}
+          </h3>
+
+          <p>
+            {{
+              text(
+                'Consulta horarios disponibles y escoge el que mejor se adapte a ti.',
+                'Check available times and choose the one that works best for you.'
+              )
+            }}
+          </p>
+
+        </article>
+
+
+        <article class="step-card">
+
+          <span class="step-number">
+            03
+          </span>
+
+          <h3>
+            {{
+              text(
+                'Gestiona tu cita',
+                'Manage your appointment'
+              )
+            }}
+          </h3>
+
+          <p>
+            {{
+              text(
+                'Consulta el estado y administra tus próximas atenciones.',
+                'Check the status and manage your upcoming visits.'
+              )
+            }}
+          </p>
+
+        </article>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================
+       NOSOTROS
+       =================================================== -->
+
+  <section
+    id="nosotros"
+    class="section"
+  >
+
+    <div class="about-card">
+
+      <div class="about-logo-panel">
+
+        <img
+          src="/assets/piedra_azul__.png"
+          alt="Piedra Azul Clínica"
+          class="about-logo"
+        />
+
+      </div>
+
+
+      <div class="about-content">
+
+        <span class="section-label">
+          {{
+            text(
+              'NOSOTROS',
+              'ABOUT US'
+            )
+          }}
+        </span>
+
+        <h2>
+          {{
+            text(
+              'Atención para nuestra comunidad',
+              'Care for our community'
+            )
+          }}
+        </h2>
+
+        <p>
+          {{
+            text(
+              'PiedraAzul es una organización de atención en salud ubicada en Popayán, orientada a la comunidad y enfocada en servicios de medicina alternativa.',
+              'PiedraAzul is a healthcare organization located in Popayán, serving the community with a focus on alternative medicine.'
+            )
+          }}
+        </p>
+
+        <p>
+          {{
+            text(
+              'Nuestra plataforma digital busca simplificar el agendamiento y mejorar la experiencia de pacientes, profesionales y personal administrativo.',
+              'Our digital platform aims to simplify scheduling and improve the experience for patients, professionals and administrative staff.'
+            )
+          }}
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================
+       CTA
+       =================================================== -->
+
+  <section class="section">
+
+    <div class="cta-card">
+
+      <div>
+
+        <span class="section-label">
+          PIEDRAAZUL
+        </span>
+
+        <h2>
+          {{
+            text(
+              '¿Necesitas atención?',
+              'Need care?'
+            )
+          }}
+        </h2>
+
+        <p>
+          {{
+            text(
+              'Consulta la disponibilidad de nuestros profesionales y agenda tu próxima cita.',
+              'Check our professionals availability and schedule your next appointment.'
+            )
+          }}
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="login()"
+      >
+        {{
+          text(
+            'Agendar una cita',
+            'Book an appointment'
+          )
+        }}
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================
+       CONTACTO
+       =================================================== -->
+
+  <footer
+    id="contacto"
+    class="public-footer"
+  >
+
+    <div class="footer-content">
+
+
+      <div class="footer-brand-section">
+
+        <img
+          src="/assets/piedra_azul__.png"
+          alt="Piedra Azul Clínica"
+          class="footer-logo"
+        />
+
+        <p>
+          {{
+            text(
+              'Atención clínica y agendamiento médico con una experiencia digital más clara y organizada.',
+              'Clinical care and medical scheduling with a clearer and more organized digital experience.'
+            )
+          }}
+        </p>
+
+      </div>
+
+
+      <div class="footer-column">
+
+        <h3>
+          {{
+            text(
+              'Contacto',
+              'Contact'
+            )
+          }}
+        </h3>
+
+        <p>
+          <strong>
+            {{
+              text(
+                'Correo:',
+                'Email:'
+              )
+            }}
+          </strong>
+
+          soporte&#64;piedraazul.com
+        </p>
+
+        <p>
+          <strong>
+            {{
+              text(
+                'Teléfono:',
+                'Phone:'
+              )
+            }}
+          </strong>
+
+          +57 602 555 0198
+        </p>
+
+        <p>
+          <strong>
+            WhatsApp:
+          </strong>
+
+          +57 310 555 7788
+        </p>
+
+      </div>
+
+
+      <div class="footer-column">
+
+        <h3>
+          {{
+            text(
+              'Atención',
+              'Office hours'
+            )
+          }}
+        </h3>
+
+        <p>
+          {{
+            text(
+              'Lunes a viernes',
+              'Monday to Friday'
+            )
+          }}
+        </p>
+
+        <p>
+          8:00 AM - 5:00 PM
+        </p>
+
+        <p>
+          Popayán, Cauca
+        </p>
+
+      </div>
+
+
+      <div class="footer-column">
+
+        <h3>
+          {{
+            text(
+              'Soporte',
+              'Support'
+            )
+          }}
+        </h3>
+
+        <p>
+          ayuda.piedraazul.com
+        </p>
+
+        <p>
+          {{
+            text(
+              'Soporte digital:',
+              'Digital support:'
+            )
+          }}
+        </p>
+
+        <p>
+          7:00 AM - 6:00 PM
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+      <span>
+        © 2026 PiedraAzul Clínica
+      </span>
+
+      <span>
+        {{
+          text(
+            'Información de contacto de demostración.',
+            'Demo contact information.'
+          )
+        }}
+      </span>
+
+    </div>
+
+  </footer>
+
+</main>

@@ -1,0 +1,223 @@
+<header class="navbar">
+
+  <div class="navbar-content">
+
+
+    <!-- LOGO -->
+
+    <button
+      type="button"
+      class="brand"
+      (click)="goHome()"
+    >
+
+      <img
+        src="/assets/piedra_azul__.png"
+        alt="Piedra Azul Clínica"
+        class="brand-logo"
+      />
+
+      <div class="brand-copy">
+
+        <strong>
+          PiedraAzul
+        </strong>
+
+        <span>
+          {{
+            text(
+              'Gestión clínica y agendamiento médico',
+              'Clinical management and medical scheduling'
+            )
+          }}
+        </span>
+
+      </div>
+
+    </button>
+
+
+    <!-- NAVEGACIÓN PÚBLICA -->
+
+    <nav
+      class="main-navigation"
+      *ngIf="!isAuthenticated"
+    >
+
+      <button
+        type="button"
+        (click)="goHome()"
+      >
+        {{
+          text(
+            'Inicio',
+            'Home'
+          )
+        }}
+      </button>
+
+
+      <button
+        type="button"
+        (click)="goToSection('servicios')"
+      >
+        {{
+          text(
+            'Servicios',
+            'Services'
+          )
+        }}
+      </button>
+
+
+      <button
+        type="button"
+        (click)="goToSection('como-funciona')"
+      >
+        {{
+          text(
+            'Cómo funciona',
+            'How it works'
+          )
+        }}
+      </button>
+
+
+      <button
+        type="button"
+        (click)="goToSection('nosotros')"
+      >
+        {{
+          text(
+            'Nosotros',
+            'About us'
+          )
+        }}
+      </button>
+
+
+      <button
+        type="button"
+        (click)="goToSection('contacto')"
+      >
+        {{
+          text(
+            'Contacto',
+            'Contact'
+          )
+        }}
+      </button>
+
+    </nav>
+
+
+    <!-- ACCIONES -->
+
+    <div class="navbar-actions">
+
+
+      <!-- IDIOMA -->
+
+      <div class="language-selector">
+
+        <button
+          type="button"
+          class="language-button"
+          [class.active]="
+            i18n.language() ===
+            'es'
+          "
+          (click)="setLanguage('es')"
+        >
+          ES
+        </button>
+
+
+        <button
+          type="button"
+          class="language-button"
+          [class.active]="
+            i18n.language() ===
+            'en'
+          "
+          (click)="setLanguage('en')"
+        >
+          EN
+        </button>
+
+      </div>
+
+
+      <!-- NO AUTENTICADO -->
+
+      <div
+        class="guest-actions"
+        *ngIf="!isAuthenticated"
+      >
+
+        <button
+          type="button"
+          class="login-button"
+          (click)="login()"
+        >
+          {{
+            text(
+              'Iniciar sesión',
+              'Sign in'
+            )
+          }}
+        </button>
+
+      </div>
+
+
+      <!-- AUTENTICADO -->
+
+      <div
+        class="authenticated-actions"
+        *ngIf="isAuthenticated"
+      >
+
+        <span class="user-pill">
+
+          <span class="user-dot"></span>
+
+          {{ username }}
+
+        </span>
+
+
+        <button
+          type="button"
+          class="portal-button"
+          (click)="goToPortal()"
+        >
+          {{
+            text(
+              'Mi portal',
+              'My portal'
+            )
+          }}
+        </button>
+
+
+        <button
+          type="button"
+          class="logout-button"
+          (click)="logout()"
+        >
+          {{
+            text(
+              'Salir',
+              'Sign out'
+            )
+          }}
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</header>

@@ -1,0 +1,121 @@
+{
+  "realm": "PiedrAzul",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      { "name": "ADMIN" },
+      { "name": "SCHEDULER" },
+      { "name": "DOCTOR" },
+      { "name": "PATIENT" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "agenda-service",
+      "name": "agenda-service",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:8081/*",
+        "http://localhost:*/*"
+      ],
+      "webOrigins": ["*"]
+    },
+
+    {
+  "clientId": "piedraazul-spa",
+  "name": "PiedraAzul Angular SPA",
+  "enabled": true,
+  "publicClient": true,
+  "protocol": "openid-connect",
+  "standardFlowEnabled": true,
+  "directAccessGrantsEnabled": false,
+  "serviceAccountsEnabled": false,
+  "implicitFlowEnabled": false,
+  "redirectUris": [
+    "http://localhost:4200/*"
+  ],
+  "webOrigins": [
+    "http://localhost:4200"
+  ],
+  "attributes": {
+    "pkce.code.challenge.method": "S256"
+  }
+}
+  ],
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "PiedraAzul",
+      "email": "admin@test.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["ADMIN"],
+      "requiredActions": []
+    },
+    {
+      "username": "scheduler",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Scheduler",
+      "lastName": "PiedraAzul",
+      "email": "scheduler@test.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "scheduler123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["SCHEDULER"],
+      "requiredActions": []
+    },
+    {
+      "username": "doctor",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Doctor",
+      "lastName": "PiedraAzul",
+      "email": "doctor@test.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "doctor123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["DOCTOR"],
+      "requiredActions": []
+    },
+    {
+      "username": "patient",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Patient",
+      "lastName": "PiedraAzul",
+      "email": "patient@test.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "patient123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["PATIENT"],
+      "requiredActions": []
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "documentNumber": "999888777",
+  "documentType": "CC",
+  "nombres": "Patient",
+  "apellidos": "Festivo",
+  "phone": "3001234567",
+  "gender": "HOMBRE",
+  "dateNacimiento": "2000-01-01",
+  "email": "patientfestivo@test.com",
+  "doctorId": 5,
+  "date": "2026-06-08",
+  "time": "09:00:00",
+  "notes": "Prueba de bloqueo por festivo"
+}
