@@ -1,678 +1,1137 @@
 <main class="scheduler-page">
 
-  <!-- ======================================
-       HERO
-       ====================================== -->
+  <div class="scheduler-layout">
 
-  <section class="scheduler-hero">
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
 
-    <div class="hero-copy">
+    <aside
+      class="scheduler-sidebar"
+      [attr.aria-label]="text(
+        'Navegación del portal del agendador',
+        'Scheduler portal navigation'
+      )"
+    >
 
-      <span class="eyebrow">
-        {{
-          text(
-            'PORTAL DEL AGENDADOR',
-            'SCHEDULER PORTAL'
-          )
-        }}
-      </span>
+      <div class="sidebar-heading">
 
-      <h1>
-        {{
-          text(
-            'Hola',
-            'Hello'
-          )
-        }},
-        {{ schedulerUsername }}
-        <span class="wave"></span>
-      </h1>
-
-      <p>
-        {{
-          text(
-            'Organiza la agenda médica, consulta profesionales y administra las citas de PiedraAzul.',
-            'Organize the medical schedule, review professionals and manage PiedraAzul appointments.'
-          )
-        }}
-      </p>
-
-    </div>
-
-
-    <div class="hero-actions">
-
-      <button
-        type="button"
-        class="primary-button hero-button"
-        (click)="
-          scrollToSection(
-            'schedule-search'
-          )
-        "
-      >
-        📅
-
-        {{
-          text(
-            'Consultar agenda',
-            'View schedule'
-          )
-        }}
-      </button>
-
-
-      <button
-        type="button"
-        class="secondary-button hero-button"
-        (click)="goToToday()"
-      >
-        {{
-          text(
-            'Ir a hoy',
-            'Go to today'
-          )
-        }}
-      </button>
-
-    </div>
-
-  </section>
-
-
-  <!-- ======================================
-       INDICADORES
-       ====================================== -->
-
-  <section class="dashboard-stats">
-
-    <article class="stat-card">
-
-      <div class="stat-icon doctors">
-        👨‍⚕️
-      </div>
-
-      <div class="stat-content">
-
-        <span class="stat-label">
+        <span>
           {{
             text(
-              'Profesionales',
-              'Professionals'
+              'CENTRO DE AGENDA',
+              'SCHEDULING CENTER'
             )
           }}
         </span>
 
-        <strong class="stat-number">
-          {{ doctors.length }}
+        <strong>
+          {{ schedulerUsername }}
         </strong>
 
-        <span class="stat-detail">
+        <small>
           {{
             text(
-              'Disponibles para agendar',
-              'Available for scheduling'
+              'Gestión de citas',
+              'Appointment management'
             )
           }}
-        </span>
+        </small>
 
       </div>
 
-    </article>
+
+      <nav class="sidebar-nav">
+
+        <button
+          type="button"
+          class="sidebar-link active"
+          (click)="scrollToSection('inicio-agendador')"
+        >
+          <span
+            class="sidebar-icon"
+            aria-hidden="true"
+          >
+            ⌂
+          </span>
+
+          <span>
+            {{
+              text(
+                'Inicio',
+                'Home'
+              )
+            }}
+          </span>
+        </button>
 
 
-    <article class="stat-card">
+        <button
+          type="button"
+          class="sidebar-link"
+          (click)="scrollToSection('schedule-search')"
+        >
+          <span
+            class="sidebar-icon"
+            aria-hidden="true"
+          >
+            ▣
+          </span>
 
-      <div class="stat-icon calendar">
-        📅
+          <span>
+            {{
+              text(
+                'Consultar agenda',
+                'View schedule'
+              )
+            }}
+          </span>
+        </button>
+
+
+        <button
+          type="button"
+          class="sidebar-link"
+          (click)="scrollToSection('schedule-results')"
+        >
+          <span
+            class="sidebar-icon"
+            aria-hidden="true"
+          >
+            ≡
+          </span>
+
+          <span>
+            {{
+              text(
+                'Citas',
+                'Appointments'
+              )
+            }}
+          </span>
+        </button>
+
+
+        <button
+          type="button"
+          class="sidebar-link"
+          (click)="goToToday()"
+        >
+          <span
+            class="sidebar-icon"
+            aria-hidden="true"
+          >
+            ●
+          </span>
+
+          <span>
+            {{
+              text(
+                'Agenda de hoy',
+                'Today schedule'
+              )
+            }}
+          </span>
+        </button>
+
+      </nav>
+
+
+      <div class="sidebar-status">
+
+        <span class="status-dot"></span>
+
+        <div>
+
+          <strong>
+            {{
+              text(
+                'Sistema disponible',
+                'System available'
+              )
+            }}
+          </strong>
+
+          <small>
+            {{
+              text(
+                'Gestión de agenda activa',
+                'Scheduling active'
+              )
+            }}
+          </small>
+
+        </div>
+
       </div>
 
-      <div class="stat-content">
+    </aside>
 
-        <span class="stat-label">
-          {{
-            text(
-              'Citas consultadas',
-              'Appointments'
-            )
-          }}
-        </span>
 
-        <strong class="stat-number">
-          {{ totalAppointments }}
-        </strong>
+    <!-- =====================================================
+         CONTENIDO
+         ===================================================== -->
 
-        <span class="stat-detail">
+    <div class="scheduler-content">
 
-          @if (
-            selectedDoctorId !== null
-          ) {
+      <!-- ===================================================
+           HERO
+           =================================================== -->
 
+      <section
+        class="scheduler-hero"
+        id="inicio-agendador"
+      >
+
+        <div class="hero-copy">
+
+          <span class="hero-label">
+            {{
+              text(
+                'PORTAL DEL AGENDADOR',
+                'SCHEDULER PORTAL'
+              )
+            }}
+          </span>
+
+
+          <h1>
+            {{
+              text(
+                'Hola',
+                'Hello'
+              )
+            }},
+            {{ schedulerUsername }}
+          </h1>
+
+
+          <p class="hero-main-text">
+            {{
+              text(
+                'Organiza las citas de forma clara y sencilla.',
+                'Manage appointments clearly and easily.'
+              )
+            }}
+          </p>
+
+
+          <p class="hero-secondary-text">
+            {{
+              text(
+                'Consulta la agenda de cada profesional, revisa horarios y gestiona cambios desde un solo lugar.',
+                'Review each professional schedule, check times and manage changes from one place.'
+              )
+            }}
+          </p>
+
+        </div>
+
+
+        <div class="hero-date">
+
+          <span>
+            {{
+              text(
+                'Fecha seleccionada',
+                'Selected date'
+              )
+            }}
+          </span>
+
+          <strong>
             {{
               formatDate(
                 selectedDate
               )
             }}
+          </strong>
+
+
+          @if (selectedDateIsToday) {
+
+            <small>
+              {{
+                text(
+                  'Hoy',
+                  'Today'
+                )
+              }}
+            </small>
 
           } @else {
 
-            {{
-              text(
-                'Selecciona una agenda',
-                'Select a schedule'
-              )
-            }}
+            <button
+              type="button"
+              class="hero-date-button"
+              (click)="goToToday()"
+            >
+              {{
+                text(
+                  'Volver a hoy',
+                  'Back to today'
+                )
+              }}
+            </button>
 
           }
 
-        </span>
+        </div>
 
-      </div>
-
-    </article>
+      </section>
 
 
-    <article class="stat-card">
+      <!-- ===================================================
+           ACCIONES PRINCIPALES
+           =================================================== -->
 
-      <div class="stat-icon pending">
-        ⏳
-      </div>
+      <section class="scheduler-actions">
 
-      <div class="stat-content">
+        <button
+          type="button"
+          class="scheduler-action primary-action"
+          (click)="scrollToSection('schedule-search')"
+        >
 
-        <span class="stat-label">
-          {{
-            text(
-              'Programadas',
-              'Scheduled'
-            )
-          }}
-        </span>
+          <span
+            class="action-symbol"
+            aria-hidden="true"
+          >
+            ▣
+          </span>
 
-        <strong class="stat-number">
-          {{ scheduledAppointments }}
-        </strong>
+          <span class="action-copy">
 
-        <span class="stat-detail">
-          {{
-            text(
-              'Pendientes de atención',
-              'Pending care'
-            )
-          }}
-        </span>
+            <strong>
+              {{
+                text(
+                  'Consultar una agenda',
+                  'View a schedule'
+                )
+              }}
+            </strong>
 
-      </div>
+            <small>
+              {{
+                text(
+                  'Elige profesional y fecha',
+                  'Choose professional and date'
+                )
+              }}
+            </small>
 
-    </article>
+          </span>
 
+          <span
+            class="action-arrow"
+            aria-hidden="true"
+          >
+            ›
+          </span>
 
-    <article class="stat-card">
-
-      <div class="stat-icon confirmed">
-        ✓
-      </div>
-
-      <div class="stat-content">
-
-        <span class="stat-label">
-          {{
-            text(
-              'Confirmadas',
-              'Confirmed'
-            )
-          }}
-        </span>
-
-        <strong class="stat-number">
-          {{ confirmedAppointments }}
-        </strong>
-
-        <span class="stat-detail">
-          {{
-            text(
-              'Listas para atención',
-              'Ready for care'
-            )
-          }}
-        </span>
-
-      </div>
-
-    </article>
-
-  </section>
+        </button>
 
 
-  <!-- ======================================
-       CONSULTAR AGENDA
-       ====================================== -->
+        <button
+          type="button"
+          class="scheduler-action"
+          (click)="goToToday()"
+        >
 
-  <section
-    class="card schedule-search-card"
-    id="schedule-search"
-  >
+          <span
+            class="action-symbol"
+            aria-hidden="true"
+          >
+            ●
+          </span>
 
-    <div class="card-heading">
+          <span class="action-copy">
 
-      <div class="heading-icon">
-        🔎
-      </div>
+            <strong>
+              {{
+                text(
+                  'Agenda de hoy',
+                  'Today schedule'
+                )
+              }}
+            </strong>
 
-      <div>
+            <small>
+              {{
+                text(
+                  'Consulta rápidamente el día actual',
+                  'Quickly review today'
+                )
+              }}
+            </small>
 
-        <span class="section-label">
-          {{
-            text(
-              'CONSULTA DE AGENDA',
-              'SCHEDULE SEARCH'
-            )
-          }}
-        </span>
+          </span>
 
-        <h2>
-          {{ i18n.t('consultSchedule') }}
-        </h2>
+          <span
+            class="action-arrow"
+            aria-hidden="true"
+          >
+            ›
+          </span>
 
-        <p>
-          {{
-            text(
-              'Selecciona un profesional y una fecha para consultar sus citas.',
-              'Select a professional and a date to review their appointments.'
-            )
-          }}
-        </p>
-
-      </div>
-
-    </div>
+        </button>
 
 
-    @if (loadingDoctors) {
+        <button
+          type="button"
+          class="scheduler-action"
+          (click)="scrollToSection('schedule-results')"
+        >
 
-      <div class="loading-state">
+          <span
+            class="action-symbol"
+            aria-hidden="true"
+          >
+            ≡
+          </span>
 
-        <div class="spinner"></div>
+          <span class="action-copy">
 
-        {{ i18n.t('loadingDoctors') }}
+            <strong>
+              {{
+                text(
+                  'Ver citas consultadas',
+                  'View appointments'
+                )
+              }}
+            </strong>
 
-      </div>
+            <small>
+              {{
+                text(
+                  'Revisa y gestiona resultados',
+                  'Review and manage results'
+                )
+              }}
+            </small>
 
-    } @else if (doctorsError) {
+          </span>
 
-      <div class="message error-message">
+          <span
+            class="action-arrow"
+            aria-hidden="true"
+          >
+            ›
+          </span>
 
-        <span>!</span>
+        </button>
 
-        {{ doctorsError }}
+      </section>
 
-      </div>
 
-    } @else {
+      <!-- ===================================================
+           RESUMEN
+           =================================================== -->
 
-      <div class="filters">
+      <section class="scheduler-summary">
 
-        <div class="form-field">
+        <!-- PROFESIONALES -->
 
-          <label for="doctor">
+        <article class="professionals-panel">
 
+          <div class="panel-heading">
+
+            <div>
+
+              <span class="panel-label">
+                {{
+                  text(
+                    'PROFESIONALES',
+                    'PROFESSIONALS'
+                  )
+                }}
+              </span>
+
+              <h2>
+                {{
+                  text(
+                    'Equipo disponible',
+                    'Available team'
+                  )
+                }}
+              </h2>
+
+            </div>
+
+          </div>
+
+
+          <div class="summary-main-value">
+
+            <strong>
+              {{ doctors.length }}
+            </strong>
+
+            <div>
+
+              <span>
+                {{
+                  text(
+                    'profesionales activos',
+                    'active professionals'
+                  )
+                }}
+              </span>
+
+              <small>
+                {{
+                  text(
+                    'Disponibles para consultar agenda',
+                    'Available for scheduling'
+                  )
+                }}
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="panel-link"
+            (click)="scrollToSection('schedule-search')"
+          >
             {{
-              i18n.t(
-                'doctorOrTherapist'
+              text(
+                'Seleccionar profesional',
+                'Select professional'
               )
             }}
 
-          </label>
+            <span aria-hidden="true">
+              →
+            </span>
+          </button>
+
+        </article>
 
 
-          <select
-            id="doctor"
-            [(ngModel)]="
-              selectedDoctorId
-            "
-            (ngModelChange)="
-              onDoctorChange()
-            "
-          >
+        <!-- RESUMEN DE CITAS -->
 
-            <option
-              [ngValue]="null"
-            >
-              {{
-                i18n.t(
-                  'selectDoctor'
-                )
-              }}
-            </option>
+        <article class="appointments-summary-panel">
 
+          <div class="panel-heading">
 
-            @for (
-              doctor of doctors;
-              track doctor.id
-            ) {
+            <div>
 
-              <option
-                [ngValue]="doctor.id"
-              >
+              <span class="panel-label">
+                {{
+                  text(
+                    'CITAS CONSULTADAS',
+                    'APPOINTMENTS'
+                  )
+                }}
+              </span>
 
-                {{ doctor.fullName }}
-                -
-                {{ doctor.specialty }}
+              <h2>
+                {{
+                  text(
+                    'Resumen de agenda',
+                    'Schedule summary'
+                  )
+                }}
+              </h2>
 
-              </option>
+            </div>
 
-            }
-
-          </select>
-
-        </div>
-
-
-        <div class="form-field">
-
-          <label for="scheduleDate">
-            {{ i18n.t('date') }}
-          </label>
-
-          <input
-            id="scheduleDate"
-            type="date"
-            [(ngModel)]="
-              selectedDate
-            "
-            (ngModelChange)="
-              onDateChange()
-            "
-          />
-
-        </div>
-
-      </div>
-
-
-      @if (selectedDoctor()) {
-
-        <div class="selected-doctor-card">
-
-          <div class="doctor-avatar">
-            +
           </div>
 
-          <div class="selected-doctor-info">
 
-            <span>
+          <div class="summary-list">
+
+            <div class="summary-row total-summary">
+
+              <strong>
+                {{ totalAppointments }}
+              </strong>
+
+              <div>
+
+                <span>
+                  {{
+                    text(
+                      'Total',
+                      'Total'
+                    )
+                  }}
+                </span>
+
+                <small>
+
+                  @if (
+                    selectedDoctorId !== null
+                  ) {
+
+                    {{
+                      formatDate(
+                        selectedDate
+                      )
+                    }}
+
+                  } @else {
+
+                    {{
+                      text(
+                        'Sin agenda seleccionada',
+                        'No schedule selected'
+                      )
+                    }}
+
+                  }
+
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <div class="summary-row scheduled-summary">
+
+              <strong>
+                {{ scheduledAppointments }}
+              </strong>
+
+              <div>
+
+                <span>
+                  {{
+                    text(
+                      'Programadas',
+                      'Scheduled'
+                    )
+                  }}
+                </span>
+
+                <small>
+                  {{
+                    text(
+                      'Pendientes de atención',
+                      'Pending care'
+                    )
+                  }}
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <div class="summary-row confirmed-summary">
+
+              <strong>
+                {{ confirmedAppointments }}
+              </strong>
+
+              <div>
+
+                <span>
+                  {{
+                    text(
+                      'Confirmadas',
+                      'Confirmed'
+                    )
+                  }}
+                </span>
+
+                <small>
+                  {{
+                    text(
+                      'Listas para atención',
+                      'Ready for care'
+                    )
+                  }}
+                </small>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      </section>
+
+
+      <!-- ===================================================
+           CONSULTAR AGENDA
+           =================================================== -->
+
+      <section
+        class="clinical-section schedule-search-section"
+        id="schedule-search"
+      >
+
+        <header class="section-heading">
+
+          <div>
+
+            <span class="panel-label">
               {{
                 text(
-                  'Profesional seleccionado',
-                  'Selected professional'
+                  'CONSULTA DE AGENDA',
+                  'SCHEDULE SEARCH'
                 )
               }}
             </span>
 
-            <strong>
+            <h2>
               {{
-                selectedDoctor()
-                  ?.fullName
+                text(
+                  '¿Qué agenda deseas consultar?',
+                  'Which schedule would you like to view?'
+                )
               }}
-            </strong>
+            </h2>
 
             <p>
               {{
-                selectedDoctor()
-                  ?.specialty
+                text(
+                  'Primero selecciona el profesional y después la fecha que deseas revisar.',
+                  'First select the professional and then the date you want to review.'
+                )
               }}
             </p>
 
           </div>
+
+        </header>
+
+
+        @if (loadingDoctors) {
+
+          <div class="loading-state">
+
+            <div class="spinner"></div>
+
+            <div>
+
+              <strong>
+                {{
+                  text(
+                    'Cargando profesionales...',
+                    'Loading professionals...'
+                  )
+                }}
+              </strong>
+
+              <p>
+                {{ i18n.t('loadingDoctors') }}
+              </p>
+
+            </div>
+
+          </div>
+
+        } @else if (doctorsError) {
+
+          <div class="message error-message">
+
+            <strong>!</strong>
+
+            <span>
+              {{ doctorsError }}
+            </span>
+
+          </div>
+
+        } @else {
+
+          <div class="schedule-steps">
+
+            <!-- PASO 1 -->
+
+            <div class="schedule-step">
+
+              <div class="step-number">
+                1
+              </div>
+
+              <div class="step-content">
+
+                <label for="doctor">
+                  {{
+                    text(
+                      'Selecciona el profesional',
+                      'Select professional'
+                    )
+                  }}
+                </label>
+
+                <p>
+                  {{
+                    text(
+                      'Elige el médico o terapeuta cuya agenda deseas consultar.',
+                      'Choose the doctor or therapist whose schedule you want to review.'
+                    )
+                  }}
+                </p>
+
+
+                <select
+                  id="doctor"
+                  [(ngModel)]="selectedDoctorId"
+                  (ngModelChange)="onDoctorChange()"
+                >
+
+                  <option [ngValue]="null">
+                    {{
+                      i18n.t(
+                        'selectDoctor'
+                      )
+                    }}
+                  </option>
+
+
+                  @for (
+                    doctor of doctors;
+                    track doctor.id
+                  ) {
+
+                    <option
+                      [ngValue]="doctor.id"
+                    >
+                      {{ doctor.fullName }}
+                      -
+                      {{ doctor.specialty }}
+                    </option>
+
+                  }
+
+                </select>
+
+              </div>
+
+            </div>
+
+
+            <!-- PASO 2 -->
+
+            <div class="schedule-step">
+
+              <div class="step-number">
+                2
+              </div>
+
+              <div class="step-content">
+
+                <label for="scheduleDate">
+                  {{
+                    text(
+                      'Selecciona la fecha',
+                      'Select date'
+                    )
+                  }}
+                </label>
+
+                <p>
+                  {{
+                    text(
+                      'Escoge el día que deseas revisar.',
+                      'Choose the day you want to review.'
+                    )
+                  }}
+                </p>
+
+                <input
+                  id="scheduleDate"
+                  type="date"
+                  [(ngModel)]="selectedDate"
+                  (ngModelChange)="onDateChange()"
+                />
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          @if (selectedDoctor()) {
+
+            <div class="selected-professional">
+
+              <div
+                class="professional-initial"
+                aria-hidden="true"
+              >
+                +
+              </div>
+
+              <div>
+
+                <span>
+                  {{
+                    text(
+                      'Profesional seleccionado',
+                      'Selected professional'
+                    )
+                  }}
+                </span>
+
+                <strong>
+                  {{
+                    selectedDoctor()
+                      ?.fullName
+                  }}
+                </strong>
+
+                <small>
+                  {{
+                    selectedDoctor()
+                      ?.specialty
+                  }}
+                </small>
+
+              </div>
+
+            </div>
+
+          }
+
+
+          <div class="schedule-search-actions">
+
+            <button
+              type="button"
+              class="primary-button large-button"
+              (click)="loadAppointments()"
+              [disabled]="
+                selectedDoctorId === null ||
+                !selectedDate ||
+                loadingAppointments
+              "
+            >
+              {{
+                loadingAppointments
+                  ? i18n.t(
+                      'consultingAppointments'
+                    )
+                  : text(
+                      'Consultar agenda',
+                      'View schedule'
+                    )
+              }}
+            </button>
+
+
+            @if (!selectedDateIsToday) {
+
+              <button
+                type="button"
+                class="secondary-button"
+                (click)="goToToday()"
+              >
+                {{
+                  text(
+                    'Ir a hoy',
+                    'Go to today'
+                  )
+                }}
+              </button>
+
+            }
+
+          </div>
+
+        }
+
+      </section>
+
+
+      <!-- ===================================================
+           MENSAJE GLOBAL
+           =================================================== -->
+
+      @if (success) {
+
+        <div class="message success-message global-message">
+
+          <strong>✓</strong>
+
+          <span>
+            {{ success }}
+          </span>
 
         </div>
 
       }
 
 
-      <button
-        type="button"
-        class="primary-button"
-        (click)="loadAppointments()"
-        [disabled]="
-          selectedDoctorId === null ||
-          !selectedDate ||
-          loadingAppointments
-        "
-      >
+      <!-- ===================================================
+           RESULTADOS
+           =================================================== -->
 
-        {{
-          loadingAppointments
-            ? i18n.t(
-                'consultingAppointments'
-              )
-            : i18n.t(
-                'consultAppointments'
-              )
-        }}
-
-      </button>
-
-    }
-
-  </section>
-
-
-  <!-- ======================================
-       MENSAJE DE ÉXITO
-       ====================================== -->
-
-  @if (success) {
-
-    <div class="message success-message global-message">
-
-      <span>✓</span>
-
-      {{ success }}
-
-    </div>
-
-  }
-
-
-  <!-- ======================================
-       RESULTADOS
-       ====================================== -->
-
-  @if (
-    selectedDoctorId !== null
-  ) {
-
-    <section class="card appointments-card">
-
-      <div class="section-heading">
-
-        <div class="card-heading compact-heading">
-
-          <div class="heading-icon appointments">
-            📋
-          </div>
-
-          <div>
-
-            <span class="section-label">
-              {{
-                text(
-                  'AGENDA MÉDICA',
-                  'MEDICAL SCHEDULE'
-                )
-              }}
-            </span>
-
-            <h2>
-              {{ i18n.t('scheduleResults') }}
-            </h2>
-
-            @if (
-              selectedDoctor()
-            ) {
-
-              <p>
-                {{
-                  selectedDoctor()
-                    ?.fullName
-                }}
-                ·
-                {{
-                  selectedDoctor()
-                    ?.specialty
-                }}
-                ·
-                {{
-                  formatDate(
-                    selectedDate
-                  )
-                }}
-              </p>
-
-            }
-
-          </div>
-
-        </div>
-
-
-        <div class="header-actions">
-
-          <button
-            type="button"
-            class="secondary-button"
-            (click)="loadAppointments()"
-            [disabled]="
-              loadingAppointments
-            "
-          >
-            ↻
-
-            {{ i18n.t('refresh') }}
-          </button>
-
-
-          <button
-            type="button"
-            class="secondary-button export-button"
-            (click)="exportSchedule()"
-            [disabled]="
-              exportingSchedule ||
-              loadingAppointments
-            "
-          >
-
-            ↓
-
-            {{
-              exportingSchedule
-                ? i18n.t(
-                    'exportingCsv'
-                  )
-                : i18n.t(
-                    'exportCsv'
-                  )
-            }}
-
-          </button>
-
-        </div>
-
-      </div>
-
-
-      @if (appointmentsError) {
-
-        <div class="message error-message">
-
-          <span>!</span>
-
-          {{ appointmentsError }}
-
-        </div>
-
-      } @else if (
-        loadingAppointments
+      @if (
+        selectedDoctorId !== null
       ) {
 
-        <div class="loading-state schedule-loading">
+        <section
+          class="clinical-section appointments-section"
+          id="schedule-results"
+        >
 
-          <div class="spinner"></div>
+          <header class="section-heading section-heading-actions">
 
-          {{
-            i18n.t(
-              'consultingAppointments'
-            )
-          }}
+            <div>
 
-        </div>
+              <span class="panel-label">
+                {{
+                  text(
+                    'AGENDA MÉDICA',
+                    'MEDICAL SCHEDULE'
+                  )
+                }}
+              </span>
 
-      } @else if (
-        appointments.length > 0
-      ) {
+              <h2>
+                {{
+                  text(
+                    'Citas del día',
+                    'Daily appointments'
+                  )
+                }}
+              </h2>
 
-        <div class="table-wrapper">
 
-          <table>
+              @if (
+                selectedDoctor()
+              ) {
 
-            <thead>
-
-              <tr>
-
-                <th>
-                  {{ i18n.t('id') }}
-                </th>
-
-                <th>
+                <p>
                   {{
-                    i18n.t(
-                      'patientName'
+                    selectedDoctor()
+                      ?.fullName
+                  }}
+                  ·
+                  {{
+                    selectedDoctor()
+                      ?.specialty
+                  }}
+                  ·
+                  {{
+                    formatDate(
+                      selectedDate
                     )
                   }}
-                </th>
+                </p>
 
-                <th>
-                  {{ i18n.t('time') }}
-                </th>
+              }
 
-                <th>
-                  {{ i18n.t('status') }}
-                </th>
-
-                <th>
-                  {{ i18n.t('notes') }}
-                </th>
-
-                <th>
-                  {{ i18n.t('actions') }}
-                </th>
-
-              </tr>
-
-            </thead>
+            </div>
 
 
-            <tbody>
+            <div class="header-actions">
+
+              <button
+                type="button"
+                class="secondary-button"
+                (click)="loadAppointments()"
+                [disabled]="loadingAppointments"
+              >
+                ↻
+
+                {{ i18n.t('refresh') }}
+              </button>
+
+
+              <button
+                type="button"
+                class="secondary-button"
+                (click)="exportSchedule()"
+                [disabled]="
+                  exportingSchedule ||
+                  loadingAppointments
+                "
+              >
+                ↓
+
+                {{
+                  exportingSchedule
+                    ? i18n.t(
+                        'exportingCsv'
+                      )
+                    : i18n.t(
+                        'exportCsv'
+                      )
+                }}
+              </button>
+
+            </div>
+
+          </header>
+
+
+          @if (appointmentsError) {
+
+            <div class="message error-message">
+
+              <strong>!</strong>
+
+              <span>
+                {{ appointmentsError }}
+              </span>
+
+            </div>
+
+          } @else if (
+            loadingAppointments
+          ) {
+
+            <div class="loading-state">
+
+              <div class="spinner"></div>
+
+              <div>
+
+                <strong>
+                  {{
+                    text(
+                      'Consultando agenda...',
+                      'Loading schedule...'
+                    )
+                  }}
+                </strong>
+
+                <p>
+                  {{
+                    i18n.t(
+                      'consultingAppointments'
+                    )
+                  }}
+                </p>
+
+              </div>
+
+            </div>
+
+          } @else if (
+            appointments.length > 0
+          ) {
+
+            <div class="appointments-list">
 
               @for (
-                appointment
-                  of appointments;
+                appointment of appointments;
                 track appointment.id
               ) {
 
-                <tr>
+                <article class="appointment-row">
 
-                  <td class="appointment-id">
-                    #{{ appointment.id }}
-                  </td>
+                  <!-- CABECERA -->
 
+                  <div class="appointment-main">
 
-                  <td>
+                    <div class="appointment-patient">
 
-                    <div class="patient-cell">
-
-                      <div class="patient-avatar">
+                      <div class="patient-initials">
 
                         {{
                           patientInitials(
@@ -685,85 +1144,96 @@
 
                       <div>
 
-                        <strong>
+                        <span class="appointment-id">
+                          #{{ appointment.id }}
+                        </span>
+
+                        <h3>
                           {{
                             appointment.patientName
                           }}
-                        </strong>
+                        </h3>
 
-                        <span>
+                        <small>
                           {{
                             text(
                               'Paciente',
                               'Patient'
                             )
                           }}
-                        </span>
+                        </small>
 
                       </div>
 
                     </div>
 
-                  </td>
 
+                    <div class="appointment-time">
 
-                  <td>
+                      <span>
+                        {{
+                          text(
+                            'Hora',
+                            'Time'
+                          )
+                        }}
+                      </span>
 
-                    <span class="time-pill">
+                      <strong>
+                        {{
+                          formatTime(
+                            appointment.time
+                          )
+                        }}
+                      </strong>
 
-                      🕐
+                    </div>
 
-                      {{
-                        formatTime(
-                          appointment.time
-                        )
-                      }}
-
-                    </span>
-
-                  </td>
-
-
-                  <td>
 
                     <span
                       class="status-badge"
-
                       [class.status-programada]="
                         appointment.status ===
                         'PROGRAMADA'
                       "
-
                       [class.status-confirmada]="
                         appointment.status ===
                         'CONFIRMADA'
                       "
-
                       [class.status-atendida]="
                         appointment.status ===
                           'ATENDIDA' ||
                         appointment.status ===
                           'COMPLETADA'
                       "
-
                       [class.status-cancelada]="
                         appointment.status ===
                         'CANCELADA'
                       "
                     >
-
                       {{
                         i18n.status(
                           appointment.status
                         )
                       }}
-
                     </span>
 
-                  </td>
+                  </div>
 
 
-                  <td class="notes-cell">
+                  <!-- OBSERVACIONES -->
+
+                  <div class="appointment-notes">
+
+                    <span class="notes-title">
+                      {{
+                        text(
+                          'Observaciones',
+                          'Notes'
+                        )
+                      }}
+                    </span>
+
 
                     @if (
                       getObservationEntries(
@@ -771,7 +1241,7 @@
                       ).length > 0
                     ) {
 
-                      <div class="observation-timeline">
+                      <div class="observation-list">
 
                         @for (
                           observation of
@@ -781,37 +1251,20 @@
                           track $index
                         ) {
 
-                          <div
-                            class="observation-entry"
+                          <div class="observation-entry">
 
-                            [class.original-observation]="
-                              $index === 0
-                            "
-                          >
-
-                            <div class="observation-marker">
-
-                              @if (
+                            <span class="observation-marker">
+                              {{
                                 $index === 0
-                              ) {
-                                📝
-                              } @else {
-                                ✓
-                              }
-
-                            </div>
+                                  ? '•'
+                                  : '✓'
+                              }}
+                            </span>
 
 
-                            <div class="observation-content">
+                            <div>
 
-                              <span
-                                class="observation-type"
-
-                                [class.status-change-label]="
-                                  $index > 0
-                                "
-                              >
-
+                              <strong>
                                 {{
                                   $index === 0
                                     ? text(
@@ -823,9 +1276,7 @@
                                         'Update'
                                       )
                                 }}
-
-                              </span>
-
+                              </strong>
 
                               <p>
                                 {{ observation }}
@@ -841,22 +1292,22 @@
 
                     } @else {
 
-                      <span class="no-notes">
-
+                      <p class="no-notes">
                         {{
                           i18n.t(
                             'noNotes'
                           )
                         }}
-
-                      </span>
+                      </p>
 
                     }
 
-                  </td>
+                  </div>
 
 
-                  <td>
+                  <!-- ACCIONES -->
+
+                  <footer class="appointment-footer">
 
                     @if (
                       canManageAppointment(
@@ -864,19 +1315,12 @@
                       )
                     ) {
 
-                      <div class="action-buttons">
+                      <div class="appointment-actions">
 
                         <button
                           type="button"
-                          class="
-                            secondary-button
-                            table-button
-                          "
-                          (click)="
-                            startReschedule(
-                              appointment
-                            )
-                          "
+                          class="secondary-button"
+                          (click)="startReschedule(appointment)"
                         >
                           ↻
 
@@ -890,31 +1334,21 @@
 
                         <button
                           type="button"
-                          class="
-                            danger-button
-                            table-button
-                          "
-                          (click)="
-                            startCancel(
-                              appointment
-                            )
-                          "
+                          class="danger-button"
+                          (click)="startCancel(appointment)"
                         >
-
                           {{
                             i18n.t(
                               'cancelAppointment'
                             )
                           }}
-
                         </button>
 
                       </div>
 
                     } @else {
 
-                      <span class="not-available">
-
+                      <span class="appointment-closed">
                         ✓
 
                         {{
@@ -922,433 +1356,13 @@
                             'notAvailable'
                           )
                         }}
-
                       </span>
 
                     }
 
-                  </td>
+                  </footer>
 
-                </tr>
-
-              }
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      } @else {
-
-        <div class="empty-state">
-
-          <div class="empty-icon">
-            📅
-          </div>
-
-          <h3>
-
-            {{
-              text(
-                'No hay citas para esta fecha',
-                'No appointments for this date'
-              )
-            }}
-
-          </h3>
-
-          <p>
-
-            {{
-              i18n.t(
-                'noAppointmentsForDate'
-              )
-            }}
-
-          </p>
-
-
-          @if (!selectedDateIsToday) {
-
-            <button
-              type="button"
-              class="primary-button"
-              (click)="goToToday()"
-            >
-
-              {{
-                text(
-                  'Consultar hoy',
-                  'View today'
-                )
-              }}
-
-            </button>
-
-          }
-
-        </div>
-
-      }
-
-    </section>
-
-  }
-
-
-  <!-- ======================================
-       REPROGRAMACIÓN
-       ====================================== -->
-
-  @if (
-    action === 'RESCHEDULE' &&
-    actionAppointment
-  ) {
-
-    <section
-      class="card action-panel"
-      id="scheduler-action-panel"
-    >
-
-      <div class="action-panel-header">
-
-        <div>
-
-          <span class="panel-label">
-
-            {{
-              text(
-                'REPROGRAMACIÓN',
-                'RESCHEDULING'
-              )
-            }}
-
-          </span>
-
-          <h2>
-
-            {{
-              i18n.t(
-                'rescheduleAppointment'
-              )
-            }}
-
-            #{{ actionAppointment.id }}
-
-          </h2>
-
-
-          <p class="action-description">
-
-            {{
-              text(
-                'Selecciona una nueva fecha y un horario disponible para esta cita.',
-                'Select a new date and an available time for this appointment.'
-              )
-            }}
-
-          </p>
-
-        </div>
-
-
-        <button
-          type="button"
-          class="secondary-button"
-          (click)="closeAction()"
-        >
-          ✕
-          {{ i18n.t('close') }}
-        </button>
-
-      </div>
-
-
-      <div class="appointment-preview">
-
-        <div class="preview-patient">
-
-          <div class="large-patient-avatar">
-
-            {{
-              patientInitials(
-                actionAppointment.patientName
-              )
-            }}
-
-          </div>
-
-          <div>
-
-            <span>
-              {{ i18n.t('patient') }}
-            </span>
-
-            <strong>
-              {{
-                actionAppointment.patientName
-              }}
-            </strong>
-
-          </div>
-
-        </div>
-
-
-        <div class="preview-item">
-
-          <span>
-
-            {{
-              i18n.t(
-                'currentAppointment'
-              )
-            }}
-
-          </span>
-
-          <strong>
-
-            {{
-              formatDate(
-                actionAppointment.date
-              )
-            }}
-
-          </strong>
-
-        </div>
-
-
-        <div class="preview-item">
-
-          <span>
-            {{ i18n.t('time') }}
-          </span>
-
-          <strong>
-
-            {{
-              formatTime(
-                actionAppointment.time
-              )
-            }}
-
-          </strong>
-
-        </div>
-
-
-        <div class="preview-item">
-
-          <span>
-            {{ i18n.t('status') }}
-          </span>
-
-          <strong>
-
-            {{
-              i18n.status(
-                actionAppointment.status
-              )
-            }}
-
-          </strong>
-
-        </div>
-
-      </div>
-
-
-      <div class="filters">
-
-        <div class="form-field">
-
-          <label for="rescheduleDate">
-
-            {{
-              i18n.t(
-                'newDate'
-              )
-            }}
-
-          </label>
-
-          <input
-            id="rescheduleDate"
-            type="date"
-
-            [(ngModel)]="
-              rescheduleDate
-            "
-
-            [min]="minDate"
-
-            (ngModelChange)="
-              rescheduleAvailability =
-                null;
-              selectedRescheduleTime =
-                ''
-            "
-          />
-
-        </div>
-
-
-        <div class="form-field">
-
-          <label for="rescheduleReason">
-
-            {{
-              i18n.t(
-                'optionalReason'
-              )
-            }}
-
-          </label>
-
-          <input
-            id="rescheduleReason"
-            type="text"
-
-            [(ngModel)]="
-              rescheduleReason
-            "
-
-            [placeholder]="
-              i18n.t(
-                'reasonPlaceholder'
-              )
-            "
-          />
-
-        </div>
-
-      </div>
-
-
-      <button
-        type="button"
-        class="primary-button"
-
-        (click)="
-          checkRescheduleAvailability()
-        "
-
-        [disabled]="
-          loadingRescheduleAvailability ||
-          !rescheduleDate
-        "
-      >
-
-        {{
-          loadingRescheduleAvailability
-            ? i18n.t(
-                'checkingNewAvailability'
-              )
-            : i18n.t(
-                'checkNewAvailability'
-              )
-        }}
-
-      </button>
-
-
-      @if (actionError) {
-
-        <div class="message error-message">
-
-          <span>!</span>
-
-          {{ actionError }}
-
-        </div>
-
-      }
-
-
-      @if (
-        rescheduleAvailability
-      ) {
-
-        <div class="availability-panel">
-
-          <div class="availability-header">
-
-            <div>
-
-              <span class="section-label">
-
-                {{
-                  text(
-                    'HORARIOS DISPONIBLES',
-                    'AVAILABLE TIMES'
-                  )
-                }}
-
-              </span>
-
-              <h3>
-                {{
-                  rescheduleAvailability
-                    .doctor
-                }}
-              </h3>
-
-              <p>
-
-                {{
-                  formatDate(
-                    rescheduleAvailability
-                      .date
-                  )
-                }}
-
-              </p>
-
-            </div>
-
-          </div>
-
-
-          @if (
-            rescheduleAvailability
-              .availableSlots.length >
-            0
-          ) {
-
-            <div class="slots">
-
-              @for (
-                slot of
-                  rescheduleAvailability
-                    .availableSlots;
-                track slot
-              ) {
-
-                <button
-                  type="button"
-                  class="slot-button"
-
-                  [class.selected]="
-                    selectedRescheduleTime ===
-                    slot
-                  "
-
-                  (click)="
-                    selectedRescheduleTime =
-                      slot
-                  "
-                >
-
-                  {{
-                    formatTime(
-                      slot
-                    )
-                  }}
-
-                </button>
+                </article>
 
               }
 
@@ -1356,66 +1370,258 @@
 
           } @else {
 
-            <div class="empty-state compact">
+            <div class="empty-state">
 
-              <div class="empty-icon">
-                🕐
+              <div class="empty-symbol">
+                ✓
               </div>
 
-              <p>
 
-                {{
-                  i18n.t(
-                    'noAvailableTimes'
-                  )
-                }}
+              <div>
 
-              </p>
+                <h3>
+                  {{
+                    text(
+                      'No hay citas para esta fecha',
+                      'No appointments for this date'
+                    )
+                  }}
+                </h3>
+
+                <p>
+                  {{
+                    i18n.t(
+                      'noAppointmentsForDate'
+                    )
+                  }}
+                </p>
+
+              </div>
+
+
+              @if (!selectedDateIsToday) {
+
+                <button
+                  type="button"
+                  class="primary-button"
+                  (click)="goToToday()"
+                >
+                  {{
+                    text(
+                      'Consultar hoy',
+                      'View today'
+                    )
+                  }}
+                </button>
+
+              }
 
             </div>
 
           }
 
-        </div>
+        </section>
 
       }
 
 
+      <!-- ===================================================
+           REPROGRAMACIÓN
+           =================================================== -->
+
       @if (
-        selectedRescheduleTime
+        action === 'RESCHEDULE' &&
+        actionAppointment
       ) {
 
-        <div class="confirm-panel">
+        <section
+          class="clinical-section action-panel"
+          id="scheduler-action-panel"
+        >
 
-          <div>
+          <header class="action-panel-header">
 
-            <span>
+            <div>
 
-              {{
-                i18n.t(
-                  'newAppointment'
-                )
-              }}
+              <span class="panel-label">
+                {{
+                  text(
+                    'REPROGRAMACIÓN',
+                    'RESCHEDULING'
+                  )
+                }}
+              </span>
 
-            </span>
+              <h2>
+                {{
+                  i18n.t(
+                    'rescheduleAppointment'
+                  )
+                }}
+                #{{ actionAppointment.id }}
+              </h2>
 
-            <strong>
+              <p>
+                {{
+                  text(
+                    'Selecciona una nueva fecha y después elige uno de los horarios disponibles.',
+                    'Select a new date and then choose one of the available times.'
+                  )
+                }}
+              </p>
 
-              {{
-                formatDate(
-                  rescheduleDate
-                )
-              }}
+            </div>
 
-              ·
 
-              {{
-                formatTime(
-                  selectedRescheduleTime
-                )
-              }}
+            <button
+              type="button"
+              class="close-button"
+              (click)="closeAction()"
+              [attr.aria-label]="i18n.t('close')"
+            >
+              ×
+            </button>
 
-            </strong>
+          </header>
+
+
+          <div class="appointment-preview">
+
+            <div class="preview-patient">
+
+              <div class="large-patient-avatar">
+
+                {{
+                  patientInitials(
+                    actionAppointment.patientName
+                  )
+                }}
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  {{ i18n.t('patient') }}
+                </span>
+
+                <strong>
+                  {{
+                    actionAppointment.patientName
+                  }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <div class="preview-item">
+
+              <span>
+                {{
+                  i18n.t(
+                    'currentAppointment'
+                  )
+                }}
+              </span>
+
+              <strong>
+                {{
+                  formatDate(
+                    actionAppointment.date
+                  )
+                }}
+              </strong>
+
+            </div>
+
+
+            <div class="preview-item">
+
+              <span>
+                {{ i18n.t('time') }}
+              </span>
+
+              <strong>
+                {{
+                  formatTime(
+                    actionAppointment.time
+                  )
+                }}
+              </strong>
+
+            </div>
+
+
+            <div class="preview-item">
+
+              <span>
+                {{ i18n.t('status') }}
+              </span>
+
+              <strong>
+                {{
+                  i18n.status(
+                    actionAppointment.status
+                  )
+                }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="reschedule-fields">
+
+            <div class="form-field">
+
+              <label for="rescheduleDate">
+                {{
+                  i18n.t(
+                    'newDate'
+                  )
+                }}
+              </label>
+
+              <input
+                id="rescheduleDate"
+                type="date"
+                [(ngModel)]="rescheduleDate"
+                [min]="minDate"
+                (ngModelChange)="
+                  rescheduleAvailability = null;
+                  selectedRescheduleTime = ''
+                "
+              />
+
+            </div>
+
+
+            <div class="form-field">
+
+              <label for="rescheduleReason">
+                {{
+                  i18n.t(
+                    'optionalReason'
+                  )
+                }}
+              </label>
+
+              <input
+                id="rescheduleReason"
+                type="text"
+                [(ngModel)]="rescheduleReason"
+                [placeholder]="
+                  i18n.t(
+                    'reasonPlaceholder'
+                  )
+                "
+              />
+
+            </div>
 
           </div>
 
@@ -1423,295 +1629,423 @@
           <button
             type="button"
             class="primary-button"
-
-            (click)="
-              confirmReschedule()
-            "
-
+            (click)="checkRescheduleAvailability()"
             [disabled]="
-              processingAction
+              loadingRescheduleAvailability ||
+              !rescheduleDate
             "
           >
-
             {{
-              processingAction
+              loadingRescheduleAvailability
                 ? i18n.t(
-                    'rescheduling'
+                    'checkingNewAvailability'
                   )
                 : i18n.t(
-                    'confirmReschedule'
+                    'checkNewAvailability'
                   )
             }}
-
           </button>
 
-        </div>
+
+          @if (actionError) {
+
+            <div class="message error-message">
+
+              <strong>!</strong>
+
+              <span>
+                {{ actionError }}
+              </span>
+
+            </div>
+
+          }
+
+
+          @if (
+            rescheduleAvailability
+          ) {
+
+            <div class="availability-panel">
+
+              <div class="availability-heading">
+
+                <span class="panel-label">
+                  {{
+                    text(
+                      'HORARIOS DISPONIBLES',
+                      'AVAILABLE TIMES'
+                    )
+                  }}
+                </span>
+
+                <h3>
+                  {{
+                    rescheduleAvailability.doctor
+                  }}
+                </h3>
+
+                <p>
+                  {{
+                    formatDate(
+                      rescheduleAvailability.date
+                    )
+                  }}
+                </p>
+
+              </div>
+
+
+              @if (
+                rescheduleAvailability
+                  .availableSlots.length > 0
+              ) {
+
+                <div class="slots">
+
+                  @for (
+                    slot of
+                      rescheduleAvailability
+                        .availableSlots;
+                    track slot
+                  ) {
+
+                    <button
+                      type="button"
+                      class="slot-button"
+                      [class.selected]="
+                        selectedRescheduleTime ===
+                        slot
+                      "
+                      (click)="
+                        selectedRescheduleTime =
+                          slot
+                      "
+                    >
+                      {{
+                        formatTime(
+                          slot
+                        )
+                      }}
+                    </button>
+
+                  }
+
+                </div>
+
+              } @else {
+
+                <div class="empty-state compact">
+
+                  <div class="empty-symbol">
+                    !
+                  </div>
+
+                  <p>
+                    {{
+                      i18n.t(
+                        'noAvailableTimes'
+                      )
+                    }}
+                  </p>
+
+                </div>
+
+              }
+
+            </div>
+
+          }
+
+
+          @if (
+            selectedRescheduleTime
+          ) {
+
+            <div class="confirm-panel">
+
+              <div>
+
+                <span>
+                  {{
+                    i18n.t(
+                      'newAppointment'
+                    )
+                  }}
+                </span>
+
+                <strong>
+                  {{
+                    formatDate(
+                      rescheduleDate
+                    )
+                  }}
+                  ·
+                  {{
+                    formatTime(
+                      selectedRescheduleTime
+                    )
+                  }}
+                </strong>
+
+              </div>
+
+
+              <button
+                type="button"
+                class="primary-button"
+                (click)="confirmReschedule()"
+                [disabled]="processingAction"
+              >
+                {{
+                  processingAction
+                    ? i18n.t(
+                        'rescheduling'
+                      )
+                    : i18n.t(
+                        'confirmReschedule'
+                      )
+                }}
+              </button>
+
+            </div>
+
+          }
+
+        </section>
 
       }
 
-    </section>
 
-  }
+      <!-- ===================================================
+           CANCELACIÓN
+           =================================================== -->
 
+      @if (
+        action === 'CANCEL' &&
+        actionAppointment
+      ) {
 
-  <!-- ======================================
-       CANCELACIÓN
-       ====================================== -->
-
-  @if (
-    action === 'CANCEL' &&
-    actionAppointment
-  ) {
-
-    <section
-      class="
-        card
-        action-panel
-        cancellation-panel
-      "
-      id="scheduler-action-panel"
-    >
-
-      <div class="action-panel-header">
-
-        <div>
-
-          <span class="panel-label danger-label">
-
-            {{
-              text(
-                'CANCELACIÓN',
-                'CANCELLATION'
-              )
-            }}
-
-          </span>
-
-          <h2>
-
-            {{
-              i18n.t(
-                'cancelAppointment'
-              )
-            }}
-
-            #{{ actionAppointment.id }}
-
-          </h2>
-
-
-          <p class="action-description">
-
-            {{
-              i18n.t(
-                'cancelAppointmentQuestion'
-              )
-            }}
-
-          </p>
-
-        </div>
-
-
-        <button
-          type="button"
-          class="secondary-button"
-          (click)="closeAction()"
+        <section
+          class="clinical-section action-panel cancellation-panel"
+          id="scheduler-action-panel"
         >
-          ✕
-          {{ i18n.t('close') }}
-        </button>
 
-      </div>
+          <header class="action-panel-header">
+
+            <div>
+
+              <span class="panel-label danger-label">
+                {{
+                  text(
+                    'CANCELACIÓN',
+                    'CANCELLATION'
+                  )
+                }}
+              </span>
+
+              <h2>
+                {{
+                  i18n.t(
+                    'cancelAppointment'
+                  )
+                }}
+                #{{ actionAppointment.id }}
+              </h2>
+
+              <p>
+                {{
+                  i18n.t(
+                    'cancelAppointmentQuestion'
+                  )
+                }}
+              </p>
+
+            </div>
 
 
-      <div class="appointment-preview">
+            <button
+              type="button"
+              class="close-button"
+              (click)="closeAction()"
+              [attr.aria-label]="i18n.t('close')"
+            >
+              ×
+            </button>
 
-        <div class="preview-patient">
+          </header>
 
-          <div class="large-patient-avatar">
 
-            {{
-              patientInitials(
-                actionAppointment.patientName
-              )
-            }}
+          <div class="appointment-preview">
+
+            <div class="preview-patient">
+
+              <div class="large-patient-avatar">
+
+                {{
+                  patientInitials(
+                    actionAppointment.patientName
+                  )
+                }}
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  {{ i18n.t('patient') }}
+                </span>
+
+                <strong>
+                  {{
+                    actionAppointment.patientName
+                  }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <div class="preview-item">
+
+              <span>
+                {{ i18n.t('date') }}
+              </span>
+
+              <strong>
+                {{
+                  formatDate(
+                    actionAppointment.date
+                  )
+                }}
+              </strong>
+
+            </div>
+
+
+            <div class="preview-item">
+
+              <span>
+                {{ i18n.t('time') }}
+              </span>
+
+              <strong>
+                {{
+                  formatTime(
+                    actionAppointment.time
+                  )
+                }}
+              </strong>
+
+            </div>
+
+
+            <div class="preview-item">
+
+              <span>
+                {{ i18n.t('status') }}
+              </span>
+
+              <strong>
+                {{
+                  i18n.status(
+                    actionAppointment.status
+                  )
+                }}
+              </strong>
+
+            </div>
 
           </div>
 
-          <div>
 
-            <span>
-              {{ i18n.t('patient') }}
-            </span>
+          <div class="form-field">
 
-            <strong>
+            <label for="cancellationReason">
 
               {{
-                actionAppointment.patientName
+                i18n.t(
+                  'cancellationReason'
+                )
               }}
 
-            </strong>
+              <span class="required">
+                *
+              </span>
+
+            </label>
+
+            <textarea
+              id="cancellationReason"
+              rows="4"
+              [(ngModel)]="cancellationReason"
+              [placeholder]="
+                i18n.t(
+                  'cancellationReasonPlaceholder'
+                )
+              "
+            ></textarea>
 
           </div>
 
-        </div>
+
+          @if (actionError) {
+
+            <div class="message error-message">
+
+              <strong>!</strong>
+
+              <span>
+                {{ actionError }}
+              </span>
+
+            </div>
+
+          }
 
 
-        <div class="preview-item">
+          <div class="cancel-actions">
 
-          <span>
-            {{ i18n.t('date') }}
-          </span>
-
-          <strong>
-
-            {{
-              formatDate(
-                actionAppointment.date
-              )
-            }}
-
-          </strong>
-
-        </div>
-
-
-        <div class="preview-item">
-
-          <span>
-            {{ i18n.t('time') }}
-          </span>
-
-          <strong>
-
-            {{
-              formatTime(
-                actionAppointment.time
-              )
-            }}
-
-          </strong>
-
-        </div>
+            <button
+              type="button"
+              class="danger-button strong-danger"
+              (click)="confirmCancellation()"
+              [disabled]="
+                processingAction ||
+                !cancellationReason.trim()
+              "
+            >
+              {{
+                processingAction
+                  ? i18n.t(
+                      'cancellingAppointment'
+                    )
+                  : i18n.t(
+                      'confirmCancellation'
+                    )
+              }}
+            </button>
 
 
-        <div class="preview-item">
+            <button
+              type="button"
+              class="secondary-button"
+              (click)="closeAction()"
+              [disabled]="processingAction"
+            >
+              {{ i18n.t('close') }}
+            </button>
 
-          <span>
-            {{ i18n.t('status') }}
-          </span>
+          </div>
 
-          <strong>
-
-            {{
-              i18n.status(
-                actionAppointment.status
-              )
-            }}
-
-          </strong>
-
-        </div>
-
-      </div>
-
-
-      <div class="form-field">
-
-        <label for="cancellationReason">
-
-          {{
-            i18n.t(
-              'cancellationReason'
-            )
-          }}
-
-          <span class="required">*</span>
-
-        </label>
-
-
-        <textarea
-          id="cancellationReason"
-          rows="4"
-
-          [(ngModel)]="
-            cancellationReason
-          "
-
-          [placeholder]="
-            i18n.t(
-              'cancellationReasonPlaceholder'
-            )
-          "
-        ></textarea>
-
-      </div>
-
-
-      @if (actionError) {
-
-        <div class="message error-message">
-
-          <span>!</span>
-
-          {{ actionError }}
-
-        </div>
+        </section>
 
       }
 
+    </div>
 
-      <div class="cancel-actions">
-
-        <button
-          type="button"
-          class="
-            danger-button
-            strong-danger
-          "
-
-          (click)="
-            confirmCancellation()
-          "
-
-          [disabled]="
-            processingAction ||
-            !cancellationReason.trim()
-          "
-        >
-
-          {{
-            processingAction
-              ? i18n.t(
-                  'cancellingAppointment'
-                )
-              : i18n.t(
-                  'confirmCancellation'
-                )
-          }}
-
-        </button>
-
-
-        <button
-          type="button"
-          class="secondary-button"
-
-          (click)="closeAction()"
-
-          [disabled]="
-            processingAction
-          "
-        >
-          {{ i18n.t('close') }}
-        </button>
-
-      </div>
-
-    </section>
-
-  }
+  </div>
 
 </main>
