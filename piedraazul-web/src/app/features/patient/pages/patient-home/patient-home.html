@@ -1,703 +1,1167 @@
 <main class="patient-page">
 
-  <!-- ========================================
-       HERO
-       ======================================== -->
+  <div class="patient-layout">
 
-  <section class="patient-hero">
+    <!-- =====================================================
+         NAVEGACIÓN LATERAL
+         ===================================================== -->
 
-    <div class="hero-copy">
+    <aside
+      class="patient-sidebar"
+      [attr.aria-label]="text(
+        'Navegación del portal del paciente',
+        'Patient portal navigation'
+      )"
+    >
 
-      <span class="eyebrow">
-        {{
-          text(
-            'PORTAL DEL PACIENTE',
-            'PATIENT PORTAL'
-          )
-        }}
-      </span>
-
-      <h1>
-        {{
-          text(
-            'Hola',
-            'Hello'
-          )
-        }}{{ patientFirstName ? ', ' + patientFirstName : '' }}
-        <span class="wave"></span>
-      </h1>
-
-      <p>
-        {{
-          text(
-            'Tu salud, tus citas y tu información médica organizadas en un solo lugar.',
-            'Your health, appointments and medical information organized in one place.'
-          )
-        }}
-      </p>
-
-    </div>
-
-
-    <div class="hero-actions">
-
-      <button
-        type="button"
-        class="primary-button hero-button"
-        (click)="scrollToSection('agendar-cita')"
-      >
-        <span>＋</span>
-
-        {{
-          text(
-            'Agendar una cita',
-            'Book appointment'
-          )
-        }}
-      </button>
-
-      <button
-        type="button"
-        class="secondary-button hero-button"
-        (click)="scrollToSection('mis-citas')"
-      >
-        {{
-          text(
-            'Ver mis citas',
-            'View appointments'
-          )
-        }}
-      </button>
-
-    </div>
-
-  </section>
-
-
-  <!-- ========================================
-       INDICADORES
-       ======================================== -->
-
-  <section class="dashboard-stats">
-
-    <article class="stat-card next-stat">
-
-      <div class="stat-icon">
-        📅
-      </div>
-
-      <div class="stat-content">
-
-        <span class="stat-label">
+      <div class="sidebar-heading">
+        <span>
           {{
             text(
-              'Próxima cita',
-              'Next appointment'
+              'Mi portal',
+              'My portal'
             )
           }}
         </span>
 
-        @if (nextAppointment) {
+        <strong>
+          {{
+            patientFirstName ||
+            text(
+              'Paciente',
+              'Patient'
+            )
+          }}
+        </strong>
+      </div>
 
-          <strong class="next-date">
-            {{
-              formatDate(
-                nextAppointment.date
-              )
-            }}
-          </strong>
 
-          <span class="stat-detail">
-            {{
-              formatTime(
-                nextAppointment.time
-              )
-            }}
-            ·
-            {{ nextAppointment.doctorName }}
+      <nav class="sidebar-nav">
+
+        <button
+          type="button"
+          class="sidebar-link active"
+          (click)="scrollToSection('inicio')"
+        >
+          <span
+            class="sidebar-icon"
+            aria-hidden="true"
+          >
+            ⌂
           </span>
 
-        } @else {
-
-          <strong>
+          <span>
             {{
               text(
-                'Sin citas próximas',
-                'No upcoming appointments'
-              )
-            }}
-          </strong>
-
-          <span class="stat-detail">
-            {{
-              text(
-                'Agenda cuando lo necesites',
-                'Book whenever you need'
+                'Inicio',
+                'Home'
               )
             }}
           </span>
-
-        }
-
-      </div>
-
-    </article>
+        </button>
 
 
-    <article class="stat-card">
+        <button
+          type="button"
+          class="sidebar-link"
+          (click)="scrollToSection('agendar-cita')"
+        >
+          <span
+            class="sidebar-icon"
+            aria-hidden="true"
+          >
+            ＋
+          </span>
 
-      <div class="stat-icon blue">
-        🩺
-      </div>
+          <span>
+            {{
+              text(
+                'Agendar cita',
+                'Book appointment'
+              )
+            }}
+          </span>
+        </button>
 
-      <div class="stat-content">
 
-        <span class="stat-label">
-          {{
-            text(
-              'Citas activas',
-              'Active appointments'
-            )
-          }}
+        <button
+          type="button"
+          class="sidebar-link"
+          (click)="scrollToSection('mis-citas')"
+        >
+          <span
+            class="sidebar-icon"
+            aria-hidden="true"
+          >
+            ▣
+          </span>
+
+          <span>
+            {{
+              text(
+                'Mis citas',
+                'My appointments'
+              )
+            }}
+          </span>
+        </button>
+
+
+        <button
+          type="button"
+          class="sidebar-link"
+          (click)="scrollToSection('profesionales')"
+        >
+          <span
+            class="sidebar-icon"
+            aria-hidden="true"
+          >
+            ✚
+          </span>
+
+          <span>
+            {{
+              text(
+                'Profesionales',
+                'Professionals'
+              )
+            }}
+          </span>
+        </button>
+
+
+        <button
+          type="button"
+          class="sidebar-link"
+          (click)="scrollToSection('mi-informacion')"
+        >
+          <span
+            class="sidebar-icon"
+            aria-hidden="true"
+          >
+            i
+          </span>
+
+          <span>
+            {{
+              text(
+                'Mi información',
+                'My information'
+              )
+            }}
+          </span>
+        </button>
+
+      </nav>
+
+
+      <div class="sidebar-help">
+
+        <span
+          class="sidebar-help-icon"
+          aria-hidden="true"
+        >
+          ?
         </span>
-
-        <strong class="stat-number">
-          {{ activeAppointments.length }}
-        </strong>
-
-        <span class="stat-detail">
-          {{
-            text(
-              'Programadas o confirmadas',
-              'Scheduled or confirmed'
-            )
-          }}
-        </span>
-
-      </div>
-
-    </article>
-
-
-    <article class="stat-card">
-
-      <div class="stat-icon green">
-        ✓
-      </div>
-
-      <div class="stat-content">
-
-        <span class="stat-label">
-          {{
-            text(
-              'Historial',
-              'History'
-            )
-          }}
-        </span>
-
-        <strong class="stat-number">
-          {{ historyAppointments.length }}
-        </strong>
-
-        <span class="stat-detail">
-          {{
-            text(
-              'Citas finalizadas',
-              'Completed appointments'
-            )
-          }}
-        </span>
-
-      </div>
-
-    </article>
-
-
-    <article class="stat-card">
-
-      <div class="stat-icon cyan">
-        👨‍⚕️
-      </div>
-
-      <div class="stat-content">
-
-        <span class="stat-label">
-          {{
-            text(
-              'Profesionales',
-              'Professionals'
-            )
-          }}
-        </span>
-
-        <strong class="stat-number">
-          {{ doctors.length }}
-        </strong>
-
-        <span class="stat-detail">
-          {{
-            text(
-              'Disponibles en PiedraAzul',
-              'Available at PiedraAzul'
-            )
-          }}
-        </span>
-
-      </div>
-
-    </article>
-
-  </section>
-
-
-  <!-- ========================================
-       PERFIL
-       ======================================== -->
-
-  @if (patient) {
-
-    <section class="card profile-card">
-
-      <div class="card-heading">
-
-        <div class="heading-icon">
-          👤
-        </div>
 
         <div>
-          <span class="section-label">
+          <strong>
             {{
               text(
-                'MI INFORMACIÓN',
-                'MY INFORMATION'
+                '¿Necesitas ayuda?',
+                'Need help?'
               )
             }}
-          </span>
+          </strong>
 
-          <h2>
+          <p>
             {{
               text(
-                'Datos del paciente',
-                'Patient information'
+                'Usa el menú para encontrar rápidamente lo que necesitas.',
+                'Use the menu to quickly find what you need.'
               )
             }}
-          </h2>
+          </p>
         </div>
 
       </div>
 
+    </aside>
 
-      <div class="profile-grid">
 
-        <div class="profile-item">
+    <!-- =====================================================
+         CONTENIDO
+         ===================================================== -->
 
-          <span>
+    <div class="patient-content">
+
+      <!-- ===================================================
+           BIENVENIDA
+           =================================================== -->
+
+      <section
+        class="patient-hero"
+        id="inicio"
+      >
+
+        <div class="hero-copy">
+
+          <span class="hero-label">
             {{
               text(
-                'Nombre completo',
-                'Full name'
+                'PORTAL DEL PACIENTE',
+                'PATIENT PORTAL'
               )
             }}
           </span>
 
-          <strong>
-            {{ patientName }}
-          </strong>
-
-        </div>
-
-
-        <div class="profile-item">
-
-          <span>
+          <h1>
             {{
               text(
-                'Documento',
-                'Document'
+                'Hola',
+                'Hello'
               )
-            }}
-          </span>
+            }}{{ patientFirstName ? ', ' + patientFirstName : '' }}
+          </h1>
 
-          <strong>
-            {{ patient.documentType }}
-            {{ patient.documentNumber }}
-          </strong>
-
-        </div>
-
-
-        <div class="profile-item">
-
-          <span>
+          <p class="hero-description">
             {{
               text(
-                'Correo electrónico',
-                'Email'
+                'Estamos aquí para ayudarte a cuidar de tu salud.',
+                'We are here to help you take care of your health.'
               )
             }}
-          </span>
+          </p>
 
-          <strong>
-            {{
-              patient.email ||
-              i18n.t('notRegistered')
-            }}
-          </strong>
-
-        </div>
-
-
-        <div class="profile-item">
-
-          <span>
+          <p class="hero-help">
             {{
               text(
-                'Teléfono',
-                'Phone'
+                'Desde este portal puedes agendar citas, consultar tu historial y revisar tu información.',
+                'From this portal you can book appointments, review your history and check your information.'
               )
             }}
-          </span>
-
-          <strong>
-            {{
-              patient.phone ||
-              i18n.t('notRegistered')
-            }}
-          </strong>
+          </p>
 
         </div>
 
-      </div>
 
-    </section>
-
-  }
-
-
-  <!-- ========================================
-       AGENDAR
-       ======================================== -->
-
-  <section
-    class="card booking-card"
-    id="agendar-cita"
-  >
-
-    <div class="card-heading">
-
-      <div class="heading-icon calendar">
-        📅
-      </div>
-
-      <div>
-
-        <span class="section-label">
-          {{
-            text(
-              'NUEVA CITA',
-              'NEW APPOINTMENT'
-            )
-          }}
-        </span>
-
-        <h2>
-          {{ i18n.t('bookAppointment') }}
-        </h2>
-
-        <p>
-          {{
-            text(
-              'Selecciona un profesional y la fecha en la que deseas ser atendido.',
-              'Select a professional and the date you would like to be seen.'
-            )
-          }}
-        </p>
-
-      </div>
-
-    </div>
-
-
-    <div class="form-grid">
-
-      <div class="form-field">
-
-        <label for="doctor">
-          {{
-            i18n.t(
-              'doctorOrTherapist'
-            )
-          }}
-        </label>
-
-        <select
-          id="doctor"
-          [(ngModel)]="selectedDoctorId"
-          (ngModelChange)="resetAvailability()"
+        <div
+          class="hero-health"
+          aria-hidden="true"
         >
 
-          <option [ngValue]="null">
+          <div class="health-circle">
+            <span>+</span>
+          </div>
+
+          <strong>
             {{
-              i18n.t(
-                'selectDoctor'
+              text(
+                'Tu salud es nuestra prioridad',
+                'Your health is our priority'
               )
             }}
-          </option>
+          </strong>
 
-          @for (
-            doctor of doctors;
-            track doctor.id
-          ) {
+        </div>
 
-            <option
-              [ngValue]="doctor.id"
+      </section>
+
+
+      <!-- ===================================================
+           ACCIONES PRINCIPALES
+           =================================================== -->
+
+      <section
+        class="quick-actions"
+        [attr.aria-label]="text(
+          'Acciones principales',
+          'Main actions'
+        )"
+      >
+
+        <button
+          type="button"
+          class="quick-action quick-action-main"
+          (click)="scrollToSection('agendar-cita')"
+        >
+
+          <span
+            class="quick-icon"
+            aria-hidden="true"
+          >
+            ＋
+          </span>
+
+          <span class="quick-copy">
+
+            <strong>
+              {{
+                text(
+                  'Agendar una cita',
+                  'Book an appointment'
+                )
+              }}
+            </strong>
+
+            <small>
+              {{
+                text(
+                  'Elige profesional, fecha y hora',
+                  'Choose professional, date and time'
+                )
+              }}
+            </small>
+
+          </span>
+
+          <span
+            class="quick-arrow"
+            aria-hidden="true"
+          >
+            ›
+          </span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="quick-action"
+          (click)="scrollToSection('mis-citas')"
+        >
+
+          <span
+            class="quick-icon"
+            aria-hidden="true"
+          >
+            ▣
+          </span>
+
+          <span class="quick-copy">
+
+            <strong>
+              {{
+                text(
+                  'Ver mis citas',
+                  'View appointments'
+                )
+              }}
+            </strong>
+
+            <small>
+              {{
+                text(
+                  'Consulta tu agenda',
+                  'Review your schedule'
+                )
+              }}
+            </small>
+
+          </span>
+
+          <span
+            class="quick-arrow"
+            aria-hidden="true"
+          >
+            ›
+          </span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="quick-action"
+          (click)="scrollToSection('profesionales')"
+        >
+
+          <span
+            class="quick-icon"
+            aria-hidden="true"
+          >
+            ✚
+          </span>
+
+          <span class="quick-copy">
+
+            <strong>
+              {{
+                text(
+                  'Profesionales',
+                  'Professionals'
+                )
+              }}
+            </strong>
+
+            <small>
+              {{
+                text(
+                  'Conoce quién puede atenderte',
+                  'Meet your care professionals'
+                )
+              }}
+            </small>
+
+          </span>
+
+          <span
+            class="quick-arrow"
+            aria-hidden="true"
+          >
+            ›
+          </span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="quick-action"
+          (click)="scrollToSection('mi-informacion')"
+        >
+
+          <span
+            class="quick-icon"
+            aria-hidden="true"
+          >
+            i
+          </span>
+
+          <span class="quick-copy">
+
+            <strong>
+              {{
+                text(
+                  'Mi información',
+                  'My information'
+                )
+              }}
+            </strong>
+
+            <small>
+              {{
+                text(
+                  'Consulta tus datos personales',
+                  'Review your personal information'
+                )
+              }}
+            </small>
+
+          </span>
+
+          <span
+            class="quick-arrow"
+            aria-hidden="true"
+          >
+            ›
+          </span>
+
+        </button>
+
+      </section>
+
+
+      <!-- ===================================================
+           RESUMEN
+           =================================================== -->
+
+      <section class="patient-summary">
+
+        <!-- PRÓXIMA CITA -->
+
+        <article class="next-appointment-panel">
+
+          <header class="panel-heading">
+
+            <div>
+              <span class="panel-kicker">
+                {{
+                  text(
+                    'LO MÁS IMPORTANTE',
+                    'MOST IMPORTANT'
+                  )
+                }}
+              </span>
+
+              <h2>
+                {{
+                  text(
+                    'Tu próxima cita',
+                    'Your next appointment'
+                  )
+                }}
+              </h2>
+            </div>
+
+          </header>
+
+
+          @if (nextAppointment) {
+
+            <div class="next-appointment-content">
+
+              <div class="appointment-main-date">
+
+                <span>
+                  {{
+                    text(
+                      'Fecha',
+                      'Date'
+                    )
+                  }}
+                </span>
+
+                <strong>
+                  {{
+                    formatDate(
+                      nextAppointment.date
+                    )
+                  }}
+                </strong>
+
+              </div>
+
+
+              <div class="appointment-data">
+
+                <div>
+                  <span>
+                    {{
+                      text(
+                        'Hora',
+                        'Time'
+                      )
+                    }}
+                  </span>
+
+                  <strong>
+                    {{
+                      formatTime(
+                        nextAppointment.time
+                      )
+                    }}
+                  </strong>
+                </div>
+
+
+                <div>
+                  <span>
+                    {{
+                      text(
+                        'Profesional',
+                        'Professional'
+                      )
+                    }}
+                  </span>
+
+                  <strong>
+                    {{ nextAppointment.doctorName }}
+                  </strong>
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="text-button"
+              (click)="scrollToSection('mis-citas')"
             >
-              {{ doctor.fullName }}
-              -
-              {{ doctor.specialty }}
-            </option>
+              {{
+                text(
+                  'Ver detalles de mi cita',
+                  'View appointment details'
+                )
+              }}
+
+              <span aria-hidden="true">
+                →
+              </span>
+            </button>
+
+          } @else {
+
+            <div class="no-appointment">
+
+              <div
+                class="no-appointment-symbol"
+                aria-hidden="true"
+              >
+                +
+              </div>
+
+              <div>
+
+                <strong>
+                  {{
+                    text(
+                      'No tienes citas próximas',
+                      'You have no upcoming appointments'
+                    )
+                  }}
+                </strong>
+
+                <p>
+                  {{
+                    text(
+                      'Cuando necesites atención, puedes agendar una cita aquí.',
+                      'When you need care, you can book an appointment here.'
+                    )
+                  }}
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="primary-button"
+              (click)="scrollToSection('agendar-cita')"
+            >
+              ＋
+              {{
+                text(
+                  'Agendar ahora',
+                  'Book now'
+                )
+              }}
+            </button>
 
           }
 
-        </select>
-
-      </div>
+        </article>
 
 
-      <div class="form-field">
+        <!-- ACTIVIDAD -->
 
-        <label for="appointmentDate">
-          {{ i18n.t('date') }}
-        </label>
+        <article class="activity-panel">
 
-        <input
-          id="appointmentDate"
-          type="date"
-          [(ngModel)]="selectedDate"
-          [min]="minDate"
-          (ngModelChange)="resetAvailability()"
-        />
+          <header class="panel-heading">
 
-      </div>
+            <div>
+              <span class="panel-kicker">
+                {{
+                  text(
+                    'TU ACTIVIDAD',
+                    'YOUR ACTIVITY'
+                  )
+                }}
+              </span>
 
-    </div>
+              <h2>
+                {{
+                  text(
+                    'Resumen',
+                    'Summary'
+                  )
+                }}
+              </h2>
+            </div>
 
-
-    <button
-      type="button"
-      class="primary-button"
-      (click)="checkAvailability()"
-      [disabled]="
-        loadingAvailability ||
-        loadingDoctors ||
-        !selectedDoctorId ||
-        !selectedDate
-      "
-    >
-      {{
-        loadingAvailability
-          ? i18n.t(
-              'checkingAvailability'
-            )
-          : i18n.t(
-              'checkAvailability'
-            )
-      }}
-    </button>
+          </header>
 
 
-    @if (error) {
+          <div class="activity-list">
 
-      <div class="message error-message">
-        <span>!</span>
-        {{ error }}
-      </div>
+            <div class="activity-row">
 
-    }
+              <strong>
+                {{ activeAppointments.length }}
+              </strong>
 
+              <div>
+                <span>
+                  {{
+                    text(
+                      'Citas activas',
+                      'Active appointments'
+                    )
+                  }}
+                </span>
 
-    @if (success) {
+                <small>
+                  {{
+                    text(
+                      'Programadas o confirmadas',
+                      'Scheduled or confirmed'
+                    )
+                  }}
+                </small>
+              </div>
 
-      <div class="message success-message">
-        <span>✓</span>
-        {{ success }}
-      </div>
-
-    }
-
-  </section>
-
-
-  <!-- ========================================
-       DISPONIBILIDAD
-       ======================================== -->
-
-  @if (availability) {
-
-    <section class="card availability-card">
-
-      <div class="card-heading">
-
-        <div class="heading-icon clock">
-          🕐
-        </div>
-
-        <div>
-
-          <span class="section-label">
-            {{
-              text(
-                'DISPONIBILIDAD',
-                'AVAILABILITY'
-              )
-            }}
-          </span>
-
-          <h2>
-            {{ i18n.t('availableTimes') }}
-          </h2>
-
-        </div>
-
-      </div>
+            </div>
 
 
-      <div class="availability-details">
+            <div class="activity-row">
 
-        <div class="availability-item">
-          <span>
-            {{ i18n.t('doctor') }}
-          </span>
+              <strong>
+                {{ historyAppointments.length }}
+              </strong>
 
-          <strong>
-            {{ availability.doctor }}
-          </strong>
-        </div>
+              <div>
+                <span>
+                  {{
+                    text(
+                      'Citas finalizadas',
+                      'Completed appointments'
+                    )
+                  }}
+                </span>
 
+                <small>
+                  {{
+                    text(
+                      'Registradas en tu historial',
+                      'Recorded in your history'
+                    )
+                  }}
+                </small>
+              </div>
 
-        <div class="availability-item">
-          <span>
-            {{ i18n.t('date') }}
-          </span>
-
-          <strong>
-            {{
-              formatDate(
-                availability.date
-              )
-            }}
-          </strong>
-        </div>
-
-
-        <div class="availability-item">
-          <span>
-            {{ i18n.t('schedule') }}
-          </span>
-
-          <strong>
-            {{
-              formatTime(
-                availability.startTime
-              )
-            }}
-            -
-            {{
-              formatTime(
-                availability.endTime
-              )
-            }}
-          </strong>
-        </div>
+            </div>
 
 
-        <div class="availability-item">
-          <span>
-            {{
-              i18n.t(
-                'appointmentInterval'
-              )
-            }}
-          </span>
+            <div class="activity-row">
 
-          <strong>
-            {{
-              availability.intervalMinutes
-            }}
-            {{ i18n.t('minutes') }}
-          </strong>
-        </div>
+              <strong>
+                {{ doctors.length }}
+              </strong>
 
-      </div>
+              <div>
+                <span>
+                  {{
+                    text(
+                      'Profesionales',
+                      'Professionals'
+                    )
+                  }}
+                </span>
 
+                <small>
+                  {{
+                    text(
+                      'Disponibles para atenderte',
+                      'Available to care for you'
+                    )
+                  }}
+                </small>
+              </div>
 
-      @if (
-        availability.availableSlots.length >
-        0
-      ) {
-
-        <div class="slot-section">
-
-          <h3>
-            {{
-              text(
-                'Selecciona una hora',
-                'Select a time'
-              )
-            }}
-          </h3>
-
-          <div class="slots">
-
-            @for (
-              slot of availability.availableSlots;
-              track slot
-            ) {
-
-              <button
-                type="button"
-                class="slot-button"
-                [class.selected]="
-                  selectedTime === slot
-                "
-                (click)="selectTime(slot)"
-              >
-                {{ formatTime(slot) }}
-              </button>
-
-            }
+            </div>
 
           </div>
 
-        </div>
+        </article>
+
+      </section>
 
 
-        @if (selectedTime) {
+      <!-- ===================================================
+           DATOS DEL PACIENTE
+           =================================================== -->
 
-          <div class="booking-section">
+      @if (patient) {
 
-            <div class="booking-summary">
+        <section
+          class="patient-info-section"
+          id="mi-informacion"
+        >
+
+          <header class="simple-heading">
+
+            <div>
+
+              <span class="panel-kicker">
+                {{
+                  text(
+                    'MI INFORMACIÓN',
+                    'MY INFORMATION'
+                  )
+                }}
+              </span>
+
+              <h2>
+                {{
+                  text(
+                    'Datos del paciente',
+                    'Patient information'
+                  )
+                }}
+              </h2>
+
+            </div>
+
+          </header>
+
+
+          <div class="patient-details">
+
+            <div class="patient-detail">
 
               <span>
                 {{
                   text(
-                    'Horario seleccionado',
-                    'Selected time'
+                    'Nombre completo',
+                    'Full name'
+                  )
+                }}
+              </span>
+
+              <strong>
+                {{ patientName }}
+              </strong>
+
+            </div>
+
+
+            <div class="patient-detail">
+
+              <span>
+                {{
+                  text(
+                    'Documento',
+                    'Document'
+                  )
+                }}
+              </span>
+
+              <strong>
+                {{ patient.documentType }}
+                {{ patient.documentNumber }}
+              </strong>
+
+            </div>
+
+
+            <div class="patient-detail">
+
+              <span>
+                {{
+                  text(
+                    'Correo electrónico',
+                    'Email'
                   )
                 }}
               </span>
 
               <strong>
                 {{
-                  formatDate(
-                    selectedDate
+                  patient.email ||
+                  i18n.t('notRegistered')
+                }}
+              </strong>
+
+            </div>
+
+
+            <div class="patient-detail">
+
+              <span>
+                {{
+                  text(
+                    'Teléfono',
+                    'Phone'
                   )
                 }}
-                ·
+              </span>
+
+              <strong>
                 {{
-                  formatTime(
-                    selectedTime
+                  patient.phone ||
+                  i18n.t('notRegistered')
+                }}
+              </strong>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      }
+
+
+      <!-- ===================================================
+           AGENDAR CITA
+           =================================================== -->
+
+      <section
+        class="clinical-section booking-card"
+        id="agendar-cita"
+      >
+
+        <header class="section-header">
+
+          <div>
+
+            <span class="panel-kicker">
+              {{
+                text(
+                  'NUEVA CITA',
+                  'NEW APPOINTMENT'
+                )
+              }}
+            </span>
+
+            <h2>
+              {{ i18n.t('bookAppointment') }}
+            </h2>
+
+            <p>
+              {{
+                text(
+                  'Te acompañamos paso a paso. Primero elige el profesional y después selecciona la fecha.',
+                  'We guide you step by step. First choose the professional and then select the date.'
+                )
+              }}
+            </p>
+
+          </div>
+
+        </header>
+
+
+        <div class="booking-steps">
+
+          <!-- PASO 1 -->
+
+          <div class="booking-step">
+
+            <div class="step-number">
+              1
+            </div>
+
+            <div class="step-content">
+
+              <label for="doctor">
+                {{
+                  text(
+                    'Elige el profesional',
+                    'Choose the professional'
+                  )
+                }}
+              </label>
+
+              <p>
+                {{
+                  text(
+                    'Selecciona el médico o terapeuta que deseas consultar.',
+                    'Select the doctor or therapist you want to see.'
+                  )
+                }}
+              </p>
+
+              <select
+                id="doctor"
+                [(ngModel)]="selectedDoctorId"
+                (ngModelChange)="resetAvailability()"
+              >
+
+                <option [ngValue]="null">
+                  {{
+                    i18n.t(
+                      'selectDoctor'
+                    )
+                  }}
+                </option>
+
+                @for (
+                  doctor of doctors;
+                  track doctor.id
+                ) {
+
+                  <option
+                    [ngValue]="doctor.id"
+                  >
+                    {{ doctor.fullName }}
+                    -
+                    {{ doctor.specialty }}
+                  </option>
+
+                }
+
+              </select>
+
+            </div>
+
+          </div>
+
+
+          <!-- PASO 2 -->
+
+          <div class="booking-step">
+
+            <div class="step-number">
+              2
+            </div>
+
+            <div class="step-content">
+
+              <label for="appointmentDate">
+                {{
+                  text(
+                    'Elige la fecha',
+                    'Choose the date'
+                  )
+                }}
+              </label>
+
+              <p>
+                {{
+                  text(
+                    'Selecciona el día en el que puedes asistir.',
+                    'Select the day you can attend.'
+                  )
+                }}
+              </p>
+
+              <input
+                id="appointmentDate"
+                type="date"
+                [(ngModel)]="selectedDate"
+                [min]="minDate"
+                (ngModelChange)="resetAvailability()"
+              />
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="booking-action">
+
+          <button
+            type="button"
+            class="primary-button large-button"
+            (click)="checkAvailability()"
+            [disabled]="
+              loadingAvailability ||
+              loadingDoctors ||
+              !selectedDoctorId ||
+              !selectedDate
+            "
+          >
+            {{
+              loadingAvailability
+                ? i18n.t(
+                    'checkingAvailability'
+                  )
+                : i18n.t(
+                    'checkAvailability'
+                  )
+            }}
+          </button>
+
+          <small>
+            {{
+              text(
+                'Después podrás elegir la hora disponible.',
+                'Afterwards you can choose the available time.'
+              )
+            }}
+          </small>
+
+        </div>
+
+
+        @if (error) {
+
+          <div class="message error-message">
+            <strong>!</strong>
+            {{ error }}
+          </div>
+
+        }
+
+
+        @if (success) {
+
+          <div class="message success-message">
+            <strong>✓</strong>
+            {{ success }}
+          </div>
+
+        }
+
+      </section>
+
+
+      <!-- ===================================================
+           DISPONIBILIDAD
+           =================================================== -->
+
+      @if (availability) {
+
+        <section class="clinical-section availability-card">
+
+          <header class="section-header">
+
+            <div>
+
+              <span class="panel-kicker">
+                {{
+                  text(
+                    'PASO SIGUIENTE',
+                    'NEXT STEP'
+                  )
+                }}
+              </span>
+
+              <h2>
+                {{
+                  text(
+                    'Elige la hora',
+                    'Choose the time'
+                  )
+                }}
+              </h2>
+
+              <p>
+                {{
+                  text(
+                    'Estas son las horas disponibles para la fecha seleccionada.',
+                    'These are the available times for the selected date.'
+                  )
+                }}
+              </p>
+
+            </div>
+
+          </header>
+
+
+          <div class="availability-summary">
+
+            <div>
+
+              <span>
+                {{ i18n.t('doctor') }}
+              </span>
+
+              <strong>
+                {{ availability.doctor }}
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <span>
+                {{ i18n.t('date') }}
+              </span>
+
+              <strong>
+                {{
+                  formatDate(
+                    availability.date
                   )
                 }}
               </strong>
@@ -705,19 +1169,1028 @@
             </div>
 
 
+            <div>
+
+              <span>
+                {{ i18n.t('schedule') }}
+              </span>
+
+              <strong>
+                {{
+                  formatTime(
+                    availability.startTime
+                  )
+                }}
+                -
+                {{
+                  formatTime(
+                    availability.endTime
+                  )
+                }}
+              </strong>
+
+            </div>
+
+
+            <div>
+
+              <span>
+                {{
+                  i18n.t(
+                    'appointmentInterval'
+                  )
+                }}
+              </span>
+
+              <strong>
+                {{ availability.intervalMinutes }}
+                {{ i18n.t('minutes') }}
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          @if (
+            availability.availableSlots.length > 0
+          ) {
+
+            <div class="time-selection">
+
+              <h3>
+                {{
+                  text(
+                    'Horas disponibles',
+                    'Available times'
+                  )
+                }}
+              </h3>
+
+              <div class="slots">
+
+                @for (
+                  slot of availability.availableSlots;
+                  track slot
+                ) {
+
+                  <button
+                    type="button"
+                    class="slot-button"
+                    [class.selected]="
+                      selectedTime === slot
+                    "
+                    (click)="selectTime(slot)"
+                  >
+                    {{ formatTime(slot) }}
+                  </button>
+
+                }
+
+              </div>
+
+            </div>
+
+
+            @if (selectedTime) {
+
+              <div class="appointment-confirmation">
+
+                <div class="selected-appointment">
+
+                  <span>
+                    {{
+                      text(
+                        'Has seleccionado',
+                        'You selected'
+                      )
+                    }}
+                  </span>
+
+                  <strong>
+                    {{
+                      formatDate(
+                        selectedDate
+                      )
+                    }}
+                    ·
+                    {{
+                      formatTime(
+                        selectedTime
+                      )
+                    }}
+                  </strong>
+
+                </div>
+
+
+                <div class="form-field">
+
+                  <label for="notes">
+                    {{ i18n.t('notes') }}
+                  </label>
+
+                  <textarea
+                    id="notes"
+                    rows="4"
+                    [(ngModel)]="notes"
+                    [placeholder]="
+                      i18n.t(
+                        'optionalAppointmentNotes'
+                      )
+                    "
+                  ></textarea>
+
+                </div>
+
+
+                <button
+                  type="button"
+                  class="primary-button large-button"
+                  (click)="bookAppointment()"
+                  [disabled]="
+                    booking ||
+                    !patient
+                  "
+                >
+                  {{
+                    booking
+                      ? i18n.t(
+                          'bookingAppointment'
+                        )
+                      : i18n.t(
+                          'bookAppointment'
+                        )
+                  }}
+                </button>
+
+              </div>
+
+            }
+
+          } @else {
+
+            <div class="empty-state">
+
+              <div
+                class="empty-state-symbol"
+                aria-hidden="true"
+              >
+                !
+              </div>
+
+              <div>
+
+                <strong>
+                  {{
+                    i18n.t(
+                      'noAvailableTimes'
+                    )
+                  }}
+                </strong>
+
+                <p>
+                  {{
+                    text(
+                      'Puedes elegir otra fecha para consultar nuevos horarios.',
+                      'You can choose another date to check new times.'
+                    )
+                  }}
+                </p>
+
+              </div>
+
+            </div>
+
+          }
+
+        </section>
+
+      }
+
+
+      <!-- ===================================================
+           CITA CREADA
+           =================================================== -->
+
+      @if (createdAppointment) {
+
+        <section class="appointment-created">
+
+          <div
+            class="created-symbol"
+            aria-hidden="true"
+          >
+            ✓
+          </div>
+
+          <div>
+
+            <span>
+              {{
+                text(
+                  'CITA AGENDADA',
+                  'APPOINTMENT BOOKED'
+                )
+              }}
+            </span>
+
+            <h2>
+              {{
+                i18n.t(
+                  'appointmentCreated'
+                )
+              }}
+            </h2>
+
+            <p>
+              {{ createdAppointment.doctorName }}
+              ·
+              {{
+                formatDate(
+                  createdAppointment.date
+                )
+              }}
+              ·
+              {{
+                formatTime(
+                  createdAppointment.time
+                )
+              }}
+            </p>
+
+          </div>
+
+        </section>
+
+      }
+
+
+      <!-- ===================================================
+           MIS CITAS
+           =================================================== -->
+
+      <section
+        class="clinical-section appointments-section"
+        id="mis-citas"
+      >
+
+        <header class="section-header section-header-actions">
+
+          <div>
+
+            <span class="panel-kicker">
+              {{
+                text(
+                  'MI AGENDA',
+                  'MY SCHEDULE'
+                )
+              }}
+            </span>
+
+            <h2>
+              {{ i18n.t('myAppointments') }}
+            </h2>
+
+            <p>
+              {{
+                text(
+                  'Aquí puedes revisar, reprogramar o cancelar tus citas.',
+                  'Here you can review, reschedule or cancel your appointments.'
+                )
+              }}
+            </p>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="loadAppointments()"
+            [disabled]="loadingAppointments"
+          >
+            ↻
+            {{
+              loadingAppointments
+                ? i18n.t(
+                    'refreshing'
+                  )
+                : i18n.t(
+                    'refresh'
+                  )
+            }}
+          </button>
+
+        </header>
+
+
+        @if (appointmentActionSuccess) {
+
+          <div class="message success-message">
+            <strong>✓</strong>
+            {{ appointmentActionSuccess }}
+          </div>
+
+        }
+
+
+        @if (appointmentActionError) {
+
+          <div class="message error-message">
+            <strong>!</strong>
+            {{ appointmentActionError }}
+          </div>
+
+        }
+
+
+        @if (appointmentsError) {
+
+          <div class="message error-message">
+            <strong>!</strong>
+            {{ appointmentsError }}
+          </div>
+
+        }
+
+
+        @if (loadingAppointments) {
+
+          <div class="loading-state">
+
+            <div class="spinner"></div>
+
+            <span>
+              {{
+                i18n.t(
+                  'loadingAppointments'
+                )
+              }}
+            </span>
+
+          </div>
+
+        } @else if (
+          appointments.length > 0
+        ) {
+
+          <div class="appointments-list">
+
+            @for (
+              appointment of appointments;
+              track appointment.id
+            ) {
+
+              <article class="appointment-row">
+
+                <div class="appointment-row-main">
+
+                  <span class="appointment-id">
+                    #{{ appointment.id }}
+                  </span>
+
+                  <div class="appointment-professional">
+
+                    <span>
+                      {{
+                        text(
+                          'Profesional',
+                          'Professional'
+                        )
+                      }}
+                    </span>
+
+                    <strong>
+                      {{ appointment.doctorName }}
+                    </strong>
+
+                  </div>
+
+
+                  <div class="appointment-date">
+
+                    <span>
+                      {{ i18n.t('date') }}
+                    </span>
+
+                    <strong>
+                      {{
+                        formatDate(
+                          appointment.date
+                        )
+                      }}
+                    </strong>
+
+                  </div>
+
+
+                  <div class="appointment-hour">
+
+                    <span>
+                      {{ i18n.t('time') }}
+                    </span>
+
+                    <strong>
+                      {{
+                        formatTime(
+                          appointment.time
+                        )
+                      }}
+                    </strong>
+
+                  </div>
+
+
+                  <div>
+
+                    <span
+                      class="status-badge"
+                      [class.status-programada]="
+                        appointment.status ===
+                        'PROGRAMADA'
+                      "
+                      [class.status-confirmada]="
+                        appointment.status ===
+                        'CONFIRMADA'
+                      "
+                      [class.status-atendida]="
+                        appointment.status ===
+                        'ATENDIDA' ||
+                        appointment.status ===
+                        'COMPLETADA'
+                      "
+                      [class.status-cancelada]="
+                        appointment.status ===
+                        'CANCELADA'
+                      "
+                    >
+                      {{
+                        i18n.status(
+                          appointment.status
+                        )
+                      }}
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                @if (
+                  getAppointmentNotes(
+                    appointment.notes
+                  ).length > 0
+                ) {
+
+                  <div class="appointment-notes">
+
+                    <span class="appointment-notes-title">
+                      {{ i18n.t('notes') }}
+                    </span>
+
+                    @for (
+                      note of getAppointmentNotes(
+                        appointment.notes
+                      );
+                      track $index
+                    ) {
+
+                      <p>
+                        {{ note }}
+                      </p>
+
+                    }
+
+                  </div>
+
+                }
+
+
+                @if (
+                  canReschedule(
+                    appointment
+                  ) ||
+                  canCancel(
+                    appointment
+                  )
+                ) {
+
+                  <div class="appointment-actions">
+
+                    @if (
+                      canReschedule(
+                        appointment
+                      )
+                    ) {
+
+                      <button
+                        type="button"
+                        class="secondary-button"
+                        (click)="
+                          startReschedule(
+                            appointment
+                          )
+                        "
+                      >
+                        {{
+                          i18n.t(
+                            'reschedule'
+                          )
+                        }}
+                      </button>
+
+                    }
+
+
+                    @if (
+                      canCancel(
+                        appointment
+                      )
+                    ) {
+
+                      <button
+                        type="button"
+                        class="danger-button"
+                        (click)="
+                          startCancellation(
+                            appointment
+                          )
+                        "
+                      >
+                        {{
+                          i18n.t(
+                            'cancelAppointment'
+                          )
+                        }}
+                      </button>
+
+                    }
+
+                  </div>
+
+                }
+
+              </article>
+
+            }
+
+          </div>
+
+        } @else {
+
+          <div class="empty-state">
+
+            <div
+              class="empty-state-symbol"
+              aria-hidden="true"
+            >
+              +
+            </div>
+
+            <div>
+
+              <strong>
+                {{
+                  text(
+                    'Aún no tienes citas',
+                    'You have no appointments yet'
+                  )
+                }}
+              </strong>
+
+              <p>
+                {{
+                  text(
+                    'Tus citas aparecerán aquí después de agendarlas.',
+                    'Your appointments will appear here after booking.'
+                  )
+                }}
+              </p>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="primary-button"
+              (click)="scrollToSection('agendar-cita')"
+            >
+              {{
+                text(
+                  'Agendar ahora',
+                  'Book now'
+                )
+              }}
+            </button>
+
+          </div>
+
+        }
+
+
+        <!-- =================================================
+             REPROGRAMAR
+             ================================================= -->
+
+        @if (reschedulingAppointment) {
+
+          <div
+            class="action-panel reschedule-panel"
+            id="reschedule-panel"
+          >
+
+            <header class="action-panel-header">
+
+              <div>
+
+                <span class="panel-kicker">
+                  {{
+                    text(
+                      'REPROGRAMACIÓN',
+                      'RESCHEDULING'
+                    )
+                  }}
+                </span>
+
+                <h3>
+                  {{
+                    i18n.t(
+                      'rescheduleAppointment'
+                    )
+                  }}
+                  #{{ reschedulingAppointment.id }}
+                </h3>
+
+              </div>
+
+
+              <button
+                type="button"
+                class="close-button"
+                (click)="cancelReschedule()"
+                [attr.aria-label]="i18n.t('close')"
+              >
+                ×
+              </button>
+
+            </header>
+
+
+            <div class="current-appointment">
+
+              <div>
+
+                <span>
+                  {{ i18n.t('doctor') }}
+                </span>
+
+                <strong>
+                  {{
+                    reschedulingAppointment.doctorName
+                  }}
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  {{
+                    i18n.t(
+                      'currentAppointment'
+                    )
+                  }}
+                </span>
+
+                <strong>
+                  {{
+                    formatDate(
+                      reschedulingAppointment.date
+                    )
+                  }}
+                  ·
+                  {{
+                    formatTime(
+                      reschedulingAppointment.time
+                    )
+                  }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+              <div class="form-field">
+
+                <label for="rescheduleDate">
+                  {{
+                    i18n.t(
+                      'newDate'
+                    )
+                  }}
+                </label>
+
+                <input
+                  id="rescheduleDate"
+                  type="date"
+                  [(ngModel)]="rescheduleDate"
+                  [min]="minDate"
+                  (ngModelChange)="
+                    resetRescheduleAvailability()
+                  "
+                />
+
+              </div>
+
+
+              <div class="form-field">
+
+                <label for="rescheduleReason">
+                  {{ i18n.t('reason') }}
+                </label>
+
+                <input
+                  id="rescheduleReason"
+                  type="text"
+                  [(ngModel)]="rescheduleReason"
+                  [placeholder]="
+                    i18n.t(
+                      'optionalReason'
+                    )
+                  "
+                />
+
+              </div>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="primary-button"
+              (click)="checkRescheduleAvailability()"
+              [disabled]="
+                loadingRescheduleAvailability ||
+                !rescheduleDate
+              "
+            >
+              {{
+                loadingRescheduleAvailability
+                  ? i18n.t(
+                      'checkingNewAvailability'
+                    )
+                  : i18n.t(
+                      'checkNewAvailability'
+                    )
+              }}
+            </button>
+
+
+            @if (rescheduleError) {
+
+              <div class="message error-message">
+                <strong>!</strong>
+                {{ rescheduleError }}
+              </div>
+
+            }
+
+
+            @if (rescheduleSuccess) {
+
+              <div class="message success-message">
+                <strong>✓</strong>
+                {{ rescheduleSuccess }}
+              </div>
+
+            }
+
+
+            @if (rescheduleAvailability) {
+
+              <div class="reschedule-times">
+
+                <h4>
+                  {{
+                    i18n.t(
+                      'availableTimes'
+                    )
+                  }}
+                </h4>
+
+                <p>
+                  {{
+                    formatDate(
+                      rescheduleAvailability.date
+                    )
+                  }}
+                </p>
+
+
+                <div class="slots">
+
+                  @for (
+                    slot of rescheduleAvailability.availableSlots;
+                    track slot
+                  ) {
+
+                    <button
+                      type="button"
+                      class="slot-button"
+                      [class.selected]="
+                        rescheduleTime === slot
+                      "
+                      (click)="
+                        selectRescheduleTime(
+                          slot
+                        )
+                      "
+                    >
+                      {{ formatTime(slot) }}
+                    </button>
+
+                  }
+
+                </div>
+
+              </div>
+
+            }
+
+
+            @if (rescheduleTime) {
+
+              <div class="reschedule-confirmation">
+
+                <div>
+
+                  <span>
+                    {{
+                      i18n.t(
+                        'newAppointment'
+                      )
+                    }}
+                  </span>
+
+                  <strong>
+                    {{
+                      formatDate(
+                        rescheduleDate
+                      )
+                    }}
+                    ·
+                    {{
+                      formatTime(
+                        rescheduleTime
+                      )
+                    }}
+                  </strong>
+
+                </div>
+
+
+                <button
+                  type="button"
+                  class="primary-button"
+                  (click)="confirmReschedule()"
+                  [disabled]="rescheduling"
+                >
+                  {{
+                    rescheduling
+                      ? i18n.t(
+                          'rescheduling'
+                        )
+                      : i18n.t(
+                          'confirmReschedule'
+                        )
+                  }}
+                </button>
+
+              </div>
+
+            }
+
+          </div>
+
+        }
+
+
+        <!-- =================================================
+             CANCELAR
+             ================================================= -->
+
+        @if (cancellingAppointment) {
+
+          <div
+            class="action-panel cancel-panel"
+            id="cancel-panel"
+          >
+
+            <header class="action-panel-header">
+
+              <div>
+
+                <span class="panel-kicker danger-kicker">
+                  {{
+                    text(
+                      'CANCELACIÓN',
+                      'CANCELLATION'
+                    )
+                  }}
+                </span>
+
+                <h3>
+                  {{
+                    i18n.t(
+                      'cancelAppointmentTitle'
+                    )
+                  }}
+                  #{{ cancellingAppointment.id }}
+                </h3>
+
+              </div>
+
+
+              <button
+                type="button"
+                class="close-button"
+                (click)="cancelCancellation()"
+                [attr.aria-label]="i18n.t('close')"
+              >
+                ×
+              </button>
+
+            </header>
+
+
+            <div class="current-appointment">
+
+              <div>
+
+                <span>
+                  {{ i18n.t('doctor') }}
+                </span>
+
+                <strong>
+                  {{
+                    cancellingAppointment.doctorName
+                  }}
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  {{
+                    i18n.t(
+                      'currentAppointment'
+                    )
+                  }}
+                </span>
+
+                <strong>
+                  {{
+                    formatDate(
+                      cancellingAppointment.date
+                    )
+                  }}
+                  ·
+                  {{
+                    formatTime(
+                      cancellingAppointment.time
+                    )
+                  }}
+                </strong>
+
+              </div>
+
+            </div>
+
+
             <div class="form-field">
 
-              <label for="notes">
-                {{ i18n.t('notes') }}
+              <label for="cancellationReason">
+                {{
+                  i18n.t(
+                    'cancellationReason'
+                  )
+                }}
               </label>
 
               <textarea
-                id="notes"
+                id="cancellationReason"
                 rows="4"
-                [(ngModel)]="notes"
+                [(ngModel)]="cancellationReason"
                 [placeholder]="
                   i18n.t(
-                    'optionalAppointmentNotes'
+                    'cancellationReasonPlaceholder'
                   )
                 "
               ></textarea>
@@ -725,758 +2198,218 @@
             </div>
 
 
-            <button
-  type="button"
-  class="primary-button booking-button"
-  (click)="bookAppointment()"
-  [disabled]="
-    booking ||
-    !patient
-  "
->
-  <span class="button-icon">
-    ✓
-  </span>
+            @if (cancellationError) {
 
-  {{
-    booking
-      ? i18n.t(
-          'bookingAppointment'
-        )
-      : i18n.t(
-          'bookAppointment'
-        )
-  }}
-</button>
+              <div class="message error-message">
+                <strong>!</strong>
+                {{ cancellationError }}
+              </div>
+
+            }
+
+
+            <div class="cancel-actions">
+
+              <button
+                type="button"
+                class="danger-button danger-button-strong"
+                (click)="confirmCancellation()"
+                [disabled]="
+                  cancelling ||
+                  !cancellationReason.trim()
+                "
+              >
+                {{
+                  cancelling
+                    ? i18n.t(
+                        'cancellingAppointment'
+                      )
+                    : i18n.t(
+                        'confirmCancellation'
+                      )
+                }}
+              </button>
+
+
+              <button
+                type="button"
+                class="secondary-button"
+                (click)="cancelCancellation()"
+                [disabled]="cancelling"
+              >
+                {{ i18n.t('close') }}
+              </button>
+
+            </div>
 
           </div>
 
         }
 
-      } @else {
+      </section>
 
-        <div class="empty-state compact">
+
+      <!-- ===================================================
+           PROFESIONALES
+           =================================================== -->
+
+      <section
+        class="clinical-section doctors-section"
+        id="profesionales"
+      >
+
+        <header class="section-header">
 
           <div>
-            🕐
+
+            <span class="panel-kicker">
+              {{
+                text(
+                  'NUESTRO EQUIPO',
+                  'OUR TEAM'
+                )
+              }}
+            </span>
+
+            <h2>
+              {{
+                i18n.t(
+                  'availableDoctors'
+                )
+              }}
+            </h2>
+
+            <p>
+              {{
+                text(
+                  'Conoce los profesionales disponibles para tu atención.',
+                  'Meet the professionals available for your care.'
+                )
+              }}
+            </p>
+
           </div>
 
-          <strong>
-            {{
-              i18n.t(
-                'noAvailableTimes'
-              )
-            }}
-          </strong>
-
-        </div>
-
-      }
-
-    </section>
-
-  }
+        </header>
 
 
-  <!-- ========================================
-       CITA CREADA
-       ======================================== -->
+        @if (loadingDoctors) {
 
-  @if (createdAppointment) {
+          <div class="loading-state">
 
-    <section class="card created-card">
+            <div class="spinner"></div>
 
-      <div class="created-icon">
-        ✓
-      </div>
+            <span>
+              {{
+                i18n.t(
+                  'loadingDoctors'
+                )
+              }}
+            </span>
 
-      <div>
+          </div>
 
-        <span class="section-label success">
-          {{
-            text(
-              'CITA AGENDADA',
-              'APPOINTMENT BOOKED'
-            )
-          }}
-        </span>
+        } @else if (
+          doctors.length > 0
+        ) {
 
-        <h2>
-          {{
-            i18n.t(
-              'appointmentCreated'
-            )
-          }}
-        </h2>
-
-        <p>
-          {{ createdAppointment.doctorName }}
-          ·
-          {{
-            formatDate(
-              createdAppointment.date
-            )
-          }}
-          ·
-          {{
-            formatTime(
-              createdAppointment.time
-            )
-          }}
-        </p>
-
-      </div>
-
-    </section>
-
-  }
-
-
-  <!-- ========================================
-       MIS CITAS
-       ======================================== -->
-
-  <section
-    class="card appointments-card"
-    id="mis-citas"
-  >
-
-    <div class="section-heading">
-
-      <div class="card-heading compact-heading">
-
-        <div class="heading-icon appointments">
-          🩺
-        </div>
-
-        <div>
-
-          <span class="section-label">
-            {{
-              text(
-                'MI AGENDA',
-                'MY SCHEDULE'
-              )
-            }}
-          </span>
-
-          <h2>
-            {{ i18n.t('myAppointments') }}
-          </h2>
-
-          <p>
-            {{
-              text(
-                'Consulta y administra tus citas médicas.',
-                'Review and manage your medical appointments.'
-              )
-            }}
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <button
-        type="button"
-        class="secondary-button"
-        (click)="loadAppointments()"
-        [disabled]="loadingAppointments"
-      >
-        ↻
-        {{
-          loadingAppointments
-            ? i18n.t(
-                'refreshing'
-              )
-            : i18n.t(
-                'refresh'
-              )
-        }}
-      </button>
-
-    </div>
-
-
-    @if (appointmentActionSuccess) {
-
-      <div class="message success-message">
-        <span>✓</span>
-        {{ appointmentActionSuccess }}
-      </div>
-
-    }
-
-
-    @if (appointmentActionError) {
-
-      <div class="message error-message">
-        <span>!</span>
-        {{ appointmentActionError }}
-      </div>
-
-    }
-
-
-    @if (appointmentsError) {
-
-      <div class="message error-message">
-        <span>!</span>
-        {{ appointmentsError }}
-      </div>
-
-    }
-
-
-    @if (loadingAppointments) {
-
-      <div class="loading-state">
-        <div class="spinner"></div>
-
-        {{
-          i18n.t(
-            'loadingAppointments'
-          )
-        }}
-      </div>
-
-    } @else if (
-      appointments.length > 0
-    ) {
-
-      <div class="table-wrapper">
-
-        <table class="appointments-table">
-
-          <thead>
-
-            <tr>
-
-              <th>
-                {{ i18n.t('id') }}
-              </th>
-
-              <th>
-                {{ i18n.t('doctor') }}
-              </th>
-
-              <th>
-                {{ i18n.t('date') }}
-              </th>
-
-              <th>
-                {{ i18n.t('time') }}
-              </th>
-
-              <th>
-                {{ i18n.t('status') }}
-              </th>
-
-              <th>
-                {{ i18n.t('notes') }}
-              </th>
-
-              <th>
-                {{ i18n.t('actions') }}
-              </th>
-
-            </tr>
-
-          </thead>
-
-
-          <tbody>
+          <div class="doctors-list">
 
             @for (
-              appointment of appointments;
-              track appointment.id
+              doctor of doctors;
+              track doctor.id
             ) {
 
-              <tr>
+              <article class="doctor-row">
 
-                <td class="appointment-id">
-                  #{{ appointment.id }}
-                </td>
-
-
-                <td>
-
-                  <div class="doctor-cell">
-
-                    <div class="doctor-avatar">
-                      +
-                    </div>
-
-                    <strong>
-                      {{
-                        appointment.doctorName
-                      }}
-                    </strong>
-
-                  </div>
-
-                </td>
+                <div
+                  class="doctor-avatar"
+                  aria-hidden="true"
+                >
+                  +
+                </div>
 
 
-                <td>
-                  {{
-                    formatDate(
-                      appointment.date
-                    )
-                  }}
-                </td>
+                <div class="doctor-info">
+
+                  <h3>
+                    {{ doctor.fullName }}
+                  </h3>
+
+                  <p>
+                    {{ doctor.specialty }}
+                  </p>
+
+                </div>
 
 
-                <td class="appointment-time">
-                  {{
-                    formatTime(
-                      appointment.time
-                    )
-                  }}
-                </td>
+                <div class="doctor-duration">
 
-
-                <td>
-
-                  <span
-                    class="status-badge"
-                    [class.status-programada]="
-                      appointment.status ===
-                      'PROGRAMADA'
-                    "
-                    [class.status-confirmada]="
-                      appointment.status ===
-                      'CONFIRMADA'
-                    "
-                    [class.status-atendida]="
-                      appointment.status ===
-                      'ATENDIDA' ||
-                      appointment.status ===
-                      'COMPLETADA'
-                    "
-                    [class.status-cancelada]="
-                      appointment.status ===
-                      'CANCELADA'
-                    "
-                  >
+                  <span>
                     {{
-                      i18n.status(
-                        appointment.status
+                      text(
+                        'Duración de la cita',
+                        'Appointment duration'
                       )
                     }}
                   </span>
 
-                </td>
+                  <strong>
+                    {{ doctor.intervalMinutes }}
+                    {{ i18n.t('minutes') }}
+                  </strong>
 
+                </div>
 
-                <td class="notes-cell">
-
-  @if (
-    getAppointmentNotes(
-      appointment.notes
-    ).length > 0
-  ) {
-
-    <div class="notes-list">
-
-      @for (
-        note of
-          getAppointmentNotes(
-            appointment.notes
-          );
-        track $index
-      ) {
-
-        <div
-          class="note-item"
-          [class.note-history]="
-            $index > 0
-          "
-        >
-
-          <span class="note-number">
-            {{ $index + 1 }}
-          </span>
-
-          <span class="note-text">
-            {{ note }}
-          </span>
-
-        </div>
-
-      }
-
-    </div>
-
-  } @else {
-
-    <span class="no-notes">
-      {{ i18n.t('noNotes') }}
-    </span>
-
-  }
-
-</td>
-
-
-                <td>
-
-                  @if (
-                    canReschedule(
-                      appointment
-                    ) ||
-                    canCancel(
-                      appointment
-                    )
-                  ) {
-
-                    <div class="action-buttons">
-
-                      @if (
-                        canReschedule(
-                          appointment
-                        )
-                      ) {
-
-                        <button
-                          type="button"
-                          class="secondary-button table-button"
-                          (click)="
-                            startReschedule(
-                              appointment
-                            )
-                          "
-                        >
-                          {{
-                            i18n.t(
-                              'reschedule'
-                            )
-                          }}
-                        </button>
-
-                      }
-
-
-                      @if (
-                        canCancel(
-                          appointment
-                        )
-                      ) {
-
-                        <button
-                          type="button"
-                          class="danger-button table-button"
-                          (click)="
-                            startCancellation(
-                              appointment
-                            )
-                          "
-                        >
-                          {{
-                            i18n.t(
-                              'cancelAppointment'
-                            )
-                          }}
-                        </button>
-
-                      }
-
-                    </div>
-
-                  } @else {
-
-                    <span class="no-action">
-                      ✓
-                      {{
-                        i18n.t(
-                          'notAvailable'
-                        )
-                      }}
-                    </span>
-
-                  }
-
-                </td>
-
-              </tr>
-
-            }
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-    } @else {
-
-      <div class="empty-state">
-
-        <div>
-          📅
-        </div>
-
-        <h3>
-          {{
-            text(
-              'Aún no tienes citas',
-              'You have no appointments yet'
-            )
-          }}
-        </h3>
-
-        <p>
-          {{
-            text(
-              'Cuando agendas una cita aparecerá aquí.',
-              'Your appointments will appear here after booking.'
-            )
-          }}
-        </p>
-
-        <button
-          type="button"
-          class="primary-button"
-          (click)="scrollToSection('agendar-cita')"
-        >
-          {{
-            text(
-              'Agendar ahora',
-              'Book now'
-            )
-          }}
-        </button>
-
-      </div>
-
-    }
-
-
-    <!-- ======================================
-         REPROGRAMAR
-         ====================================== -->
-
-    @if (
-      reschedulingAppointment
-    ) {
-
-      <div
-        class="reschedule-panel"
-        id="reschedule-panel"
-      >
-
-        <div class="reschedule-header">
-
-          <div>
-
-            <span class="panel-label">
-              {{
-                text(
-                  'REPROGRAMACIÓN',
-                  'RESCHEDULING'
-                )
-              }}
-            </span>
-
-            <h3>
-              {{
-                i18n.t(
-                  'rescheduleAppointment'
-                )
-              }}
-              #{{ reschedulingAppointment.id }}
-            </h3>
-
-            <p>
-              <strong>
-                {{ i18n.t('doctor') }}:
-              </strong>
-
-              {{
-                reschedulingAppointment.doctorName
-              }}
-            </p>
-
-            <p>
-              <strong>
-                {{
-                  i18n.t(
-                    'currentAppointment'
-                  )
-                }}:
-              </strong>
-
-              {{
-                formatDate(
-                  reschedulingAppointment.date
-                )
-              }}
-
-              {{ i18n.t('at') }}
-
-              {{
-                formatTime(
-                  reschedulingAppointment.time
-                )
-              }}
-            </p>
-
-          </div>
-
-
-          <button
-            type="button"
-            class="secondary-button"
-            (click)="cancelReschedule()"
-          >
-            ✕
-            {{ i18n.t('close') }}
-          </button>
-
-        </div>
-
-
-        <div class="form-grid">
-
-          <div class="form-field">
-
-            <label for="rescheduleDate">
-              {{
-                i18n.t(
-                  'newDate'
-                )
-              }}
-            </label>
-
-            <input
-              id="rescheduleDate"
-              type="date"
-              [(ngModel)]="rescheduleDate"
-              [min]="minDate"
-              (ngModelChange)="
-                resetRescheduleAvailability()
-              "
-            />
-
-          </div>
-
-
-          <div class="form-field">
-
-            <label for="rescheduleReason">
-              {{ i18n.t('reason') }}
-            </label>
-
-            <input
-              id="rescheduleReason"
-              type="text"
-              [(ngModel)]="rescheduleReason"
-              [placeholder]="
-                i18n.t(
-                  'optionalReason'
-                )
-              "
-            />
-
-          </div>
-
-        </div>
-
-
-        <button
-          type="button"
-          class="primary-button"
-          (click)="checkRescheduleAvailability()"
-          [disabled]="
-            loadingRescheduleAvailability ||
-            !rescheduleDate
-          "
-        >
-          {{
-            loadingRescheduleAvailability
-              ? i18n.t(
-                  'checkingNewAvailability'
-                )
-              : i18n.t(
-                  'checkNewAvailability'
-                )
-          }}
-        </button>
-
-
-        @if (rescheduleError) {
-
-          <div class="message error-message">
-            <span>!</span>
-            {{ rescheduleError }}
-          </div>
-
-        }
-
-
-        @if (rescheduleSuccess) {
-
-          <div class="message success-message">
-            <span>✓</span>
-            {{ rescheduleSuccess }}
-          </div>
-
-        }
-
-
-        @if (
-          rescheduleAvailability
-        ) {
-
-          <div class="reschedule-availability">
-
-            <h4>
-              {{
-                i18n.t(
-                  'availableTimes'
-                )
-              }}
-            </h4>
-
-            <p>
-              <strong>
-                {{ i18n.t('date') }}:
-              </strong>
-
-              {{
-                formatDate(
-                  rescheduleAvailability.date
-                )
-              }}
-            </p>
-
-
-            <div class="slots">
-
-              @for (
-                slot of
-                  rescheduleAvailability.availableSlots;
-                track slot
-              ) {
 
                 <button
                   type="button"
-                  class="slot-button"
-                  [class.selected]="
-                    rescheduleTime ===
-                    slot
-                  "
-                  (click)="
-                    selectRescheduleTime(
-                      slot
-                    )
-                  "
+                  class="secondary-button"
+                  (click)="selectDoctor(doctor)"
                 >
-                  {{ formatTime(slot) }}
+                  {{
+                    text(
+                      'Agendar',
+                      'Book'
+                    )
+                  }}
                 </button>
 
-              }
+              </article>
+
+            }
+
+          </div>
+
+        } @else {
+
+          <div class="empty-state">
+
+            <div
+              class="empty-state-symbol"
+              aria-hidden="true"
+            >
+              +
+            </div>
+
+            <div>
+
+              <strong>
+                {{
+                  i18n.t(
+                    'noActiveDoctors'
+                  )
+                }}
+              </strong>
+
+              <p>
+                {{
+                  text(
+                    'En este momento no hay profesionales disponibles.',
+                    'There are currently no professionals available.'
+                  )
+                }}
+              </p>
 
             </div>
 
@@ -1484,382 +2417,10 @@
 
         }
 
-
-        @if (rescheduleTime) {
-
-          <div class="reschedule-confirmation">
-
-            <p>
-              <strong>
-                {{
-                  i18n.t(
-                    'newAppointment'
-                  )
-                }}:
-              </strong>
-
-              {{
-                formatDate(
-                  rescheduleDate
-                )
-              }}
-
-              {{ i18n.t('at') }}
-
-              {{
-                formatTime(
-                  rescheduleTime
-                )
-              }}
-            </p>
-
-
-            <button
-              type="button"
-              class="primary-button"
-              (click)="confirmReschedule()"
-              [disabled]="rescheduling"
-            >
-              {{
-                rescheduling
-                  ? i18n.t(
-                      'rescheduling'
-                    )
-                  : i18n.t(
-                      'confirmReschedule'
-                    )
-              }}
-            </button>
-
-          </div>
-
-        }
-
-      </div>
-
-    }
-
-
-    <!-- ======================================
-         CANCELAR
-         ====================================== -->
-
-    @if (
-      cancellingAppointment
-    ) {
-
-      <div
-        class="cancel-panel"
-        id="cancel-panel"
-      >
-
-        <div class="cancel-header">
-
-          <div>
-
-            <span class="panel-label danger">
-              {{
-                text(
-                  'CANCELACIÓN',
-                  'CANCELLATION'
-                )
-              }}
-            </span>
-
-            <h3>
-              {{
-                i18n.t(
-                  'cancelAppointmentTitle'
-                )
-              }}
-              #{{ cancellingAppointment.id }}
-            </h3>
-
-            <p>
-              {{
-                i18n.t(
-                  'cancelAppointmentQuestion'
-                )
-              }}
-            </p>
-
-            <p>
-              <strong>
-                {{ i18n.t('doctor') }}:
-              </strong>
-
-              {{
-                cancellingAppointment.doctorName
-              }}
-            </p>
-
-            <p>
-              <strong>
-                {{
-                  i18n.t(
-                    'currentAppointment'
-                  )
-                }}:
-              </strong>
-
-              {{
-                formatDate(
-                  cancellingAppointment.date
-                )
-              }}
-
-              {{ i18n.t('at') }}
-
-              {{
-                formatTime(
-                  cancellingAppointment.time
-                )
-              }}
-            </p>
-
-          </div>
-
-
-          <button
-            type="button"
-            class="secondary-button"
-            (click)="cancelCancellation()"
-          >
-            ✕
-            {{ i18n.t('close') }}
-          </button>
-
-        </div>
-
-
-        <div class="form-field">
-
-          <label for="cancellationReason">
-            {{
-              i18n.t(
-                'cancellationReason'
-              )
-            }}
-          </label>
-
-          <textarea
-            id="cancellationReason"
-            rows="4"
-            [(ngModel)]="cancellationReason"
-            [placeholder]="
-              i18n.t(
-                'cancellationReasonPlaceholder'
-              )
-            "
-          ></textarea>
-
-        </div>
-
-
-        @if (cancellationError) {
-
-          <div class="message error-message">
-            <span>!</span>
-            {{ cancellationError }}
-          </div>
-
-        }
-
-
-        <div class="cancel-actions">
-
-          <button
-            type="button"
-            class="danger-button strong-danger"
-            (click)="confirmCancellation()"
-            [disabled]="
-              cancelling ||
-              !cancellationReason.trim()
-            "
-          >
-            {{
-              cancelling
-                ? i18n.t(
-                    'cancellingAppointment'
-                  )
-                : i18n.t(
-                    'confirmCancellation'
-                  )
-            }}
-          </button>
-
-
-          <button
-            type="button"
-            class="secondary-button"
-            (click)="cancelCancellation()"
-            [disabled]="cancelling"
-          >
-            {{ i18n.t('close') }}
-          </button>
-
-        </div>
-
-      </div>
-
-    }
-
-  </section>
-
-
-  <!-- ========================================
-       PROFESIONALES
-       ======================================== -->
-
-  <section class="card doctors-card">
-
-    <div class="card-heading">
-
-      <div class="heading-icon doctors">
-        👨‍⚕️
-      </div>
-
-      <div>
-
-        <span class="section-label">
-          {{
-            text(
-              'NUESTRO EQUIPO',
-              'OUR TEAM'
-            )
-          }}
-        </span>
-
-        <h2>
-          {{
-            i18n.t(
-              'availableDoctors'
-            )
-          }}
-        </h2>
-
-        <p>
-          {{
-            text(
-              'Conoce los profesionales disponibles para tu atención.',
-              'Meet the professionals available for your care.'
-            )
-          }}
-        </p>
-
-      </div>
+      </section>
 
     </div>
 
-
-    @if (loadingDoctors) {
-
-      <div class="loading-state">
-
-        <div class="spinner"></div>
-
-        {{
-          i18n.t(
-            'loadingDoctors'
-          )
-        }}
-
-      </div>
-
-    } @else if (
-      doctors.length > 0
-    ) {
-
-      <div class="doctor-grid">
-
-        @for (
-          doctor of doctors;
-          track doctor.id
-        ) {
-
-          <article class="doctor-card">
-
-            <div class="doctor-card-top">
-
-              <div class="doctor-large-avatar">
-                +
-              </div>
-
-              <span class="doctor-status">
-                <span></span>
-                {{ i18n.t('active') }}
-              </span>
-
-            </div>
-
-
-            <h3>
-              {{ doctor.fullName }}
-            </h3>
-
-            <p class="specialty">
-              {{ doctor.specialty }}
-            </p>
-
-
-            <div class="doctor-meta">
-
-              <span>
-                {{
-                  text(
-                    'Duración por cita',
-                    'Appointment duration'
-                  )
-                }}
-              </span>
-
-              <strong>
-                {{ doctor.intervalMinutes }}
-                {{ i18n.t('minutes') }}
-              </strong>
-
-            </div>
-
-
-            <button
-              type="button"
-              class="doctor-book-button"
-              (click)="selectDoctor(doctor)"
-            >
-              {{
-                text(
-                  'Agendar con este profesional',
-                  'Book with this professional'
-                )
-              }}
-            </button>
-
-          </article>
-
-        }
-
-      </div>
-
-    } @else {
-
-      <div class="empty-state">
-
-        <div>
-          👨‍⚕️
-        </div>
-
-        <h3>
-          {{
-            i18n.t(
-              'noActiveDoctors'
-            )
-          }}
-        </h3>
-
-      </div>
-
-    }
-
-  </section>
+  </div>
 
 </main>
