@@ -14,6 +14,7 @@ Project documentation:
 
 [Google Docs - PiedraAzul](https://docs.google.com/document/d/1sPHt0zLF7bGqXfEkfuj3O59Gnp1NG1h-SVsOveMMYvk/edit?usp=sharing)
 
+[Jira - PiedraAzul](https://unicauca-team-i1l9rsfo.atlassian.net/jira/software/projects/SCRUM/boards/1/backlog?epics=visible)
 ---
 
 ## Problem It Solves
