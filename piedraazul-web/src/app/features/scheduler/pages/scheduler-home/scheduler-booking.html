@@ -1,0 +1,178 @@
+<section class="booking-card clinical-section" id="scheduler-booking" aria-labelledby="booking-title">
+  <header class="section-heading"><div>
+    <span class="panel-label">{{ text('RECEPCIÓN', 'RECEPTION') }}</span>
+    <h2 id="booking-title">
+      {{ text('Agendar cita para un paciente', 'Book a patient appointment') }}
+    </h2>
+    <p>
+      {{
+        text(
+          'Busca al paciente por documento, elige el profesional y reserva un horario disponible.',
+          'Find the patient by document number, choose a professional and book an available time.'
+        )
+      }}
+    </p>
+  </div></header>
+
+  @if (created(); as appointment) {
+    <div class="confirmation" role="status">
+      <h3>{{ text('Cita agendada', 'Appointment booked') }} #{{ appointment.id }}</h3>
+      <p>
+        <strong>{{ appointment.patientName }}</strong> · {{ appointment.documentNumber }}
+      </p>
+      <p>
+        {{ appointment.doctorName }} · {{ appointment.date }} · {{ appointment.time.slice(0, 5) }}
+      </p>
+      <p>
+        {{
+          text(
+            'Puedes revisar la nueva cita en la agenda del profesional.',
+            'You can review the new appointment in the schedule.'
+          )
+        }}
+      </p>
+      <button type="button" class="primary primary-button" (click)="newBooking()">
+        {{ text('Agendar otra cita', 'Book another appointment') }}
+      </button>
+    </div>
+  } @else {
+    <fieldset [disabled]="booking()" [attr.aria-busy]="booking()">
+      <legend class="sr-only">{{ text('Datos de la cita', 'Appointment details') }}</legend>
+      <h3>1. {{ text('Paciente', 'Patient') }}</h3>
+      <form class="patient-search" (ngSubmit)="findPatient()">
+        <label for="booking-document"
+          >{{ text('Número de documento', 'Document number') }}
+          <input
+            id="booking-document"
+            name="document"
+            autocomplete="off"
+            required
+            [(ngModel)]="documentNumber"
+            (ngModelChange)="resetPatient()"
+          />
+        </label>
+        <button
+          type="submit"
+          class="secondary secondary-button"
+          [disabled]="searchingPatient() || !documentNumber.trim()"
+        >
+          {{
+            searchingPatient()
+              ? text('Buscando…', 'Searching…')
+              : text('Buscar paciente', 'Find patient')
+          }}
+        </button>
+      </form>
+      @if (patientError()) {
+        <p class="error message error-message" role="alert">{{ patientError() }}</p>
+      }
+      @if (patient(); as selectedPatient) {
+        <div class="patient-result selected-professional" aria-live="polite">
+          <strong>{{ selectedPatient.firstNames }} {{ selectedPatient.lastNames }}</strong>
+          <span
+            >{{ selectedPatient.documentType }} {{ selectedPatient.documentNumber }} ·
+            {{ selectedPatient.phone }}</span
+          >
+          <small>{{
+            text(
+              'Verifica que corresponda a la persona que solicita la cita.',
+              'Verify this is the person requesting the appointment.'
+            )
+          }}</small>
+        </div>
+      }
+
+      <h3>2. {{ text('Profesional y horario', 'Professional and time') }}</h3>
+      <div class="booking-grid">
+        <label for="booking-doctor"
+          >{{ text('Profesional', 'Professional') }}
+          <select id="booking-doctor" [(ngModel)]="doctorId" (ngModelChange)="resetSlots()">
+            <option [ngValue]="null">
+              {{ text('Selecciona un profesional', 'Select a professional') }}
+            </option>
+            @for (doctor of doctors; track doctor.id) {
+              <option [ngValue]="doctor.id">{{ doctor.fullName }} · {{ doctor.specialty }}</option>
+            }
+          </select>
+        </label>
+        <label for="booking-date"
+          >{{ text('Fecha', 'Date') }}
+          <input
+            id="booking-date"
+            type="date"
+            [min]="today"
+            [(ngModel)]="date"
+            (ngModelChange)="resetSlots()"
+          />
+        </label>
+      </div>
+      <button
+        type="button"
+        class="secondary secondary-button"
+        (click)="checkSlots()"
+        [disabled]="!doctorId || !date || searchingSlots()"
+      >
+        {{
+          searchingSlots()
+            ? text('Consultando…', 'Loading…')
+            : text('Consultar horarios', 'Check available times')
+        }}
+      </button>
+      @if (availability(); as slots) {
+        <div class="availability" aria-live="polite">
+          @if (slots.availableSlots.length) {
+            <p>{{ text('Selecciona una hora:', 'Select a time:') }}</p>
+            <div
+              class="slots"
+              role="group"
+              [attr.aria-label]="text('Horarios disponibles', 'Available times')"
+            >
+              @for (slot of slots.availableSlots; track slot) {
+                <button
+                  type="button"
+                  class="slot slot-button"
+                  [class.selected]="time === slot"
+                  [attr.aria-pressed]="time === slot"
+                  (click)="time = slot"
+                >
+                  {{ slot.slice(0, 5) }}
+                </button>
+              }
+            </div>
+          } @else {
+            <p>
+              {{
+                text(
+                  'No hay horarios disponibles para esta fecha. Prueba con otro día.',
+                  'No available times on this date. Try another day.'
+                )
+              }}
+            </p>
+          }
+        </div>
+      }
+
+      <h3>3. {{ text('Confirmar cita', 'Confirm appointment') }}</h3>
+      <label for="booking-notes"
+        >{{ text('Observaciones (opcional)', 'Notes (optional)') }}
+        <textarea id="booking-notes" rows="2" [(ngModel)]="notes"></textarea>
+      </label>
+      @if (patient() && time) {
+        <p class="summary">
+          {{ patient()!.firstNames }} {{ patient()!.lastNames }} · {{ date }} ·
+          {{ time.slice(0, 5) }}
+        </p>
+      }
+      @if (error()) {
+        <p class="error message error-message" role="alert">{{ error() }}</p>
+      }
+      <button type="button" class="primary primary-button" (click)="book()" [disabled]="!canBook">
+        {{
+          booking()
+            ? text('Agendando…', 'Booking…')
+            : text('Confirmar y agendar cita', 'Confirm and book appointment')
+        }}
+      </button>
+    </fieldset>
+  }
+</section>

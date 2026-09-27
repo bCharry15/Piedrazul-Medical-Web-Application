@@ -1,16 +1,17 @@
 <header class="navbar">
-
   <div class="navbar-content">
 
-
-    <!-- LOGO -->
+    <!-- MARCA -->
 
     <button
       type="button"
       class="brand"
       (click)="goHome()"
+      [attr.aria-label]="text(
+        'Ir al inicio de PiedraAzul',
+        'Go to PiedraAzul home'
+      )"
     >
-
       <img
         src="/assets/piedra_azul__.png"
         alt="Piedra Azul Clínica"
@@ -18,7 +19,6 @@
       />
 
       <div class="brand-copy">
-
         <strong>
           PiedraAzul
         </strong>
@@ -31,9 +31,7 @@
             )
           }}
         </span>
-
       </div>
-
     </button>
 
 
@@ -42,72 +40,80 @@
     <nav
       class="main-navigation"
       *ngIf="!isAuthenticated"
+      [attr.aria-label]="text(
+        'Navegación principal',
+        'Main navigation'
+      )"
     >
-
       <button
         type="button"
         (click)="goHome()"
       >
-        {{
-          text(
-            'Inicio',
-            'Home'
-          )
-        }}
+        <span>
+          {{
+            text(
+              'Inicio',
+              'Home'
+            )
+          }}
+        </span>
       </button>
-
 
       <button
         type="button"
         (click)="goToSection('servicios')"
       >
-        {{
-          text(
-            'Servicios',
-            'Services'
-          )
-        }}
+        <span>
+          {{
+            text(
+              'Servicios',
+              'Services'
+            )
+          }}
+        </span>
       </button>
-
 
       <button
         type="button"
         (click)="goToSection('como-funciona')"
       >
-        {{
-          text(
-            'Cómo funciona',
-            'How it works'
-          )
-        }}
+        <span>
+          {{
+            text(
+              'Cómo funciona',
+              'How it works'
+            )
+          }}
+        </span>
       </button>
-
 
       <button
         type="button"
         (click)="goToSection('nosotros')"
       >
-        {{
-          text(
-            'Nosotros',
-            'About us'
-          )
-        }}
+        <span>
+          {{
+            text(
+              'Nosotros',
+              'About us'
+            )
+          }}
+        </span>
       </button>
-
 
       <button
         type="button"
         (click)="goToSection('contacto')"
       >
-        {{
-          text(
-            'Contacto',
-            'Contact'
-          )
-        }}
+        <span>
+          {{
+            text(
+              'Contacto',
+              'Contact'
+            )
+          }}
+        </span>
       </button>
-
     </nav>
 
 
@@ -115,36 +121,40 @@
 
     <div class="navbar-actions">
 
-
       <!-- IDIOMA -->
 
-      <div class="language-selector">
-
+      <div
+        class="language-selector"
+        role="group"
+        [attr.aria-label]="text(
+          'Seleccionar idioma',
+          'Select language'
+        )"
+      >
         <button
           type="button"
           class="language-button"
-          [class.active]="
-            i18n.language() ===
-            'es'
-          "
+          [class.active]="i18n.language() === 'es'"
+          [attr.aria-pressed]="i18n.language() === 'es'"
           (click)="setLanguage('es')"
         >
           ES
         </button>
 
+        <span
+          class="language-divider"
+          aria-hidden="true"
+        ></span>
 
         <button
           type="button"
           class="language-button"
-          [class.active]="
-            i18n.language() ===
-            'en'
-          "
+          [class.active]="i18n.language() === 'en'"
+          [attr.aria-pressed]="i18n.language() === 'en'"
           (click)="setLanguage('en')"
         >
           EN
         </button>
-
       </div>
 
 
@@ -154,20 +164,27 @@
         class="guest-actions"
         *ngIf="!isAuthenticated"
       >
-
         <button
           type="button"
           class="login-button"
           (click)="login()"
         >
-          {{
-            text(
-              'Iniciar sesión',
-              'Sign in'
-            )
-          }}
-        </button>
+          <span>
+            {{
+              text(
+                'Iniciar sesión',
+                'Sign in'
+              )
+            }}
+          </span>
 
+          <span
+            class="button-arrow"
+            aria-hidden="true"
+          >
+            →
+          </span>
+        </button>
       </div>
 
 
@@ -177,29 +194,38 @@
         class="authenticated-actions"
         *ngIf="isAuthenticated"
       >
-
         <span class="user-pill">
+          <span
+            class="user-dot"
+            aria-hidden="true"
+          ></span>
 
-          <span class="user-dot"></span>
-
-          {{ username }}
-
+          <span class="user-name">
+            {{ username }}
+          </span>
         </span>
-
 
         <button
           type="button"
           class="portal-button"
           (click)="goToPortal()"
         >
-          {{
-            text(
-              'Mi portal',
-              'My portal'
-            )
-          }}
-        </button>
+          <span>
+            {{
+              text(
+                'Mi portal',
+                'My portal'
+              )
+            }}
+          </span>
 
+          <span
+            class="button-arrow"
+            aria-hidden="true"
+          >
+            →
+          </span>
+        </button>
 
         <button
           type="button"
@@ -213,11 +239,9 @@
             )
           }}
         </button>
-
       </div>
 
     </div>
 
   </div>
-
 </header>
