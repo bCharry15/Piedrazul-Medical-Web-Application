@@ -3,6 +3,7 @@ import {
 } from '@angular/common';
 
 import {
+  ChangeDetectorRef,
   Component,
   OnInit,
   inject,
@@ -72,6 +73,9 @@ import {
 })
 export class PatientHome
   implements OnInit {
+
+  // HTTP callbacks must notify Angular's zoneless change detection.
+  private readonly changeDetector = inject(ChangeDetectorRef);
 
   private readonly auth =
     inject(Auth);
@@ -480,6 +484,7 @@ export class PatientHome
 
         next:
           (patient) => {
+            this.changeDetector.markForCheck();
 
             this.patient =
               patient;
@@ -495,6 +500,7 @@ export class PatientHome
 
         error:
           (error) => {
+            this.changeDetector.markForCheck();
 
             console.error(
               error
@@ -532,6 +538,7 @@ export class PatientHome
 
         next:
           (doctors) => {
+            this.changeDetector.markForCheck();
 
             this.doctors =
               doctors.filter(
@@ -546,6 +553,7 @@ export class PatientHome
 
         error:
           (error) => {
+            this.changeDetector.markForCheck();
 
             console.error(
               error
@@ -599,6 +607,7 @@ export class PatientHome
 
         next:
           (appointments) => {
+            this.changeDetector.markForCheck();
 
             this.appointments =
               appointments;
@@ -610,6 +619,7 @@ export class PatientHome
 
         error:
           (error) => {
+            this.changeDetector.markForCheck();
 
             console.error(
               error
@@ -692,6 +702,7 @@ export class PatientHome
 
         next:
           (availability) => {
+            this.changeDetector.markForCheck();
 
             this.availability =
               availability;
@@ -703,6 +714,7 @@ export class PatientHome
 
         error:
           (error) => {
+            this.changeDetector.markForCheck();
 
             console.error(
               error
@@ -862,6 +874,7 @@ export class PatientHome
 
         next:
           (appointment) => {
+            this.changeDetector.markForCheck();
 
             this.createdAppointment =
               appointment;
@@ -891,6 +904,7 @@ export class PatientHome
 
         error:
           (error) => {
+            this.changeDetector.markForCheck();
 
             console.error(
               error
@@ -1112,6 +1126,7 @@ export class PatientHome
 
         next:
           (availability) => {
+            this.changeDetector.markForCheck();
 
             this.rescheduleAvailability =
               availability;
@@ -1123,6 +1138,7 @@ export class PatientHome
 
         error:
           (error) => {
+            this.changeDetector.markForCheck();
 
             console.error(
               error
@@ -1241,6 +1257,7 @@ export class PatientHome
 
         next:
           (response) => {
+            this.changeDetector.markForCheck();
 
             this.rescheduleSuccess =
               response.message ||
@@ -1276,6 +1293,7 @@ export class PatientHome
 
         error:
           (error) => {
+            this.changeDetector.markForCheck();
 
             console.error(
               error
@@ -1428,6 +1446,7 @@ export class PatientHome
 
         next:
           () => {
+            this.changeDetector.markForCheck();
 
             this.cancelling =
               false;
@@ -1455,6 +1474,7 @@ export class PatientHome
 
         error:
           (error) => {
+            this.changeDetector.markForCheck();
 
             console.error(
               error
@@ -1530,6 +1550,7 @@ export class PatientHome
 
         next:
           (availability) => {
+            this.changeDetector.markForCheck();
 
             this.availability =
               availability;
@@ -1538,6 +1559,7 @@ export class PatientHome
 
         error:
           (error) => {
+            this.changeDetector.markForCheck();
 
             console.error(
               error

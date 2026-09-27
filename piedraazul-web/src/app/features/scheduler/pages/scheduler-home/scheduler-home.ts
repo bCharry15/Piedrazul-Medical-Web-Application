@@ -1,3 +1,5 @@
+
+import { SchedulerBooking } from './scheduler-booking';
 import { CommonModule } from '@angular/common';
 
 import {
@@ -51,6 +53,7 @@ type SchedulerAction =
 @Component({
   imports: [
     CommonModule,
+    SchedulerBooking,
     FormsModule,
   ],
 
@@ -158,6 +161,14 @@ export class SchedulerHome
   cancellationReason =
     '';
 
+
+  bookingOpen = false;
+
+  openBooking(): void {
+    this.bookingOpen = true;
+    this.cdr.detectChanges();
+    this.scrollToSection('scheduler-booking');
+  }
 
   ngOnInit():
     void {

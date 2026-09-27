@@ -25,10 +25,10 @@ export class PatientService {
 
   private readonly apiUrl = 'http://localhost:8081/api/patients';
 
-  getProfileByUsername(username: string): Observable<PatientProfile> {
+  getByDocumentNumber(documentNumber: string): Observable<PatientProfile> {
     return this.http
       .get<PatientProfileApiResponse>(
-        `${this.apiUrl}/profile/${encodeURIComponent(username)}`
+        `${this.apiUrl}/document/${encodeURIComponent(documentNumber.trim())}`,
       )
       .pipe(
         map((response) => ({
@@ -42,7 +42,26 @@ export class PatientService {
           gender: response.gender,
           birthDate: response.dateNacimiento,
           email: response.email,
-        }))
+        })),
+      );
+  }
+
+  getProfileByUsername(username: string): Observable<PatientProfile> {
+    return this.http
+      .get<PatientProfileApiResponse>(`${this.apiUrl}/profile/${encodeURIComponent(username)}`)
+      .pipe(
+        map((response) => ({
+          id: response.id,
+          username: response.username,
+          documentNumber: response.documentNumber,
+          documentType: response.documentType,
+          firstNames: response.nombres,
+          lastNames: response.apellidos,
+          phone: response.phone,
+          gender: response.gender,
+          birthDate: response.dateNacimiento,
+          email: response.email,
+        })),
       );
   }
 }

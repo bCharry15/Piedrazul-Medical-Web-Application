@@ -1,105 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap');
+
+
 :host {
   display: block;
 }
 
 
+/* =========================================================
+   VARIABLES
+   ========================================================= */
+
 .navbar {
+  --navy-950: #102a43;
+  --navy-900: #173b57;
+  --navy-800: #214e6d;
+
+  --blue-600: #176c9e;
+  --blue-500: #2387b7;
+
+  --teal-600: #19796e;
+  --teal-500: #269688;
+
+  --coral-500: #d96c5f;
+
+  --slate-700: #445d6e;
+  --slate-600: #607887;
+  --slate-400: #9caeb8;
+
+  --border: #d8e1e6;
+  --border-strong: #b9cad3;
+
+  --surface: #ffffff;
+  --surface-soft: #f5f8f9;
+
   position: sticky;
-
   top: 0;
-
   z-index: 100;
 
   width: 100%;
 
-  background:
-    rgba(
-      255,
-      255,
-      255,
-      0.96
-    );
+  background: var(--surface);
 
   border-bottom:
     1px solid
-    #d6e9f5;
+    var(--border);
 
+  /*
+   * La única sombra del navbar.
+   * Su función es separar la navegación del contenido
+   * cuando la barra queda sticky.
+   */
   box-shadow:
-    0 8px 24px
-    rgba(
-      31,
-      101,
-      154,
-      0.055
-    );
+    0 3px 0
+    rgba(16, 42, 67, 0.04);
 
-  backdrop-filter:
-    blur(16px);
+  font-family:
+    'IBM Plex Sans',
+    sans-serif;
 }
 
 
 .navbar-content {
   max-width: 1500px;
-
   min-height: 94px;
 
   margin: 0 auto;
 
   padding:
-    10px
+    9px
     34px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
 
-  gap: 26px;
+  gap: 28px;
 }
 
 
-/* ======================
+/* =========================================================
    MARCA
-   ====================== */
+   ========================================================= */
 
 .brand {
-  min-width: 265px;
+  min-width: 270px;
 
   padding: 0;
 
   display: flex;
-
   align-items: center;
 
   gap: 13px;
 
-  border: none;
+  border: 0;
 
   background: transparent;
 
-  cursor: pointer;
+  color: inherit;
 
+  cursor: pointer;
   text-align: left;
+
+  position: relative;
+}
+
+
+.brand::after {
+  content: '';
+
+  position: absolute;
+
+  left: 89px;
+  bottom: -7px;
+
+  width: 28px;
+  height: 2px;
+
+  background:
+    var(--teal-500);
+
+  transform-origin: left;
+  transform: scaleX(0);
+
+  transition:
+    transform 180ms ease;
+}
+
+
+.brand:hover::after,
+.brand:focus-visible::after {
+  transform: scaleX(1);
+}
+
+
+.brand:focus-visible {
+  outline:
+    3px solid
+    rgba(35, 135, 183, 0.28);
+
+  outline-offset: 5px;
 }
 
 
 .brand-logo {
   width: 76px;
-
   height: 76px;
-
-  object-fit: contain;
 
   display: block;
 
-  border-radius: 16px;
+  object-fit: contain;
+
+  border-radius: 6px;
 }
 
 
 .brand-copy {
   display: flex;
-
   flex-direction: column;
 
   gap: 2px;
@@ -107,224 +163,480 @@
 
 
 .brand-copy strong {
-  color: #16385e;
+  color:
+    var(--navy-950);
 
-  font-size: 1.4rem;
+  font-family:
+    'Newsreader',
+    Georgia,
+    serif;
 
-  font-weight: 900;
+  font-size: 1.55rem;
+  font-weight: 700;
 
-  letter-spacing: -0.02em;
+  line-height: 1;
+
+  letter-spacing: -0.025em;
 }
 
 
 .brand-copy span {
   max-width: 255px;
 
-  color: #55758f;
+  color:
+    var(--slate-600);
 
-  font-size: 0.84rem;
+  font-size: 0.79rem;
+  font-weight: 500;
 
-  line-height: 1.35;
+  line-height: 1.4;
+
+  letter-spacing: 0.01em;
 }
 
 
-/* ======================
-   NAVEGACIÓN
-   ====================== */
+/* =========================================================
+   NAVEGACIÓN PRINCIPAL
+   ========================================================= */
 
 .main-navigation {
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
-  gap: 3px;
+  gap: 5px;
 }
 
 
 .main-navigation button {
+  position: relative;
+
+  min-height: 44px;
+
   padding:
     10px
-    11px;
+    10px
+    12px;
 
-  border: none;
-
-  border-radius: 12px;
+  border: 0;
 
   background: transparent;
 
-  color: #395f7d;
+  color:
+    var(--slate-700);
+
+  font-family:
+    'IBM Plex Sans',
+    sans-serif;
 
   font-size: 0.91rem;
+  font-weight: 500;
 
-  font-weight: 750;
+  letter-spacing: -0.01em;
 
   white-space: nowrap;
 
   cursor: pointer;
 
   transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    transform 0.15s ease;
+    color 160ms ease;
 }
 
 
-.main-navigation button:hover {
-  background: #eaf7ff;
+/*
+ * Pequeño indicador clínico.
+ * Se inspira en la cruz médica sin convertir
+ * cada enlace en un botón decorativo.
+ */
+.main-navigation button::before {
+  content: '';
 
-  color: #2189d4;
+  position: absolute;
+
+  left: 10px;
+  bottom: 4px;
+
+  width: 5px;
+  height: 5px;
+
+  border:
+    1.5px solid
+    var(--teal-500);
+
+  opacity: 0;
 
   transform:
-    translateY(-1px);
+    rotate(45deg)
+    scale(0.4);
+
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+
+/*
+ * Línea activa / hover.
+ */
+.main-navigation button::after {
+  content: '';
+
+  position: absolute;
+
+  left: 20px;
+  right: 10px;
+  bottom: 5px;
+
+  height: 1px;
+
+  background:
+    var(--blue-600);
+
+  transform: scaleX(0);
+
+  transform-origin: left;
+
+  transition:
+    transform 190ms ease;
+}
+
+
+.main-navigation button:hover,
+.main-navigation button:focus-visible {
+  color:
+    var(--navy-950);
+
+  font-weight: 600;
+}
+
+
+.main-navigation button:hover::before,
+.main-navigation button:focus-visible::before {
+  opacity: 1;
+
+  transform:
+    rotate(45deg)
+    scale(1);
+}
+
+
+.main-navigation button:hover::after,
+.main-navigation button:focus-visible::after {
+  transform: scaleX(1);
+}
+
+
+.main-navigation button:focus-visible {
+  outline:
+    2px solid
+    var(--blue-500);
+
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   ACCIONES
+   ========================================================= */
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 11px;
 }
 
 
 /* ======================
-   ACCIONES
+   IDIOMA
    ====================== */
 
-.navbar-actions {
-  display: flex;
+.language-selector {
+  min-height: 39px;
 
+  display: flex;
   align-items: center;
 
-  justify-content: flex-end;
-
-  gap: 10px;
-}
-
-
-.language-selector {
-  display: flex;
-
-  padding: 4px;
+  padding:
+    0
+    2px;
 
   border:
     1px solid
-    #cde4f3;
+    var(--border);
 
-  border-radius: 999px;
+  border-radius: 5px;
 
-  background: #f8fcff;
+  background:
+    var(--surface);
+
+  overflow: hidden;
 }
 
 
 .language-button {
-  min-width: 40px;
+  position: relative;
+
+  min-width: 39px;
+  min-height: 37px;
 
   padding:
     7px
-    9px;
+    8px;
 
-  border: none;
-
-  border-radius: 999px;
+  border: 0;
 
   background: transparent;
 
-  color: #56768f;
+  color:
+    var(--slate-600);
 
-  font-weight: 850;
+  font-family:
+    'IBM Plex Sans',
+    sans-serif;
+
+  font-size: 0.76rem;
+  font-weight: 700;
+
+  letter-spacing: 0.06em;
 
   cursor: pointer;
+
+  transition:
+    color 140ms ease,
+    background-color 140ms ease;
+}
+
+
+.language-button:hover {
+  color:
+    var(--navy-950);
+
+  background:
+    var(--surface-soft);
 }
 
 
 .language-button.active {
+  color:
+    var(--surface);
+
   background:
-    linear-gradient(
-      135deg,
-      #61bef7,
-      #2c90d8
-    );
-
-  color: #ffffff;
-
-  box-shadow:
-    0 5px 13px
-    rgba(
-      44,
-      144,
-      216,
-      0.2
-    );
+    var(--navy-900);
 }
 
+
+.language-button.active::after {
+  content: '';
+
+  position: absolute;
+
+  left: 8px;
+  right: 8px;
+  bottom: 4px;
+
+  height: 2px;
+
+  background:
+    var(--teal-500);
+}
+
+
+.language-button:focus-visible {
+  z-index: 1;
+
+  outline:
+    2px solid
+    var(--blue-500);
+
+  outline-offset: -3px;
+}
+
+
+.language-divider {
+  width: 1px;
+  height: 18px;
+
+  background:
+    var(--border);
+}
+
+
+/* ======================
+   GRUPOS DE ACCIONES
+   ====================== */
 
 .guest-actions,
 .authenticated-actions {
   display: flex;
-
   align-items: center;
 
   gap: 9px;
 }
 
 
+/* ======================
+   BOTÓN PRINCIPAL
+   ====================== */
+
 .login-button,
 .portal-button {
+  min-height: 44px;
+
   padding:
-    12px
-    18px;
+    11px
+    16px;
 
-  border: none;
+  display: inline-flex;
+  align-items: center;
 
-  border-radius: 14px;
+  gap: 12px;
+
+  border:
+    1px solid
+    var(--navy-900);
+
+  border-radius: 5px;
 
   background:
-    linear-gradient(
-      135deg,
-      #4eafea,
-      #2187d1
-    );
+    var(--navy-900);
 
-  color: #ffffff;
+  color:
+    #ffffff;
 
-  font-weight: 850;
+  font-family:
+    'IBM Plex Sans',
+    sans-serif;
 
-  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
 
   white-space: nowrap;
 
-  box-shadow:
-    0 9px 19px
-    rgba(
-      43,
-      143,
-      215,
-      0.2
-    );
+  cursor: pointer;
 
   transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+    background-color 160ms ease,
+    border-color 160ms ease;
 }
 
 
 .login-button:hover,
 .portal-button:hover {
-  transform:
-    translateY(-1px);
+  border-color:
+    var(--blue-600);
 
-  box-shadow:
-    0 13px 24px
-    rgba(
-      43,
-      143,
-      215,
-      0.27
-    );
+  background:
+    var(--blue-600);
 }
 
 
-.user-pill {
-  display: inline-flex;
+.login-button:focus-visible,
+.portal-button:focus-visible {
+  outline:
+    3px solid
+    rgba(35, 135, 183, 0.3);
 
+  outline-offset: 3px;
+}
+
+
+.button-arrow {
+  display: inline-block;
+
+  font-size: 1rem;
+  font-weight: 400;
+
+  line-height: 1;
+
+  transition:
+    transform 160ms ease;
+}
+
+
+.login-button:hover .button-arrow,
+.portal-button:hover .button-arrow,
+.login-button:focus-visible .button-arrow,
+.portal-button:focus-visible .button-arrow {
+  transform:
+    translateX(3px);
+}
+
+
+/* ======================
+   USUARIO AUTENTICADO
+   ====================== */
+
+.user-pill {
+  position: relative;
+
+  min-height: 40px;
+
+  display: inline-flex;
   align-items: center;
 
-  gap: 7px;
+  gap: 9px;
+
+  padding:
+    8px
+    11px
+    8px
+    12px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-left:
+    3px solid
+    var(--teal-500);
+
+  border-radius: 4px;
+
+  background:
+    var(--surface-soft);
+
+  color:
+    var(--navy-900);
+
+  font-size: 0.84rem;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+
+.user-dot {
+  width: 7px;
+  height: 7px;
+
+  flex: 0 0 7px;
+
+  border-radius: 50%;
+
+  background:
+    var(--teal-600);
+}
+
+
+.user-name {
+  max-width: 150px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+/* ======================
+   SALIR
+   ====================== */
+
+.logout-button {
+  min-height: 40px;
 
   padding:
     9px
@@ -332,67 +644,55 @@
 
   border:
     1px solid
-    #cee4f2;
+    transparent;
 
-  border-radius: 999px;
+  border-radius: 4px;
 
-  background: #f7fcff;
+  background: transparent;
 
-  color: #355e7c;
+  color:
+    var(--slate-600);
 
-  font-size: 0.87rem;
+  font-family:
+    'IBM Plex Sans',
+    sans-serif;
 
-  font-weight: 750;
-}
-
-
-.user-dot {
-  width: 8px;
-
-  height: 8px;
-
-  border-radius: 50%;
-
-  background: #32aa74;
-}
-
-
-.logout-button {
-  padding:
-    10px
-    14px;
-
-  border:
-    1px solid
-    #d9e7ef;
-
-  border-radius: 13px;
-
-  background: #ffffff;
-
-  color: #58768d;
-
-  font-weight: 750;
+  font-size: 0.84rem;
+  font-weight: 600;
 
   cursor: pointer;
 
   transition:
-    background 0.15s ease,
-    transform 0.15s ease;
+    color 150ms ease,
+    border-color 150ms ease,
+    background-color 150ms ease;
 }
 
 
 .logout-button:hover {
-  background: #f4f9fc;
+  color:
+    #8f4038;
 
-  transform:
-    translateY(-1px);
+  border-color:
+    #e6c5c1;
+
+  background:
+    #fff8f7;
 }
 
 
-/* ======================
+.logout-button:focus-visible {
+  outline:
+    2px solid
+    var(--coral-500);
+
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
    RESPONSIVE
-   ====================== */
+   ========================================================= */
 
 @media (
   max-width: 1220px
@@ -408,12 +708,34 @@
   }
 
 
+  .brand::after {
+    left: 89px;
+  }
+
+
   .main-navigation button {
     padding:
       10px
-      7px;
+      7px
+      12px;
 
-    font-size: 0.86rem;
+    font-size: 0.85rem;
+  }
+
+
+  .main-navigation button::before {
+    left: 7px;
+  }
+
+
+  .main-navigation button::after {
+    left: 17px;
+    right: 7px;
+  }
+
+
+  .navbar-content {
+    gap: 18px;
   }
 
 }
@@ -429,6 +751,8 @@
     padding:
       10px
       18px;
+
+    row-gap: 7px;
   }
 
 
@@ -439,7 +763,27 @@
 
     justify-content: flex-start;
 
+    gap: 11px;
+
     overflow-x: auto;
+
+    scrollbar-width: thin;
+
+    border-top:
+      1px solid
+      var(--border);
+
+    padding-top: 4px;
+  }
+
+
+  .main-navigation button {
+    flex: 0 0 auto;
+  }
+
+
+  .navbar-actions {
+    margin-left: auto;
   }
 
 }
@@ -450,42 +794,127 @@
 ) {
 
   .navbar-content {
-    gap: 11px;
+    gap: 9px;
+
+    padding:
+      8px
+      12px;
+  }
+
+
+  .brand {
+    gap: 8px;
   }
 
 
   .brand-logo {
-    width: 56px;
+    width: 52px;
+    height: 52px;
 
-    height: 56px;
+    border-radius: 4px;
   }
 
 
   .brand-copy strong {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
   }
 
 
-  .guest-actions {
+  .brand::after {
+    left: 60px;
+  }
+
+
+  .navbar-actions {
     gap: 5px;
   }
 
 
-  .login-button {
-    padding:
-      9px
-      11px;
+  .guest-actions,
+  .authenticated-actions {
+    gap: 5px;
+  }
 
-    font-size: 0.8rem;
+
+  .login-button,
+  .portal-button {
+    min-height: 38px;
+
+    padding:
+      8px
+      10px;
+
+    gap: 7px;
+
+    font-size: 0.77rem;
+  }
+
+
+  .button-arrow {
+    display: none;
+  }
+
+
+  .language-selector {
+    min-height: 36px;
   }
 
 
   .language-button {
-    min-width: 35px;
+    min-width: 33px;
+    min-height: 34px;
+
+    padding:
+      5px
+      6px;
+
+    font-size: 0.68rem;
+  }
+
+
+  .user-pill {
+    min-height: 36px;
+
+    max-width: 125px;
 
     padding:
       6px
-      7px;
+      8px;
+
+    font-size: 0.75rem;
+  }
+
+
+  .user-name {
+    max-width: 88px;
+  }
+
+
+  .logout-button {
+    min-height: 36px;
+
+    padding:
+      7px
+      8px;
+
+    font-size: 0.75rem;
+  }
+
+
+  .main-navigation {
+    gap: 4px;
+  }
+
+
+  .main-navigation button {
+    min-height: 40px;
+
+    padding:
+      8px
+      7px
+      11px;
+
+    font-size: 0.8rem;
   }
 
 }

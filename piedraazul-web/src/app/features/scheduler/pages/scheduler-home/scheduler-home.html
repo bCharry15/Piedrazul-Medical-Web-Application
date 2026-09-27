@@ -134,6 +134,11 @@
           </span>
         </button>
 
+        <!-- NUEVO: acceso a agendamiento -->
+        <button type="button" class="sidebar-link" (click)="openBooking()">
+          <span class="sidebar-icon" aria-hidden="true">+</span>
+          <span>{{ text('Agendar cita', 'Book appointment') }}</span>
+        </button>
       </nav>
 
 
@@ -2044,6 +2049,13 @@
 
       }
 
+      <!-- NUEVO: formulario visible solo al solicitarlo -->
+      @if (bookingOpen) {
+        <app-scheduler-booking
+          [doctors]="doctors"
+          (appointmentCreated)="selectedDoctorId = $event.doctorId; selectedDate = $event.appointment.date; loadAppointments()"
+        />
+      }
     </div>
 
   </div>
