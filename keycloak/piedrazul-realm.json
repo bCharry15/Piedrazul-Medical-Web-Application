@@ -1,6 +1,15 @@
 {
   "realm": "PiedrAzul",
   "enabled": true,
+  "displayName": "PiedraAzul",
+  "loginTheme": "piedraazul",
+  "internationalizationEnabled": true,
+  "supportedLocales": ["es", "en"],
+  "defaultLocale": "es",
+  "rememberMe": true,
+  "resetPasswordAllowed": true,
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
   "roles": {
     "realm": [
       { "name": "ADMIN" },
