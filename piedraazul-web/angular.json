@@ -59,17 +59,24 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular/build:dev-server",
-          "configurations": {
-            "production": {
-              "buildTarget": "piedraazul-web:build:production"
-            },
-            "development": {
-              "buildTarget": "piedraazul-web:build:development"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
+  "builder": "@angular/build:dev-server",
+  "options": {
+    "headers": {
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' http://localhost:8081 http://localhost:8085 ws://localhost:4200; frame-src 'self' http://localhost:8085; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self' http://localhost:8085"
+    }
+  },
+  "configurations": {
+    "production": {
+      "buildTarget": "piedraazul-web:build:production"
+    },
+    "development": {
+      "buildTarget": "piedraazul-web:build:development"
+    }
+  },
+  "defaultConfiguration": "development"
+},
         "test": {
           "builder": "@angular/build:unit-test"
         }
