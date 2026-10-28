@@ -535,7 +535,7 @@
             <button
               type="button"
               class="panel-link"
-              (click)="scrollToSection('agenda-pacientes')"
+              (click)="scrollToSection('historial-paciente')"
             >
               {{
                 text(
@@ -1041,6 +1041,24 @@
                 ↻
                 {{ i18n.t('refresh') }}
               </button>
+
+              <button
+  type="button"
+  class="secondary-button"
+  (click)="exportSchedule()"
+  [disabled]="
+    exportingSchedule ||
+    loadingAppointments ||
+    !doctor ||
+    !selectedDate
+  "
+>
+  {{
+    exportingSchedule
+      ? text('Exportando…', 'Exporting…')
+      : text('Exportar CSV', 'Export CSV')
+  }}
+</button>
 
             </header>
 
@@ -1676,5 +1694,7 @@
     </div>
 
   }
+
+  <app-patient-history id="historial-paciente"></app-patient-history>
 
 </main>

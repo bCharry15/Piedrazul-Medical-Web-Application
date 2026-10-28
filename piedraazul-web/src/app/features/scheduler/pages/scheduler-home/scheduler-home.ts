@@ -1,6 +1,7 @@
 
 import { SchedulerBooking } from './scheduler-booking';
 import { CommonModule } from '@angular/common';
+import { PatientHistory } from '../../../../shared/components/patient-history/patient-history';
 
 import {
   ChangeDetectorRef,
@@ -53,6 +54,7 @@ type SchedulerAction =
 @Component({
   imports: [
     CommonModule,
+    PatientHistory,
     SchedulerBooking,
     FormsModule,
   ],

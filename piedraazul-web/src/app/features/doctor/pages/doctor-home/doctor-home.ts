@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-
+import { PatientHistory } from '../../../../shared/components/patient-history/patient-history';
 import {
   ChangeDetectorRef,
   Component,
@@ -38,6 +38,7 @@ import {
   imports: [
     CommonModule,
     FormsModule,
+    PatientHistory,
   ],
 
   selector: 'app-doctor-home',
@@ -114,6 +115,60 @@ export class DoctorHome
 
   statusError =
     '';
+
+
+  exportingSchedule = false;
+
+exportSchedule(): void {
+  if (!this.doctor || !this.selectedDate || this.exportingSchedule) {
+    return;
+  }
+
+  const doctorId = this.doctor.id;
+  const date = this.selectedDate;
+
+  this.exportingSchedule = true;
+  this.error = '';
+
+  this.appointmentService
+    .exportByDoctorAndDate(doctorId, date)
+    .subscribe({
+      next: (response) => {
+        const blob = response.body;
+
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+
+          link.href = url;
+          link.download = `appointments_doctor_${doctorId}_${date}.csv`;
+
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        } else {
+          this.error = this.text(
+            'La exportación no devolvió un archivo.',
+            'The export did not return a file.'
+          );
+        }
+
+        this.exportingSchedule = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.error = this.text(
+          'No se pudo exportar la agenda.',
+          'Could not export the schedule.'
+        );
+
+        this.exportingSchedule = false;
+        this.cdr.detectChanges();
+      },
+    });
+}
 
 
   ngOnInit():
