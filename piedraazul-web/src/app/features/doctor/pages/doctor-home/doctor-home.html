@@ -796,6 +796,71 @@
 
         </section>
 
+        <section class="clinical-section" aria-labelledby="weekly-report-title">
+  <header class="section-heading">
+    <h2 id="weekly-report-title">
+      {{ text('Asistencia semanal', 'Weekly attendance') }}
+    </h2>
+  </header>
+
+  <form #weeklyForm="ngForm" (ngSubmit)="loadWeeklyReport()">
+    <label for="weekly-report-date">
+      {{ text('Fecha dentro de la semana', 'Date within the week') }}
+    </label>
+    <input
+      id="weekly-report-date"
+      name="weeklyReportDate"
+      type="date"
+      required
+      [(ngModel)]="weeklyReportDate"
+      [readOnly]="loadingWeeklyReport"
+    >
+    <button type="submit" [disabled]="weeklyForm.invalid || loadingWeeklyReport">
+      {{ text('Consultar semana', 'View week') }}
+    </button>
+  </form>
+
+  @if (loadingWeeklyReport) {
+    <p role="status">{{ text('Cargando reporte…', 'Loading report…') }}</p>
+  }
+
+  @if (weeklyReportError) {
+    <p role="alert">{{ weeklyReportError }}</p>
+  }
+
+  @if (weeklyReport; as report) {
+    <h3>{{ report.weekStart }} — {{ report.weekEnd }}</h3>
+
+    @if (report.total === 0) {
+      <p>{{ text('No hay citas en esta semana.', 'There are no appointments this week.') }}</p>
+    } @else {
+      <div class="weekly-report-summary">
+        <div
+          class="weekly-report-donut"
+          [style.--attendance]="weeklyAttendancePercent + '%'"
+        >
+          <div class="weekly-report-donut-label">
+            <strong>{{ weeklyAttendancePercent | number:'1.0-0' }} %</strong>
+            <span>
+              {{ report.attended }} / {{ report.total }}
+              {{ text('atendidas', 'attended') }}
+            </span>
+          </div>
+        </div>
+
+        <ul class="weekly-report-statuses">
+          @for (row of report.statuses; track row.status) {
+            <li>
+              <span>{{ row.status.replace('_', ' ') | lowercase }}</span>
+              <strong>{{ row.total }}</strong>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  }
+</section>
+
 
         <!-- ===============================================
              CONSULTAR AGENDA

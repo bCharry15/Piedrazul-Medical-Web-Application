@@ -124,6 +124,14 @@ interface ChangeAppointmentStatusApiResponse {
   mensaje: string;
 }
 
+export interface WeeklyAppointmentReport {
+  weekStart: string;
+  weekEnd: string;
+  total: number;
+  attended: number;
+  statuses: { status: string; total: number }[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -139,6 +147,13 @@ export class AppointmentService {
     return this.http.get<{ month: number; total: number }[]>(
       `${this.apiUrl}/reports/monthly`,
       { params: { year } },
+    );
+  }
+
+    getWeeklyReport(date: string): Observable<WeeklyAppointmentReport> {
+    return this.http.get<WeeklyAppointmentReport>(
+      `${this.apiUrl}/reports/weekly`,
+      { params: { date } },
     );
   }
 
