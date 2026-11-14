@@ -15,19 +15,25 @@ import org.springframework.web.server.ResponseStatusException;
 import co.edu.unicauca.piedraazul.agenda.appointments.internal.application.usecase.MonthlyAppointmentReportService;
 import co.edu.unicauca.piedraazul.agenda.appointments.internal.application.usecase.MonthlyAppointmentReportService.MonthlyTotal;
 import co.edu.unicauca.piedraazul.agenda.doctors.internal.adapter.out.persistence.DoctorRepository;
+import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
+import co.edu.unicauca.piedraazul.agenda.appointments.internal.application.usecase.WeeklyAppointmentReportService;
 
 @RestController
 @RequestMapping("/api/appointments/reports")
 public class MonthlyAppointmentReportController {
 
     private final MonthlyAppointmentReportService reportService;
+    private final WeeklyAppointmentReportService weeklyReportService;
     private final DoctorRepository doctorRepository;
 
     public MonthlyAppointmentReportController(
             MonthlyAppointmentReportService reportService,
+            WeeklyAppointmentReportService weeklyReportService,
             DoctorRepository doctorRepository
     ) {
         this.reportService = reportService;
+        this.weeklyReportService = weeklyReportService;
         this.doctorRepository = doctorRepository;
     }
 
@@ -41,15 +47,31 @@ public class MonthlyAppointmentReportController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Año fuera del rango permitido");
         }
 
+                return reportService.getReport(requireActiveDoctorId(jwt), year);
+    }
+
+    @GetMapping("/weekly")
+    @PreAuthorize("hasRole('DOCTOR')")
+    public WeeklyAppointmentReportService.WeeklyReport getWeeklyReport(
+            @AuthenticationPrincipal Jwt jwt,
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ) {
+        if (date.getYear() < 1900 || date.getYear() > 9998) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Año fuera del rango permitido");
+        }
+
+        return weeklyReportService.getReport(requireActiveDoctorId(jwt), date);
+    }
+
+    private Long requireActiveDoctorId(Jwt jwt) {
         String username = jwt.getClaimAsString("preferred_username");
         if (username == null || username.isBlank()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario sin perfil médico activo");
         }
 
-        var doctor = doctorRepository.findByUserUsernameAndActiveTrue(username)
+        return doctorRepository.findByUserUsernameAndActiveTrue(username)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.FORBIDDEN, "Usuario sin perfil médico activo"));
-
-        return reportService.getReport(doctor.getId(), year);
+                        HttpStatus.FORBIDDEN, "Usuario sin perfil médico activo"))
+                .getId();
     }
 }
