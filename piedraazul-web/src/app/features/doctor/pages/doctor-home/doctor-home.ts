@@ -117,6 +117,43 @@ export class DoctorHome
     '';
 
 
+    reportYear: number | null = new Date().getFullYear();
+  displayedReportYear: number | null = null;
+  monthlyReport: { month: number; total: number }[] = [];
+  loadingReport = false;
+  reportError = '';
+
+  loadMonthlyReport(): void {
+    const year = this.reportYear;
+
+    if (this.loadingReport || year === null || !Number.isInteger(year)
+        || year < 1900 || year > 9998) {
+      return;
+    }
+
+    this.loadingReport = true;
+    this.reportError = '';
+    this.displayedReportYear = null;
+
+    this.appointmentService.getMonthlyReport(year).subscribe({
+      next: (report) => {
+        this.monthlyReport = report;
+        this.displayedReportYear = year;
+        this.loadingReport = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.reportError = this.text(
+          'No se pudo cargar el reporte mensual.',
+          'Could not load the monthly report.',
+        );
+        this.loadingReport = false;
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+
   exportingSchedule = false;
 
 exportSchedule(): void {
