@@ -833,11 +833,23 @@
     <p role="alert">{{ reportError }}</p>
   }
 
-  @if (displayedReportYear !== null) {
-    <h3>{{ displayedReportYear }}</h3>
-    <ul>
+    @if (displayedReportYear !== null) {
+    <h3>{{ doctor.fullName }} · {{ displayedReportYear }}</h3>
+
+    <ul class="monthly-report-chart">
       @for (row of monthlyReport; track row.month) {
-        <li>{{ text('Mes', 'Month') }} {{ row.month }}: {{ row.total }}</li>
+        <li>
+          <span>{{ reportMonthName(row.month) }}</span>
+
+          <div class="monthly-report-track" aria-hidden="true">
+            <div
+              class="monthly-report-bar"
+              [style.width.%]="100 * row.total / reportScaleMax"
+            ></div>
+          </div>
+
+          <strong>{{ row.total }}</strong>
+        </li>
       }
     </ul>
   }

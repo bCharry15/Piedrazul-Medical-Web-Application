@@ -2415,3 +2415,32 @@ button:disabled {
   }
 
 }
+
+.monthly-report-chart {
+  display: grid;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+
+  li {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr) minmax(2rem, auto);
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  strong {
+    text-align: right;
+  }
+}
+
+.monthly-report-track {
+  background: #e4eef6;
+  border-radius: 0.25rem;
+}
+
+.monthly-report-bar {
+  height: 0.75rem;
+  background: var(--pa-primary);
+  border-radius: inherit;
+}
