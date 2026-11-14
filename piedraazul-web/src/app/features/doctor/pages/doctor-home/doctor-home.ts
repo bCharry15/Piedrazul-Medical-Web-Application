@@ -18,7 +18,7 @@ import {
 } from '../../../../core/i18n/language';
 
 import {
-  AppointmentService,
+  AppointmentService,type WeeklyAppointmentReport
 } from '../../../../core/services/appointment';
 
 import {
@@ -157,6 +157,42 @@ export class DoctorHome
           'Could not load the monthly report.',
         );
         this.loadingReport = false;
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+    weeklyReportDate = this.getTodayLocalDate();
+  weeklyReport: WeeklyAppointmentReport | null = null;
+  loadingWeeklyReport = false;
+  weeklyReportError = '';
+
+  get weeklyAttendancePercent(): number {
+    const report = this.weeklyReport;
+    return report?.total ? (100 * report.attended) / report.total : 0;
+  }
+
+  loadWeeklyReport(): void {
+    if (!this.weeklyReportDate || this.loadingWeeklyReport) {
+      return;
+    }
+
+    this.loadingWeeklyReport = true;
+    this.weeklyReportError = '';
+    this.weeklyReport = null;
+
+    this.appointmentService.getWeeklyReport(this.weeklyReportDate).subscribe({
+      next: (report) => {
+        this.weeklyReport = report;
+        this.loadingWeeklyReport = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.weeklyReportError = this.text(
+          'No se pudo cargar el reporte semanal.',
+          'Could not load the weekly report.',
+        );
+        this.loadingWeeklyReport = false;
         this.cdr.markForCheck();
       },
     });
