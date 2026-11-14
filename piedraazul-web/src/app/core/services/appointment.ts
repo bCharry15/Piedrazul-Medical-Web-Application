@@ -135,6 +135,13 @@ export class AppointmentService {
   private readonly apiUrl =
     'http://localhost:8081/api/appointments';
 
+      getMonthlyReport(year: number): Observable<{ month: number; total: number }[]> {
+    return this.http.get<{ month: number; total: number }[]>(
+      `${this.apiUrl}/reports/monthly`,
+      { params: { year } },
+    );
+  }
+
   create(
     request: CreateAppointmentRequest
   ): Observable<CreatedAppointment> {

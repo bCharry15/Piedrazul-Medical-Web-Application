@@ -2415,3 +2415,44 @@ button:disabled {
   }
 
 }
+
+.monthly-report-scroll {
+  overflow-x: auto;
+}
+
+.monthly-report-chart {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0.5rem;
+  min-width: 36rem;
+  margin: 1rem 0 0;
+  padding: 0 0 0.5rem;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-rows: auto 10rem auto;
+    justify-items: center;
+    gap: 0.375rem;
+  }
+
+  span {
+    text-transform: capitalize;
+  }
+}
+
+.monthly-report-track {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  border-bottom: 1px solid #b6ccdb;
+  background: #f2f7fb;
+}
+
+.monthly-report-bar {
+  width: 60%;
+  max-width: 2.5rem;
+  background: var(--pa-primary);
+  border-radius: 0.25rem 0.25rem 0 0;
+}

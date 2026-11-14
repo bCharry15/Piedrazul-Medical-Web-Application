@@ -801,6 +801,62 @@
              CONSULTAR AGENDA
              =============================================== -->
 
+        <section class="clinical-section" aria-labelledby="monthly-report-title">
+  <header class="section-heading">
+    <h2 id="monthly-report-title">
+      {{ text('Citas por mes', 'Appointments by month') }}
+    </h2>
+  </header>
+
+  <form #reportForm="ngForm" (ngSubmit)="loadMonthlyReport()">
+    <label for="report-year">{{ text('Año', 'Year') }}</label>
+    <input
+      id="report-year"
+      name="reportYear"
+      type="number"
+      min="1900"
+      max="9998"
+      step="1"
+      required
+      [(ngModel)]="reportYear"
+    >
+    <button type="submit" [disabled]="reportForm.invalid || loadingReport">
+      {{ text('Generar reporte', 'Generate report') }}
+    </button>
+  </form>
+
+  @if (loadingReport) {
+    <p role="status">{{ text('Cargando reporte…', 'Loading report…') }}</p>
+  }
+
+  @if (reportError) {
+    <p role="alert">{{ reportError }}</p>
+  }
+
+    @if (displayedReportYear !== null) {
+    <h3>{{ doctor.fullName }} · {{ displayedReportYear }}</h3>
+
+    <div class="monthly-report-scroll">
+  <ul class="monthly-report-chart" role="list">
+    @for (row of monthlyReport; track row.month) {
+      <li>
+        <strong>{{ row.total }}</strong>
+
+        <div class="monthly-report-track" aria-hidden="true">
+          <div
+            class="monthly-report-bar"
+            [style.height.%]="100 * row.total / reportScaleMax"
+          ></div>
+        </div>
+
+        <span>{{ reportMonthName(row.month).slice(0, 3) }}</span>
+      </li>
+    }
+  </ul>
+</div>
+  }
+</section>
+
         <section
           class="clinical-section schedule-search-section"
           id="agenda-medica"
