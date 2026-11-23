@@ -817,6 +817,231 @@ class RescheduleAppointmentServiceTest {
         );
     }
 
+    @Test
+    void shouldAllowDoctorToRescheduleOwnAppointment() {
+
+        LocalDate previousDate =
+                LocalDate.now().plusDays(2);
+
+        LocalTime previousTime =
+                LocalTime.of(10, 0);
+
+        LocalDate newDate =
+                LocalDate.now().plusDays(5);
+
+        LocalTime newTime =
+                LocalTime.of(11, 30);
+
+        Appointment appointment =
+                buildAppointment(
+                        AppointmentStatus.PROGRAMADA,
+                        previousDate,
+                        previousTime,
+                        "Consulta"
+                );
+
+        RescheduleAppointmentRequest request =
+                buildRequest(
+                        newDate,
+                        newTime,
+                        "Yeison Vela",
+                        "Cambio de agenda del médico"
+                );
+
+        when(
+                findAppointmentsPort.findById(
+                        1L
+                )
+        ).thenReturn(
+                Optional.of(
+                        appointment
+                )
+        );
+
+        when(
+                findAppointmentsPort.save(
+                        appointment
+                )
+        ).thenReturn(
+                appointment
+        );
+
+        // El médico 20 es el titular de la cita (ver buildAppointment).
+        Map<String, Object> response =
+                service.reschedule(
+                        1L,
+                        request,
+                        20L
+                );
+
+        assertEquals(
+                "Cita re-agendada correctamente.",
+                response.get(
+                        "mensaje"
+                )
+        );
+
+        assertEquals(
+                newDate,
+                appointment.getDate()
+        );
+
+        assertEquals(
+                newTime,
+                appointment.getTime()
+        );
+
+        ArgumentCaptor<ReschedulingHistory>
+                historyCaptor =
+                ArgumentCaptor.forClass(
+                        ReschedulingHistory.class
+                );
+
+        verify(
+                saveReschedulingHistoryPort
+        ).save(
+                historyCaptor.capture()
+        );
+
+        assertEquals(
+                "Yeison Vela",
+                historyCaptor.getValue()
+                        .getResponsible()
+        );
+
+        verify(
+                findAppointmentsPort
+        ).save(
+                appointment
+        );
+    }
+
+    @Test
+    void shouldRejectDoctorReschedulingAnotherDoctorsAppointment() {
+
+        Appointment appointment =
+                buildAppointment(
+                        AppointmentStatus.PROGRAMADA,
+                        LocalDate.now().plusDays(2),
+                        LocalTime.of(10, 0),
+                        "Consulta"
+                );
+
+        RescheduleAppointmentRequest request =
+                buildRequest(
+                        LocalDate.now().plusDays(5),
+                        LocalTime.of(11, 30),
+                        "Otro médico",
+                        "Intento no autorizado"
+                );
+
+        when(
+                findAppointmentsPort.findById(
+                        1L
+                )
+        ).thenReturn(
+                Optional.of(
+                        appointment
+                )
+        );
+
+        // La cita pertenece al médico 20; quien intenta moverla es el 99.
+        ResponseStatusException exception =
+                assertThrows(
+                        ResponseStatusException.class,
+                        () ->
+                                service.reschedule(
+                                        1L,
+                                        request,
+                                        99L
+                                )
+                );
+
+        assertEquals(
+                HttpStatus.FORBIDDEN,
+                exception.getStatusCode()
+        );
+
+        assertTrue(
+                exception.getReason()
+                        .contains(
+                                "propias citas"
+                        )
+        );
+
+        verifyNoInteractions(
+                saveReschedulingHistoryPort
+        );
+
+        verify(
+                findAppointmentsPort,
+                never()
+        ).save(
+                any()
+        );
+
+        verify(
+                findAppointmentsPort,
+                never()
+        ).isTimeSlotOccupiedForAnotherAppointment(
+                any(),
+                any(),
+                any(),
+                any()
+        );
+    }
+
+    @Test
+    void shouldCheckOwnershipBeforeAppointmentStatus() {
+
+        Appointment cancelledAppointment =
+                buildAppointment(
+                        AppointmentStatus.CANCELADA,
+                        LocalDate.now().plusDays(2),
+                        LocalTime.of(10, 0),
+                        "Cita cancelada"
+                );
+
+        RescheduleAppointmentRequest request =
+                buildRequest(
+                        LocalDate.now().plusDays(5),
+                        LocalTime.of(11, 30),
+                        "Otro médico",
+                        "Intento no autorizado"
+                );
+
+        when(
+                findAppointmentsPort.findById(
+                        1L
+                )
+        ).thenReturn(
+                Optional.of(
+                        cancelledAppointment
+                )
+        );
+
+        // Un médico ajeno recibe 403 y no se entera del estado de la cita.
+        ResponseStatusException exception =
+                assertThrows(
+                        ResponseStatusException.class,
+                        () ->
+                                service.reschedule(
+                                        1L,
+                                        request,
+                                        99L
+                                )
+                );
+
+        assertEquals(
+                HttpStatus.FORBIDDEN,
+                exception.getStatusCode()
+        );
+
+        verifyNoInteractions(
+                saveReschedulingHistoryPort
+        );
+    }
+
     private RescheduleAppointmentRequest buildRequest(
             LocalDate newDate,
             LocalTime newTime,
