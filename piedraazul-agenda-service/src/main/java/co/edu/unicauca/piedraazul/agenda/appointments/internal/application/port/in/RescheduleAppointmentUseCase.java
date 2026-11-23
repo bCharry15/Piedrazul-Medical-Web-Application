@@ -5,5 +5,22 @@ import co.edu.unicauca.piedraazul.agenda.appointments.internal.application.dto.R
 
 public interface RescheduleAppointmentUseCase {
 
-    Map<String, Object> reschedule(Long appointmentId, RescheduleAppointmentRequest request);
+    /*
+     * requesterDoctorId != null  -> quien reagenda es un médico:
+     *                               solo puede mover sus propias citas.
+     * requesterDoctorId == null  -> admin / agendador / paciente
+     *                               (comportamiento actual).
+     */
+    Map<String, Object> reschedule(
+            Long appointmentId,
+            RescheduleAppointmentRequest request,
+            Long requesterDoctorId
+    );
+
+    default Map<String, Object> reschedule(
+            Long appointmentId,
+            RescheduleAppointmentRequest request
+    ) {
+        return reschedule(appointmentId, request, null);
+    }
 }

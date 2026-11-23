@@ -33,6 +33,14 @@ import {
   Doctor,
 } from '../../../../shared/models/doctor';
 
+import {
+  AvailabilityService,
+} from '../../../../core/services/availability';
+
+import {
+  Availability,
+} from '../../../../shared/models/availability';
+
 
 @Component({
   imports: [
@@ -66,6 +74,9 @@ export class DoctorHome
 
   private readonly cdr =
     inject(ChangeDetectorRef);
+
+  private readonly availabilityService =
+    inject(AvailabilityService);
 
 
   doctor:
@@ -616,6 +627,8 @@ exportSchedule(): void {
 
     this.cancelStatusChange();
 
+    this.closeReschedule();
+
 
     this.appointmentService
       .getByDoctorAndDate(
@@ -722,6 +735,9 @@ exportSchedule(): void {
       ) ||
       this.canCancel(
         appointment
+      ) ||
+      this.canReschedule(
+        appointment
       )
     );
   }
@@ -743,6 +759,8 @@ exportSchedule(): void {
       'ATENDIDA' |
       'CANCELADA'
   ): void {
+
+    this.closeReschedule();
 
     this.statusActionAppointment =
       appointment;
@@ -1007,6 +1025,315 @@ exportSchedule(): void {
           'doctorCancellationDefault'
         );
     }
+  }
+
+
+  /*
+   * ==========================================
+   * REAGENDAMIENTO
+   * ==========================================
+   */
+
+
+  rescheduleAppointment:
+    PatientAppointment | null =
+    null;
+
+  rescheduleDate =
+    '';
+
+  rescheduleReason =
+    '';
+
+  rescheduleAvailability:
+    Availability | null =
+    null;
+
+  selectedRescheduleTime =
+    '';
+
+  loadingRescheduleAvailability =
+    false;
+
+  processingReschedule =
+    false;
+
+  rescheduleError =
+    '';
+
+
+  canReschedule(
+    appointment:
+      PatientAppointment
+  ): boolean {
+
+    return [
+      'PROGRAMADA',
+      'CONFIRMADA',
+    ].includes(
+      appointment.status
+    );
+  }
+
+
+  startReschedule(
+    appointment:
+      PatientAppointment
+  ): void {
+
+    this.cancelStatusChange();
+
+    this.rescheduleAppointment =
+      appointment;
+
+    this.rescheduleDate =
+      appointment.date;
+
+    this.rescheduleReason =
+      '';
+
+    this.rescheduleAvailability =
+      null;
+
+    this.selectedRescheduleTime =
+      '';
+
+    this.rescheduleError =
+      '';
+
+    this.success =
+      '';
+
+
+    setTimeout(
+      () => {
+
+        this.scrollToSection(
+          'reschedule-panel'
+        );
+      },
+      50
+    );
+  }
+
+
+  closeReschedule():
+    void {
+
+    this.rescheduleAppointment =
+      null;
+
+    this.rescheduleDate =
+      '';
+
+    this.rescheduleReason =
+      '';
+
+    this.rescheduleAvailability =
+      null;
+
+    this.selectedRescheduleTime =
+      '';
+
+    this.loadingRescheduleAvailability =
+      false;
+
+    this.processingReschedule =
+      false;
+
+    this.rescheduleError =
+      '';
+  }
+
+
+  checkRescheduleAvailability():
+    void {
+
+    if (
+      !this.rescheduleAppointment
+    ) {
+      return;
+    }
+
+
+    if (
+      !this.rescheduleDate
+    ) {
+
+      this.rescheduleError =
+        this.text(
+          'Selecciona la nueva fecha.',
+          'Select the new date.'
+        );
+
+      return;
+    }
+
+
+    this.rescheduleError =
+      '';
+
+    this.selectedRescheduleTime =
+      '';
+
+    this.rescheduleAvailability =
+      null;
+
+    this.loadingRescheduleAvailability =
+      true;
+
+
+    this.availabilityService
+      .getByDoctorAndDate(
+        this.rescheduleAppointment
+          .doctorId,
+
+        this.rescheduleDate
+      )
+      .subscribe({
+
+        next:
+          (availability) => {
+
+            this.rescheduleAvailability =
+              availability;
+
+            this.loadingRescheduleAvailability =
+              false;
+
+            this.cdr
+              .detectChanges();
+          },
+
+
+        error:
+          (error) => {
+
+            console.error(
+              error
+            );
+
+            this.rescheduleError =
+              this.extractErrorMessage(
+                error,
+                this.text(
+                  'No se pudo consultar la disponibilidad.',
+                  'Could not load availability.'
+                )
+              );
+
+            this.loadingRescheduleAvailability =
+              false;
+
+            this.cdr
+              .detectChanges();
+          },
+      });
+  }
+
+
+  confirmReschedule():
+    void {
+
+    if (
+      !this.rescheduleAppointment
+    ) {
+      return;
+    }
+
+
+    if (
+      !this.rescheduleDate ||
+      !this.selectedRescheduleTime
+    ) {
+
+      this.rescheduleError =
+        this.text(
+          'Selecciona la nueva fecha y una franja disponible.',
+          'Select the new date and an available time slot.'
+        );
+
+      return;
+    }
+
+
+    this.processingReschedule =
+      true;
+
+    this.rescheduleError =
+      '';
+
+
+    this.appointmentService
+      .reschedule(
+        this.rescheduleAppointment
+          .id,
+        {
+          newDate:
+            this.rescheduleDate,
+
+          newTime:
+            this.selectedRescheduleTime,
+
+          // El backend lo sobrescribe con el médico autenticado.
+          responsible:
+            this.doctor?.fullName ??
+            '',
+
+          reason:
+            this.rescheduleReason
+              .trim() ||
+            this.text(
+              'Re-agendada por el médico',
+              'Rescheduled by the doctor'
+            ),
+        }
+      )
+      .subscribe({
+
+        next:
+          () => {
+
+            this.closeReschedule();
+
+            this.success =
+              this.text(
+                'Cita re-agendada correctamente.',
+                'Appointment rescheduled successfully.'
+              );
+
+            this.loadAppointments(
+              true
+            );
+
+            this.cdr
+              .detectChanges();
+          },
+
+
+        error:
+          (error) => {
+
+            console.error(
+              error
+            );
+
+            this.processingReschedule =
+              false;
+
+            this.rescheduleError =
+              this.extractErrorMessage(
+                error,
+                this.text(
+                  'No se pudo re-agendar la cita.',
+                  'Could not reschedule the appointment.'
+                )
+              );
+
+            this.cdr
+              .detectChanges();
+          },
+      });
   }
 
 

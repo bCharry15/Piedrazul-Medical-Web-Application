@@ -1,4 +1,5 @@
 package co.edu.unicauca.piedraazul.agenda.appointments.internal.application.usecase;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -25,14 +26,18 @@ public class RescheduleAppointmentService implements RescheduleAppointmentUseCas
     private final SaveReschedulingHistoryPort saveReschedulingHistoryPort;
 
     public RescheduleAppointmentService(FindAppointmentsPort findAppointmentsPort,
-                                SaveReschedulingHistoryPort saveReschedulingHistoryPort) {
+            SaveReschedulingHistoryPort saveReschedulingHistoryPort) {
         this.findAppointmentsPort = findAppointmentsPort;
         this.saveReschedulingHistoryPort = saveReschedulingHistoryPort;
     }
 
     @Override
     @Transactional
-    public Map<String, Object> reschedule(Long appointmentId, RescheduleAppointmentRequest request) {
+    public Map<String, Object> reschedule(
+        Long appointmentId, 
+        RescheduleAppointmentRequest request,
+        Long requesterDoctorId
+    ) {
         validateIdAppointment(appointmentId);
         validateRequest(request);
 
@@ -41,7 +46,8 @@ public class RescheduleAppointmentService implements RescheduleAppointmentUseCas
                         HttpStatus.NOT_FOUND,
                         "No existe una cita con id: " + appointmentId
                 ));
-
+        
+        validateDoctorOwnership(appointment, requesterDoctorId);
         validateReschedulableAppointment(appointment);
 
         LocalDate previousDate = appointment.getDate();
@@ -84,8 +90,7 @@ public class RescheduleAppointmentService implements RescheduleAppointmentUseCas
         if (appointmentId == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "El id de la cita es obligatorio."
-            );
+                    "El id de la cita es obligatorio.");
         }
     }
 
@@ -93,22 +98,19 @@ public class RescheduleAppointmentService implements RescheduleAppointmentUseCas
         if (request == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "La solicitud de re-agendamiento no puede estar vacía."
-            );
+                    "La solicitud de re-agendamiento no puede estar vacía.");
         }
 
         if (request.getNewDate() == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "La nueva fecha de la cita es obligatoria."
-            );
+                    "La nueva fecha de la cita es obligatoria.");
         }
 
         if (request.getNewTime() == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "La nueva hora de la cita es obligatoria."
-            );
+                    "La nueva hora de la cita es obligatoria.");
         }
     }
 
@@ -119,27 +121,24 @@ public class RescheduleAppointmentService implements RescheduleAppointmentUseCas
                 || appointment.getStatus() == AppointmentStatus.NO_VINO) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "La cita ya está en un estado final y no puede ser re-agendada."
-            );
+                    "La cita ya está en un estado final y no puede ser re-agendada.");
         }
     }
 
     private void validateDateTime(LocalDate previousDate,
-                                  LocalTime previousTime,
-                                  LocalDate newDate,
-                                  LocalTime newTime) {
+            LocalTime previousTime,
+            LocalDate newDate,
+            LocalTime newTime) {
         if (newDate.equals(previousDate) && newTime.equals(previousTime)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "La nueva fecha y hora son iguales a la fecha y hora actual de la cita."
-            );
+                    "La nueva fecha y hora son iguales a la fecha y hora actual de la cita.");
         }
 
         if (newDate.isBefore(LocalDate.now())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "No se puede re-agendar una cita para una fecha pasada."
-            );
+                    "No se puede re-agendar una cita para una fecha pasada.");
         }
     }
 
@@ -148,23 +147,21 @@ public class RescheduleAppointmentService implements RescheduleAppointmentUseCas
                 appointment.getDoctor(),
                 date,
                 time,
-                appointment.getId()
-        );
+                appointment.getId());
 
         if (timeSlotOccupied) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "El médico ya tiene una cita registrada en la nueva fecha y hora seleccionada."
-            );
+                    "El médico ya tiene una cita registrada en la nueva fecha y hora seleccionada.");
         }
     }
 
     private ReschedulingHistory createHistory(Appointment appointment,
-                                                   LocalDate previousDate,
-                                                   LocalTime previousTime,
-                                                   LocalDate newDate,
-                                                   LocalTime newTime,
-                                                   RescheduleAppointmentRequest request) {
+            LocalDate previousDate,
+            LocalTime previousTime,
+            LocalDate newDate,
+            LocalTime newTime,
+            RescheduleAppointmentRequest request) {
         ReschedulingHistory history = new ReschedulingHistory();
 
         history.setAppointment(appointment);
@@ -218,5 +215,19 @@ public class RescheduleAppointmentService implements RescheduleAppointmentUseCas
         }
 
         return value.trim().replaceAll("\\s+", " ");
+    }
+        private void validateDoctorOwnership(Appointment appointment, Long requesterDoctorId) {
+        if (requesterDoctorId == null) {
+            return;
+        }
+
+        Long ownerDoctorId = appointment.getDoctor().getId();
+
+        if (!requesterDoctorId.equals(ownerDoctorId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Solo puedes re-agendar tus propias citas."
+            );
+        }
     }
 }

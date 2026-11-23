@@ -1465,6 +1465,20 @@
 
                           }
 
+
+                          @if (canReschedule(appointment)) {
+
+                            <button
+                              type="button"
+                              class="secondary-button"
+                              (click)="startReschedule(appointment)"
+                            >
+                              ↻
+                              {{ text('Reagendar', 'Reschedule') }}
+                            </button>
+
+                          }
+
                         </div>
 
                       } @else {
@@ -1800,6 +1814,149 @@
                     {{ i18n.t('close') }}
                   </button>
 
+                </div>
+
+              </div>
+
+            }
+
+            @if (rescheduleAppointment) {
+
+              <div class="status-action-panel" id="reschedule-panel">
+
+                <header class="status-action-heading">
+                  <div>
+                    <span class="panel-label">
+                      {{ text('REAGENDAR CITA', 'RESCHEDULE APPOINTMENT') }}
+                    </span>
+
+                    <h3>
+                      {{ text('Reagendar cita', 'Reschedule appointment') }}
+                      #{{ rescheduleAppointment.id }}
+                    </h3>
+
+                    <p>
+                      {{ rescheduleAppointment.patientName }} ·
+                      {{ formatDate(rescheduleAppointment.date) }}
+                      {{ formatTime(rescheduleAppointment.time) }}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="close-button"
+                    (click)="closeReschedule()"
+                    [attr.aria-label]="i18n.t('close')"
+                  >
+                    ×
+                  </button>
+                </header>
+
+                <div class="form-field">
+                  <label for="rescheduleDate">
+                    {{ text('Nueva fecha', 'New date') }}
+                  </label>
+
+                  <input
+                    id="rescheduleDate"
+                    type="date"
+                    [(ngModel)]="rescheduleDate"
+                    (ngModelChange)="
+                      rescheduleAvailability = null;
+                      selectedRescheduleTime = ''
+                    "
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  class="secondary-button"
+                  (click)="checkRescheduleAvailability()"
+                  [disabled]="loadingRescheduleAvailability || !rescheduleDate"
+                >
+                  {{
+                    loadingRescheduleAvailability
+                      ? text('Consultando…', 'Checking…')
+                      : text('Ver horarios disponibles', 'View available times')
+                  }}
+                </button>
+
+                @if (rescheduleAvailability) {
+
+                  @if (rescheduleAvailability.availableSlots.length > 0) {
+
+                    <div class="slots">
+                      @for (
+                        slot of rescheduleAvailability.availableSlots;
+                        track slot
+                      ) {
+                        <button
+                          type="button"
+                          class="slot-button"
+                          [class.selected]="selectedRescheduleTime === slot"
+                          (click)="selectedRescheduleTime = slot"
+                        >
+                          {{ formatTime(slot) }}
+                        </button>
+                      }
+                    </div>
+
+                  } @else {
+
+                    <p class="no-notes">
+                      {{
+                        text(
+                          'No hay horarios disponibles para esa fecha.',
+                          'There are no available times for that date.'
+                        )
+                      }}
+                    </p>
+
+                  }
+
+                }
+
+                <div class="form-field status-observation">
+                  <label for="rescheduleReason">
+                    {{ text('Motivo (opcional)', 'Reason (optional)') }}
+                  </label>
+
+                  <textarea
+                    id="rescheduleReason"
+                    rows="3"
+                    [(ngModel)]="rescheduleReason"
+                  ></textarea>
+                </div>
+
+                @if (rescheduleError) {
+                  <div class="message error-message">
+                    <strong>!</strong>
+                    {{ rescheduleError }}
+                  </div>
+                }
+
+                <div class="status-actions">
+                  <button
+                    type="button"
+                    class="primary-button"
+                    (click)="confirmReschedule()"
+                    [disabled]="processingReschedule || !selectedRescheduleTime"
+                  >
+                    {{
+                      processingReschedule
+                        ? text('Reagendando…', 'Rescheduling…')
+                        : text('Confirmar reagendamiento', 'Confirm reschedule')
+                    }}
+                  </button>
+
+                  <button
+                    type="button"
+                    class="secondary-button"
+                    (click)="closeReschedule()"
+                    [disabled]="processingReschedule"
+                  >
+                    {{ i18n.t('close') }}
+                  </button>
                 </div>
 
               </div>

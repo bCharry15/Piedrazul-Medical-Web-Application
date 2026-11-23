@@ -31,275 +31,276 @@ import co.edu.unicauca.piedraazul.agenda.appointments.internal.application.port.
 import co.edu.unicauca.piedraazul.agenda.appointments.internal.application.port.in.GetReschedulingHistoryUseCase;
 import co.edu.unicauca.piedraazul.agenda.appointments.internal.application.port.in.RescheduleAppointmentUseCase;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.server.ResponseStatusException;
+import co.edu.unicauca.piedraazul.agenda.doctors.internal.adapter.out.persistence.DoctorRepository;
+import co.edu.unicauca.piedraazul.agenda.doctors.internal.domain.model.Doctor;
+
 @RestController
 @RequestMapping("/api/appointments")
 public class AppointmentRestController {
 
-    private final GetAppointmentsByDoctorDateUseCase getAppointmentsByDoctorDateUseCase;
-    private final CreateAppointmentUseCase createAppointmentUseCase;
-    private final GetPatientAppointmentsUseCase getAppointmentsPatientUseCase;
-    private final ChangeAppointmentStatusUseCase changeAppointmentStatusUseCase;
-    private final RescheduleAppointmentUseCase rescheduleAppointmentUseCase;
-    private final GetReschedulingHistoryUseCase getReschedulingHistoryUseCase;
+        private final GetAppointmentsByDoctorDateUseCase getAppointmentsByDoctorDateUseCase;
+        private final CreateAppointmentUseCase createAppointmentUseCase;
+        private final GetPatientAppointmentsUseCase getAppointmentsPatientUseCase;
+        private final ChangeAppointmentStatusUseCase changeAppointmentStatusUseCase;
+        private final RescheduleAppointmentUseCase rescheduleAppointmentUseCase;
+        private final GetReschedulingHistoryUseCase getReschedulingHistoryUseCase;
+        private final DoctorRepository doctorRepository;
 
-    public AppointmentRestController(
-            GetAppointmentsByDoctorDateUseCase getAppointmentsByDoctorDateUseCase,
-            CreateAppointmentUseCase createAppointmentUseCase,
-            GetPatientAppointmentsUseCase getAppointmentsPatientUseCase,
-            ChangeAppointmentStatusUseCase changeAppointmentStatusUseCase,
-            RescheduleAppointmentUseCase rescheduleAppointmentUseCase,
-            GetReschedulingHistoryUseCase getReschedulingHistoryUseCase
-    ) {
-        this.getAppointmentsByDoctorDateUseCase =
-                getAppointmentsByDoctorDateUseCase;
+        public AppointmentRestController(
+                        GetAppointmentsByDoctorDateUseCase getAppointmentsByDoctorDateUseCase,
+                        CreateAppointmentUseCase createAppointmentUseCase,
+                        GetPatientAppointmentsUseCase getAppointmentsPatientUseCase,
+                        ChangeAppointmentStatusUseCase changeAppointmentStatusUseCase,
+                        RescheduleAppointmentUseCase rescheduleAppointmentUseCase,
+                        GetReschedulingHistoryUseCase getReschedulingHistoryUseCase,
+                        DoctorRepository doctorRepository) {
+                this.getAppointmentsByDoctorDateUseCase = getAppointmentsByDoctorDateUseCase;
 
-        this.createAppointmentUseCase =
-                createAppointmentUseCase;
+                this.createAppointmentUseCase = createAppointmentUseCase;
 
-        this.getAppointmentsPatientUseCase =
-                getAppointmentsPatientUseCase;
+                this.getAppointmentsPatientUseCase = getAppointmentsPatientUseCase;
 
-        this.changeAppointmentStatusUseCase =
-                changeAppointmentStatusUseCase;
+                this.changeAppointmentStatusUseCase = changeAppointmentStatusUseCase;
 
-        this.rescheduleAppointmentUseCase =
-                rescheduleAppointmentUseCase;
+                this.rescheduleAppointmentUseCase = rescheduleAppointmentUseCase;
 
-        this.getReschedulingHistoryUseCase =
-                getReschedulingHistoryUseCase;
-    }
+                this.getReschedulingHistoryUseCase = getReschedulingHistoryUseCase;
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public AppointmentsByDoctorDateResponse listByDoctorAndDate(
-            @RequestParam Long doctorId,
-            @RequestParam
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate date
-    ) {
-        return getAppointmentsByDoctorDateUseCase.get(
-                doctorId,
-                date
-        );
-    }
-
-    @GetMapping("/patient/{documentNumber}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<AppointmentResponse> listByPatient(
-            @PathVariable String documentNumber
-    ) {
-        return getAppointmentsPatientUseCase
-                .getByDocumentNumber(
-                        documentNumber
-                );
-    }
-
-    @GetMapping(
-            value = {"/export", "/exportar"},
-            produces = "text/csv"
-    )
-    public ResponseEntity<String> exportAppointmentsByDoctorAndDate(
-            @RequestParam Long doctorId,
-            @RequestParam
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate date
-    ) {
-
-        AppointmentsByDoctorDateResponse response =
-                getAppointmentsByDoctorDateUseCase.get(
-                        doctorId,
-                        date
-                );
-
-        StringBuilder csv =
-                new StringBuilder();
-
-        /*
-         * BOM UTF-8.
-         * Ayuda a que Excel reconozca correctamente
-         * caracteres como:
-         *
-         * á, é, í, ó, ú, ñ
-         */
-        csv.append('\uFEFF');
-
-        /*
-         * Le indica a Excel que el separador
-         * de columnas es punto y coma.
-         *
-         * Esto es especialmente útil en configuraciones
-         * regionales como Colombia.
-         */
-        csv.append("sep=;\r\n");
-
-        csv.append(
-                "ID Appointment;"
-                        + "Patient;"
-                        + "Doctor;"
-                        + "Date;"
-                        + "Time;"
-                        + "Status;"
-                        + "Notes"
-                        + "\r\n"
-        );
-
-        response.getAppointments()
-                .forEach(appointment -> {
-
-                    csv.append(
-                            appointment.getId()
-                    ).append(";");
-
-                    csv.append(
-                            escapeCsv(
-                                    appointment.getPatient()
-                            )
-                    ).append(";");
-
-                    csv.append(
-                            escapeCsv(
-                                    appointment.getDoctor()
-                            )
-                    ).append(";");
-
-                    csv.append(
-                            appointment.getDate()
-                    ).append(";");
-
-                    csv.append(
-                            appointment.getTime()
-                    ).append(";");
-
-                    csv.append(
-                            escapeCsv(
-                                    appointment.getStatus()
-                            )
-                    ).append(";");
-
-                    csv.append(
-                            escapeCsv(
-                                    appointment.getNotes()
-                            )
-                    ).append("\r\n");
-                });
-
-        String fileName =
-                "appointments_doctor_"
-                        + doctorId
-                        + "_"
-                        + date
-                        + ".csv";
-
-        return ResponseEntity
-                .ok()
-                .header(
-                        HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\""
-                                + fileName
-                                + "\""
-                )
-                .header(
-                        HttpHeaders.CONTENT_TYPE,
-                        "text/csv; charset=UTF-8"
-                )
-                .body(
-                        csv.toString()
-                );
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public CreateAppointmentResponse createAppointment(
-            @RequestBody CreateAppointmentCommand command
-    ) {
-        return createAppointmentUseCase
-                .createAppointment(
-                        command
-                );
-    }
-
-    @PutMapping("/{id}/status")
-    public ResponseEntity<Map<String, Object>> changeAppointmentStatus(
-            @PathVariable Long id,
-            @RequestBody ChangeAppointmentStatusRequest request
-    ) {
-
-        return ResponseEntity.ok(
-                changeAppointmentStatusUseCase
-                        .changeStatus(
-                                id,
-                                request
-                        )
-        );
-    }
-
-    @PutMapping("/{id}/reschedule")
-    public ResponseEntity<Map<String, Object>> rescheduleAppointment(
-            @PathVariable Long id,
-            @RequestBody RescheduleAppointmentRequest request
-    ) {
-
-        return ResponseEntity.ok(
-                rescheduleAppointmentUseCase
-                        .reschedule(
-                                id,
-                                request
-                        )
-        );
-    }
-
-    @GetMapping("/{id}/history-reschedulings")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Map<String, Object>> listReschedulingHistory(
-            @PathVariable Long id
-    ) {
-
-        return getReschedulingHistoryUseCase
-                .getByAppointmentId(
-                        id
-                );
-    }
-
-    private String escapeCsv(
-            String value
-    ) {
-
-        if (value == null) {
-            return "";
+                this.doctorRepository = doctorRepository;
         }
 
-        /*
-         * Las comillas dobles dentro de un campo CSV
-         * deben duplicarse.
-         */
-        String escapedValue =
-                value.replace(
-                        "\"",
-                        "\"\""
-                );
-
-        /*
-         * Como ahora usamos ; como separador,
-         * cualquier campo que contenga:
-         *
-         * ;
-         * "
-         * salto de línea
-         *
-         * debe ir entre comillas.
-         */
-        if (
-                escapedValue.contains(";")
-                || escapedValue.contains("\"")
-                || escapedValue.contains("\n")
-                || escapedValue.contains("\r")
-        ) {
-
-            return "\""
-                    + escapedValue
-                    + "\"";
+        @GetMapping
+        @ResponseStatus(HttpStatus.OK)
+        public AppointmentsByDoctorDateResponse listByDoctorAndDate(
+                        @RequestParam Long doctorId,
+                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+                return getAppointmentsByDoctorDateUseCase.get(
+                                doctorId,
+                                date);
         }
 
-        return escapedValue;
-    }
+        @GetMapping("/patient/{documentNumber}")
+        @ResponseStatus(HttpStatus.OK)
+        public List<AppointmentResponse> listByPatient(
+                        @PathVariable String documentNumber) {
+                return getAppointmentsPatientUseCase
+                                .getByDocumentNumber(
+                                                documentNumber);
+        }
+
+        @GetMapping(value = { "/export", "/exportar" }, produces = "text/csv")
+        public ResponseEntity<String> exportAppointmentsByDoctorAndDate(
+                        @RequestParam Long doctorId,
+                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+                AppointmentsByDoctorDateResponse response = getAppointmentsByDoctorDateUseCase.get(
+                                doctorId,
+                                date);
+
+                StringBuilder csv = new StringBuilder();
+
+                /*
+                 * BOM UTF-8.
+                 * Ayuda a que Excel reconozca correctamente
+                 * caracteres como:
+                 *
+                 * á, é, í, ó, ú, ñ
+                 */
+                csv.append('\uFEFF');
+
+                /*
+                 * Le indica a Excel que el separador
+                 * de columnas es punto y coma.
+                 *
+                 * Esto es especialmente útil en configuraciones
+                 * regionales como Colombia.
+                 */
+                csv.append("sep=;\r\n");
+
+                csv.append(
+                                "ID Appointment;"
+                                                + "Patient;"
+                                                + "Doctor;"
+                                                + "Date;"
+                                                + "Time;"
+                                                + "Status;"
+                                                + "Notes"
+                                                + "\r\n");
+
+                response.getAppointments()
+                                .forEach(appointment -> {
+
+                                        csv.append(
+                                                        appointment.getId()).append(";");
+
+                                        csv.append(
+                                                        escapeCsv(
+                                                                        appointment.getPatient()))
+                                                        .append(";");
+
+                                        csv.append(
+                                                        escapeCsv(
+                                                                        appointment.getDoctor()))
+                                                        .append(";");
+
+                                        csv.append(
+                                                        appointment.getDate()).append(";");
+
+                                        csv.append(
+                                                        appointment.getTime()).append(";");
+
+                                        csv.append(
+                                                        escapeCsv(
+                                                                        appointment.getStatus()))
+                                                        .append(";");
+
+                                        csv.append(
+                                                        escapeCsv(
+                                                                        appointment.getNotes()))
+                                                        .append("\r\n");
+                                });
+
+                String fileName = "appointments_doctor_"
+                                + doctorId
+                                + "_"
+                                + date
+                                + ".csv";
+
+                return ResponseEntity
+                                .ok()
+                                .header(
+                                                HttpHeaders.CONTENT_DISPOSITION,
+                                                "attachment; filename=\""
+                                                                + fileName
+                                                                + "\"")
+                                .header(
+                                                HttpHeaders.CONTENT_TYPE,
+                                                "text/csv; charset=UTF-8")
+                                .body(
+                                                csv.toString());
+        }
+
+        @PostMapping
+        @ResponseStatus(HttpStatus.CREATED)
+        public CreateAppointmentResponse createAppointment(
+                        @RequestBody CreateAppointmentCommand command) {
+                return createAppointmentUseCase
+                                .createAppointment(
+                                                command);
+        }
+
+        @PutMapping("/{id}/status")
+        public ResponseEntity<Map<String, Object>> changeAppointmentStatus(
+                        @PathVariable Long id,
+                        @RequestBody ChangeAppointmentStatusRequest request) {
+
+                return ResponseEntity.ok(
+                                changeAppointmentStatusUseCase
+                                                .changeStatus(
+                                                                id,
+                                                                request));
+        }
+
+        @PutMapping("/{id}/reschedule")
+        public ResponseEntity<Map<String, Object>> rescheduleAppointment(
+                        @PathVariable Long id,
+                        @RequestBody RescheduleAppointmentRequest request,
+                        @AuthenticationPrincipal Jwt jwt,
+                        Authentication authentication) {
+
+                Long requesterDoctorId = null;
+
+                if (hasRole(authentication, "ROLE_DOCTOR")) {
+                        Doctor doctor = requireActiveDoctor(jwt);
+                        requesterDoctorId = doctor.getId();
+
+                        // El responsable queda registrado con el médico autenticado,
+                        // no con lo que venga en el body.
+                        request.setResponsible(doctor.getFullName());
+                }
+
+                return ResponseEntity.ok(
+                                rescheduleAppointmentUseCase
+                                                .reschedule(
+                                                                id,
+                                                                request,
+                                                                requesterDoctorId));
+        }
+
+        private boolean hasRole(Authentication authentication, String role) {
+                return authentication != null
+                                && authentication.getAuthorities()
+                                                .stream()
+                                                .anyMatch(a -> role.equals(a.getAuthority()));
+        }
+
+        private Doctor requireActiveDoctor(Jwt jwt) {
+                String username = jwt == null
+                                ? null
+                                : jwt.getClaimAsString("preferred_username");
+
+                if (username == null || username.isBlank()) {
+                        throw new ResponseStatusException(
+                                        HttpStatus.FORBIDDEN,
+                                        "Usuario sin perfil médico activo");
+                }
+
+                return doctorRepository
+                                .findByUserUsernameAndActiveTrue(username)
+                                .orElseThrow(() -> new ResponseStatusException(
+                                                HttpStatus.FORBIDDEN,
+                                                "Usuario sin perfil médico activo"));
+        }
+
+        @GetMapping("/{id}/history-reschedulings")
+        @ResponseStatus(HttpStatus.OK)
+        public List<Map<String, Object>> listReschedulingHistory(
+                        @PathVariable Long id) {
+
+                return getReschedulingHistoryUseCase
+                                .getByAppointmentId(
+                                                id);
+        }
+
+        private String escapeCsv(
+                        String value) {
+
+                if (value == null) {
+                        return "";
+                }
+
+                /*
+                 * Las comillas dobles dentro de un campo CSV
+                 * deben duplicarse.
+                 */
+                String escapedValue = value.replace(
+                                "\"",
+                                "\"\"");
+
+                /*
+                 * Como ahora usamos ; como separador,
+                 * cualquier campo que contenga:
+                 *
+                 * ;
+                 * "
+                 * salto de línea
+                 *
+                 * debe ir entre comillas.
+                 */
+                if (escapedValue.contains(";")
+                                || escapedValue.contains("\"")
+                                || escapedValue.contains("\n")
+                                || escapedValue.contains("\r")) {
+
+                        return "\""
+                                        + escapedValue
+                                        + "\"";
+                }
+
+                return escapedValue;
+        }
 }

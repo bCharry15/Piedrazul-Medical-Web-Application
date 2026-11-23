@@ -2506,3 +2506,34 @@ button:disabled {
   }
 }
 
+.slots {
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.slot-button {
+  min-width: 85px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid #b9d0da;
+  border-radius: 7px;
+  background: #ffffff;
+  color: var(--azul-900);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.slot-button:hover {
+  border-color: var(--turquesa-700);
+  background: var(--turquesa-100);
+}
+
+.slot-button.selected {
+  border-color: var(--turquesa-700);
+  background: var(--turquesa-700);
+  color: #ffffff;
+}
