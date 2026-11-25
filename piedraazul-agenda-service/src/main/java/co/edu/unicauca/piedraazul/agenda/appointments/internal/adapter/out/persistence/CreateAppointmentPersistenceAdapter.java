@@ -30,10 +30,12 @@ public class CreateAppointmentPersistenceAdapter implements CreateAppointmentPor
             LocalTime time,
             String notes
     ) {
-        boolean yaExisteAppointment = appointmentRepository.existsByDoctorAndDateAndTime(
+       boolean yaExisteAppointment =
+        appointmentRepository.existsByDoctorAndDateAndTimeAndStatusNot(
                 doctor,
                 date,
-                time
+                time,
+                AppointmentStatus.CANCELADA
         );
 
         if (yaExisteAppointment) {

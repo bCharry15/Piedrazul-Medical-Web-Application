@@ -1,6 +1,8 @@
 package co.edu.unicauca.piedraazul.agenda.appointments.internal.application.usecase;
+import co.edu.unicauca.piedraazul.agenda.appointments.internal.domain.service.AppointmentStatusStateService;
 import java.util.HashMap;
 import java.util.Map;
+import java.time.LocalDateTime;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,10 +18,12 @@ import jakarta.transaction.Transactional;
 @Service
 public class ChangeAppointmentStatusService implements ChangeAppointmentStatusUseCase {
 
+    private final AppointmentStatusStateService appointmentStatusStateService;
     private final FindAppointmentsPort findAppointmentsPort;
 
-    public ChangeAppointmentStatusService(FindAppointmentsPort findAppointmentsPort) {
+    public ChangeAppointmentStatusService(FindAppointmentsPort findAppointmentsPort, AppointmentStatusStateService appointmentStatusStateService) {
         this.findAppointmentsPort = findAppointmentsPort;
+        this.appointmentStatusStateService = appointmentStatusStateService;
     }
 
     @Override
@@ -37,6 +41,12 @@ public class ChangeAppointmentStatusService implements ChangeAppointmentStatusUs
         AppointmentStatus newStatus = convertStatus(request.getStatus());
 
         validateStatusChange(appointment.getStatus(), newStatus);
+
+        validateCancellationReason(newStatus, request.getNotes());
+
+        if (newStatus == AppointmentStatus.CANCELADA) {
+    validateCancellationAnticipation(appointment);
+        }
 
         AppointmentStatus previousStatus = appointment.getStatus();
 
@@ -151,4 +161,34 @@ public class ChangeAppointmentStatusService implements ChangeAppointmentStatusUs
 
         return response;
     }
+
+    private void validateCancellationReason(
+        AppointmentStatus newStatus,
+        String notes) {
+
+    if (newStatus == AppointmentStatus.CANCELADA
+            && (notes == null || notes.isBlank())) {
+
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Debe proporcionar un motivo para cancelar la cita."
+        );
+    }
+}
+
+private void validateCancellationAnticipation(Appointment appointment) {
+
+    LocalDateTime appointmentDateTime =
+            appointment.getDate().atTime(appointment.getTime());
+
+    LocalDateTime minimumAllowed =
+            LocalDateTime.now().plusHours(48);
+
+    if (appointmentDateTime.isBefore(minimumAllowed)) {
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "La cita solo puede cancelarse con al menos 48 horas de anticipación."
+        );
+    }
+}
 }
