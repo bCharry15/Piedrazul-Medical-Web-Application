@@ -3,6 +3,7 @@ import co.edu.unicauca.piedraazul.agenda.appointments.internal.domain.service.Ap
 import java.util.HashMap;
 import java.util.Map;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ChangeAppointmentStatusService implements ChangeAppointmentStatusUseCase {
+
+    private static final ZoneId CLINIC_ZONE = ZoneId.of("America/Bogota");
 
     private final AppointmentStatusStateService appointmentStatusStateService;
     private final FindAppointmentsPort findAppointmentsPort;
@@ -182,7 +185,7 @@ private void validateCancellationAnticipation(Appointment appointment) {
             appointment.getDate().atTime(appointment.getTime());
 
     LocalDateTime minimumAllowed =
-            LocalDateTime.now().plusHours(48);
+            LocalDateTime.now(CLINIC_ZONE).plusHours(48);
 
     if (appointmentDateTime.isBefore(minimumAllowed)) {
         throw new ResponseStatusException(

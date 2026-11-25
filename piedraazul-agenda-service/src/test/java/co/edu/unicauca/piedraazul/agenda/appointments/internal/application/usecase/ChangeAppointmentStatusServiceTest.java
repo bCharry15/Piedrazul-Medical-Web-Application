@@ -3,6 +3,7 @@ package co.edu.unicauca.piedraazul.agenda.appointments.internal.application.usec
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -559,7 +560,7 @@ void setUp() {
 
     @Test
     void shouldRejectCancellationWithLessThan48HoursOfAnticipation() {
-        LocalDateTime appointmentDateTime = LocalDateTime.now().plusHours(47);
+        LocalDateTime appointmentDateTime = LocalDateTime.now(ZoneId.of("America/Bogota")).plusHours(47);
         Appointment appointment = buildAppointmentWithDateTime(
                 AppointmentStatus.PROGRAMADA,
                 "Consulta general",
@@ -584,7 +585,7 @@ void setUp() {
 
     @Test
     void shouldAllowCancellationWithMoreThan48HoursOfAnticipation() {
-        LocalDateTime appointmentDateTime = LocalDateTime.now().plusHours(50);
+        LocalDateTime appointmentDateTime = LocalDateTime.now(ZoneId.of("America/Bogota")).plusHours(50);
         Appointment appointment = buildAppointmentWithDateTime(
                 AppointmentStatus.PROGRAMADA,
                 "Consulta general",
