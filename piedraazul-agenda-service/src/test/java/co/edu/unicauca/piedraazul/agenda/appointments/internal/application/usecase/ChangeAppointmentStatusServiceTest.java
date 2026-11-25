@@ -1,7 +1,9 @@
 package co.edu.unicauca.piedraazul.agenda.appointments.internal.application.usecase;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -31,6 +33,7 @@ import co.edu.unicauca.piedraazul.agenda.appointments.internal.domain.model.Appo
 import co.edu.unicauca.piedraazul.agenda.appointments.internal.domain.model.AppointmentStatus;
 import co.edu.unicauca.piedraazul.agenda.doctors.internal.domain.model.Doctor;
 import co.edu.unicauca.piedraazul.agenda.patients.internal.domain.model.Patient;
+import co.edu.unicauca.piedraazul.agenda.appointments.internal.domain.service.AppointmentStatusStateService;
 
 @ExtendWith(MockitoExtension.class)
 class ChangeAppointmentStatusServiceTest {
@@ -38,17 +41,18 @@ class ChangeAppointmentStatusServiceTest {
     @Mock
     private FindAppointmentsPort findAppointmentsPort;
 
+    @Mock
+    private AppointmentStatusStateService appointmentStatusStateService;
+
     private ChangeAppointmentStatusService service;
 
-    @BeforeEach
-    void setUp() {
-
-        service =
-                new ChangeAppointmentStatusService(
-                        findAppointmentsPort
-                );
-    }
-
+@BeforeEach
+void setUp() {
+    service = new ChangeAppointmentStatusService(
+            findAppointmentsPort,
+            appointmentStatusStateService
+    );
+}
     @Test
     void shouldRejectNullAppointmentId() {
 
@@ -533,6 +537,84 @@ class ChangeAppointmentStatusServiceTest {
         );
     }
 
+
+    @Test
+    void shouldRejectCancellationWithoutReason() {
+        Appointment appointment = buildAppointment(
+                AppointmentStatus.PROGRAMADA,
+                "Consulta general"
+        );
+
+        when(findAppointmentsPort.findById(1L)).thenReturn(Optional.of(appointment));
+        ChangeAppointmentStatusRequest request = buildRequest("CANCELADA", "   ");
+
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException.class,
+                () -> service.changeStatus(1L, request)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+        assertTrue(exception.getReason().contains("motivo"));
+        verify(findAppointmentsPort, never()).save(any());
+    }
+
+    @Test
+    void shouldRejectCancellationWithLessThan48HoursOfAnticipation() {
+        LocalDateTime appointmentDateTime = LocalDateTime.now(ZoneId.of("America/Bogota")).plusHours(47);
+        Appointment appointment = buildAppointmentWithDateTime(
+                AppointmentStatus.PROGRAMADA,
+                "Consulta general",
+                appointmentDateTime
+        );
+
+        when(findAppointmentsPort.findById(1L)).thenReturn(Optional.of(appointment));
+        ChangeAppointmentStatusRequest request = buildRequest(
+                "CANCELADA",
+                "Ya no puedo asistir"
+        );
+
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException.class,
+                () -> service.changeStatus(1L, request)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+        assertTrue(exception.getReason().contains("48 horas"));
+        verify(findAppointmentsPort, never()).save(any());
+    }
+
+    @Test
+    void shouldAllowCancellationWithMoreThan48HoursOfAnticipation() {
+        LocalDateTime appointmentDateTime = LocalDateTime.now(ZoneId.of("America/Bogota")).plusHours(50);
+        Appointment appointment = buildAppointmentWithDateTime(
+                AppointmentStatus.PROGRAMADA,
+                "Consulta general",
+                appointmentDateTime
+        );
+
+        when(findAppointmentsPort.findById(1L)).thenReturn(Optional.of(appointment));
+        when(findAppointmentsPort.save(appointment)).thenReturn(appointment);
+
+        ChangeAppointmentStatusRequest request = buildRequest(
+                "CANCELADA",
+                "Tengo un compromiso"
+        );
+
+        Map<String, Object> response = service.changeStatus(1L, request);
+
+        assertEquals(AppointmentStatus.CANCELADA, appointment.getStatus());
+        assertEquals("CANCELADA", response.get("statusNuevo"));
+        verify(findAppointmentsPort).save(appointment);
+    }
+
+    /*
+     * El límite exacto de 48 horas se evalúa en el servicio con isBefore():
+     * una cita exactamente en el mínimo permitido no es anterior al límite.
+     * La prueba usa 47 y 50 horas para evitar una condición de carrera con
+     * LocalDateTime.now(). Probar el instante exacto de forma determinista
+     * requiere inyectar un Clock en el servicio.
+     */
+
     private ChangeAppointmentStatusRequest buildRequest(
             String status,
             String notes
@@ -550,6 +632,18 @@ class ChangeAppointmentStatusServiceTest {
         );
 
         return request;
+    }
+
+
+    private Appointment buildAppointmentWithDateTime(
+            AppointmentStatus initialStatus,
+            String initialNotes,
+            LocalDateTime appointmentDateTime
+    ) {
+        Appointment appointment = buildAppointment(initialStatus, initialNotes);
+        when(appointment.getDate()).thenReturn(appointmentDateTime.toLocalDate());
+        when(appointment.getTime()).thenReturn(appointmentDateTime.toLocalTime());
+        return appointment;
     }
 
     private Appointment buildAppointment(

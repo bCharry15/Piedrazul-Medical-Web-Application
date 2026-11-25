@@ -1731,6 +1731,21 @@
 
                 }
 
+                @if (
+                  isCancellationWindowClosed(
+                    appointment
+                  )
+                ) {
+                  <p class="message error-message">
+                    {{
+                      text(
+                        'La cita solo puede cancelarse con al menos 48 horas de anticipación.',
+                        'Appointments can only be cancelled at least 48 hours in advance.'
+                      )
+                    }}
+                  </p>
+                }
+
               </article>
 
             }

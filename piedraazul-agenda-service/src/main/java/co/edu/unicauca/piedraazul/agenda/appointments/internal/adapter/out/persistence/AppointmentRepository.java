@@ -29,6 +29,13 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
         Long getTotal();
     }
 
+    boolean existsByDoctorAndDateAndTimeAndStatusNot(
+        Doctor doctor,
+        LocalDate date,
+        LocalTime time,
+        AppointmentStatus status
+);
+
     @Query("""
             select month(a.date) as month, count(a) as total
             from Appointment a
