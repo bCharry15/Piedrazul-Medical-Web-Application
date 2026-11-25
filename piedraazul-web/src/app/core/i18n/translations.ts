@@ -18,6 +18,38 @@ export const translations:
    */
 
   es: {
+    availableDoctors:
+      'Médicos disponibles',
+    availableTimes:
+      'Horas disponibles',
+    bookingAppointment:
+      'Agendando cita...',
+    cancelAppointmentTitle:
+      'Cancelar cita',
+    cancellationReason:
+      'Motivo de la cancelación',
+    cancellationReasonPlaceholder:
+      'Escriba el motivo de la cancelación',
+    checkNewAvailability:
+      'Consultar nueva disponibilidad',
+    checkingNewAvailability:
+      'Consultando nueva disponibilidad...',
+    confirmCancellation:
+      'Confirmar cancelación',
+    confirmReschedule:
+      'Confirmar cambio',
+    couldNotLoadAvailability:
+      'No se pudo consultar la disponibilidad.',
+    couldNotReschedule:
+      'No se pudo reprogramar la cita.',
+    currentAppointment:
+      'Cita actual',
+    newAppointment:
+      'Nueva cita',
+    optionalAppointmentNotes:
+      'Observaciones opcionales para la cita',
+    rescheduling:
+      'Reprogramando...',
 
     /*
      * GENERAL
@@ -644,6 +676,38 @@ export const translations:
    */
 
   en: {
+    availableDoctors:
+      'Available doctors',
+    availableTimes:
+      'Available times',
+    bookingAppointment:
+      'Booking appointment...',
+    cancelAppointmentTitle:
+      'Cancel appointment',
+    cancellationReason:
+      'Cancellation reason',
+    cancellationReasonPlaceholder:
+      'Enter the reason for the cancellation',
+    checkNewAvailability:
+      'Check new availability',
+    checkingNewAvailability:
+      'Checking new availability...',
+    confirmCancellation:
+      'Confirm cancellation',
+    confirmReschedule:
+      'Confirm change',
+    couldNotLoadAvailability:
+      'Could not load availability.',
+    couldNotReschedule:
+      'Could not reschedule the appointment.',
+    currentAppointment:
+      'Current appointment',
+    newAppointment:
+      'New appointment',
+    optionalAppointmentNotes:
+      'Optional notes for the appointment',
+    rescheduling:
+      'Rescheduling...',
 
     /*
      * GENERAL
