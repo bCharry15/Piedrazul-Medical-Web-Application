@@ -1326,12 +1326,62 @@ export class PatientHome
       PatientAppointment
   ): boolean {
 
-    return [
+    const cancellableStatus = [
       'PROGRAMADA',
       'CONFIRMADA',
       'PENDIENTE',
     ].includes(
       appointment.status
+    );
+
+    if (!cancellableStatus) {
+      return false;
+    }
+
+    const appointmentDate =
+      this.appointmentDateTime(appointment);
+
+    if (!appointmentDate) {
+      return false;
+    }
+
+    const hoursUntilAppointment =
+      appointmentDate.getTime() - Date.now();
+
+    return hoursUntilAppointment >= 48 * 60 * 60 * 1000;
+  }
+
+
+  isCancellationWindowClosed(
+    appointment:
+      PatientAppointment
+  ): boolean {
+
+    const cancellableStatus = [
+      'PROGRAMADA',
+      'CONFIRMADA',
+      'PENDIENTE',
+    ].includes(
+      appointment.status
+    );
+
+    if (!cancellableStatus) {
+      return false;
+    }
+
+    const appointmentDate =
+      this.appointmentDateTime(appointment);
+
+    if (!appointmentDate) {
+      return false;
+    }
+
+    const hoursUntilAppointment =
+      appointmentDate.getTime() - Date.now();
+
+    return (
+      hoursUntilAppointment >= 0 &&
+      hoursUntilAppointment < 48 * 60 * 60 * 1000
     );
   }
 
@@ -1406,6 +1456,19 @@ export class PatientHome
     if (
       !this.cancellingAppointment
     ) {
+      return;
+    }
+
+    if (
+      !this.canCancel(
+        this.cancellingAppointment
+      )
+    ) {
+      this.cancellationError =
+        this.text(
+          'La cita solo puede cancelarse con al menos 48 horas de anticipación.',
+          'Appointments can only be cancelled at least 48 hours in advance.'
+        );
       return;
     }
 
