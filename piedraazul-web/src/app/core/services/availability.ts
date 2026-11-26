@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { map, Observable } from 'rxjs';
@@ -20,7 +21,7 @@ interface AvailabilityApiResponse {
 export class AvailabilityService {
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = 'http://localhost:8081/api/availability';
+  private readonly apiUrl = `${environment.apiUrl}/api/availability`;
 
   getByDoctorAndDate(
     doctorId: number,

@@ -1,0 +1,160 @@
+# Despliegue de producción de PiedraAzul.
+#
+# Uso en el servidor:
+#   docker compose -f docker-compose.prod.yml --env-file .env up -d --build
+#
+# Solo Caddy publica puertos (80 y 443). MariaDB, Keycloak, el backend y el
+# frontend quedan en la red interna y se acceden a través del proxy.
+
+services:
+  mariadb-agenda:
+    image: mariadb:11.4
+    restart: unless-stopped
+
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:?Defina MARIADB_ROOT_PASSWORD en .env}
+      MARIADB_DATABASE: piedraazul_agenda
+      MARIADB_USER: piedraazul
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:?Defina MARIADB_PASSWORD en .env}
+
+    volumes:
+      - mariadb_agenda_data:/var/lib/mysql
+
+    networks:
+      - piedraazul-network
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mariadb-admin ping -h localhost -uroot -p$${MARIADB_ROOT_PASSWORD} --silent",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0.6
+    command: start-dev --import-realm
+    restart: unless-stopped
+
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?Defina KEYCLOAK_ADMIN_PASSWORD en .env}
+      KC_HEALTH_ENABLED: "true"
+      KC_HTTP_RELATIVE_PATH: /auth
+      KC_HOSTNAME: https://${PIEDRAAZUL_DOMAIN:?Defina PIEDRAAZUL_DOMAIN en .env}/auth
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KC_PROXY_HEADERS: xforwarded
+      JAVA_OPTS_KC_HEAP: "-Xms256m -Xmx768m"
+
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+      - ./keycloak/piedrazul-realm.json:/opt/keycloak/data/import/piedrazul-realm.json
+      - ./keycloak/themes:/opt/keycloak/themes
+
+    networks:
+      - piedraazul-network
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "{ printf 'HEAD /auth/health/ready HTTP/1.0\\r\\n\\r\\n' >&0; grep 'HTTP/1.0 200'; } 0<>/dev/tcp/localhost/9000 || { printf 'HEAD /health/ready HTTP/1.0\\r\\n\\r\\n' >&0; grep 'HTTP/1.0 200'; } 0<>/dev/tcp/localhost/9000",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+
+  agenda-service:
+    build:
+      context: ./piedraazul-agenda-service
+      dockerfile: Dockerfile
+
+    restart: unless-stopped
+
+    depends_on:
+      mariadb-agenda:
+        condition: service_healthy
+
+      keycloak:
+        condition: service_healthy
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb-agenda:3306/piedraazul_agenda
+      SPRING_DATASOURCE_USERNAME: piedraazul
+      SPRING_DATASOURCE_PASSWORD: ${MARIADB_PASSWORD}
+
+      SPRING_JPA_SHOW_SQL: "false"
+      SERVER_FORWARD_HEADERS_STRATEGY: framework
+
+      KEYCLOAK_JWK_SET_URI: http://keycloak:8080/auth/realms/PiedrAzul/protocol/openid-connect/certs
+      KEYCLOAK_TOKEN_URI: http://keycloak:8080/auth/realms/PiedrAzul/protocol/openid-connect/token
+      KEYCLOAK_CLIENT_ID: agenda-service
+
+      KEYCLOAK_BASE_URL: http://keycloak:8080/auth
+      KEYCLOAK_REALM: PiedrAzul
+
+      KEYCLOAK_ADMIN_TOKEN_URI: http://keycloak:8080/auth/realms/master/protocol/openid-connect/token
+      KEYCLOAK_ADMIN_USERNAME: admin
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+
+      NOTIFICATION_MAIL_ENABLED: "false"
+      NOTIFICATION_MAIL_FROM: no-reply@piedraazul.com
+
+      JAVA_TOOL_OPTIONS: "-Xmx512m"
+
+    networks:
+      - piedraazul-network
+
+
+  web:
+    build:
+      context: ./piedraazul-web
+      dockerfile: Dockerfile
+
+    restart: unless-stopped
+
+    networks:
+      - piedraazul-network
+
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+
+    depends_on:
+      - web
+      - agenda-service
+      - keycloak
+
+    environment:
+      PIEDRAAZUL_DOMAIN: ${PIEDRAAZUL_DOMAIN}
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+    networks:
+      - piedraazul-network
+
+
+volumes:
+  mariadb_agenda_data:
+  keycloak_data:
+  caddy_data:
+  caddy_config:
+
+
+networks:
+  piedraazul-network:
+    driver: bridge

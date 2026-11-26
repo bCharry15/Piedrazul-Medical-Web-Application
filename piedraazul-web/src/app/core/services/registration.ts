@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import {
   Injectable,
   inject,
@@ -92,7 +93,7 @@ export class RegistrationService {
 
 
   private readonly apiUrl =
-    'http://localhost:8081/api/public/patients/register';
+    `${environment.apiUrl}/api/public/patients/register`;
 
 
   register(

@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { map, Observable } from 'rxjs';
@@ -23,7 +24,7 @@ interface PatientProfileApiResponse {
 export class PatientService {
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = 'http://localhost:8081/api/patients';
+  private readonly apiUrl = `${environment.apiUrl}/api/patients`;
 
   getByDocumentNumber(documentNumber: string): Observable<PatientProfile> {
     return this.http

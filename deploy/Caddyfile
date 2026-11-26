@@ -1,0 +1,22 @@
+# Proxy inverso de producción con HTTPS automático (Let's Encrypt).
+# Todo se publica bajo un solo dominio:
+#   /api/*  -> backend Spring Boot
+#   /auth/* -> Keycloak
+#   /*      -> frontend Angular (nginx)
+{$PIEDRAAZUL_DOMAIN} {
+    encode gzip
+
+    redir /auth /auth/
+
+    handle /api/* {
+        reverse_proxy agenda-service:8081
+    }
+
+    handle /auth/* {
+        reverse_proxy keycloak:8080
+    }
+
+    handle {
+        reverse_proxy web:80
+    }
+}

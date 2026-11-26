@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -27,7 +28,7 @@ export class UserManagementService {
     inject(HttpClient);
 
   private readonly apiUrl =
-    'http://localhost:8081/api/auth';
+    `${environment.apiUrl}/api/auth`;
 
   getSchedulers():
     Observable<ManagedUser[]> {
