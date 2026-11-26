@@ -97,6 +97,9 @@
           </span>
         </a>
 
+        <a class="sidebar-link" href="#monitoreo">
+          {{ i18n.language() === 'es' ? 'Monitoreo del sistema' : 'System monitoring' }}
+        </a>
       </nav>
 
 
@@ -2222,6 +2225,8 @@
         </section>
 
       }
+
+      <app-monitoring-panel id="monitoreo" />
 
     </div>
 

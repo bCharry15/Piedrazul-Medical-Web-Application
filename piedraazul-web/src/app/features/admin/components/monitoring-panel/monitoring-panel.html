@@ -1,0 +1,71 @@
+<section class="monitoring" aria-labelledby="monitoring-title" [attr.aria-busy]="loading()">
+  <div class="heading">
+    <div>
+      <span class="eyebrow">{{ text('ADMINISTRACIÓN DEL SISTEMA', 'SYSTEM ADMINISTRATION') }}</span>
+      <h2 id="monitoring-title">{{ text('Monitoreo', 'Monitoring') }}</h2>
+      <p>{{ text('Estado del backend, base de datos y actividad reciente.', 'Backend health, database and recent activity.') }}</p>
+    </div>
+    <button type="button" (click)="refresh()" [disabled]="loading()">
+      {{ loading() ? text('Consultando…', 'Loading…') : text('Actualizar estado', 'Refresh status') }}
+    </button>
+  </div>
+
+  @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
+  @if (checkedAt()) {
+    <p class="timestamp">{{ text('Última consulta:', 'Last checked:') }} {{ checkedAt() | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+  }
+
+  <div class="cards" aria-live="polite">
+    <article>
+      <h3>Backend</h3>
+      <strong [class.up]="health()?.status === 'UP'" [class.down]="health()?.status === 'DOWN' || health()?.status === 'OUT_OF_SERVICE'">
+        {{ statusLabel(health()?.status) }}
+      </strong>
+      <small>{{ text('Incluye conexión a BD y espacio en disco.', 'Includes database connectivity and disk space.') }}</small>
+    </article>
+    <article>
+      <h3>{{ text('Base de datos', 'Database') }}</h3>
+      <strong [class.up]="health()?.components?.['db']?.status === 'UP'" [class.down]="health()?.components?.['db']?.status === 'DOWN'">
+        {{ statusLabel(health()?.components?.['db']?.status) }}
+      </strong>
+      <small>{{ text('Comprobación de conectividad.', 'Connectivity check.') }}</small>
+    </article>
+    <article>
+      <h3>{{ text('Tiempo activo', 'Uptime') }}</h3>
+      <strong>{{ uptime() === null ? '—' : ((uptime()! / 3600 | number:'1.1-1') + ' h') }}</strong>
+      <small>{{ text('Desde el último inicio del backend.', 'Since the last backend startup.') }}</small>
+    </article>
+    <article>
+      <h3>{{ text('Memoria JVM utilizada', 'JVM memory used') }}</h3>
+      <strong>{{ memory() === null ? '—' : ((memory()! / 1048576 | number:'1.0-0') + ' MiB') }}</strong>
+      <small>{{ text('Memoria del proceso Java.', 'Java runtime memory.') }}</small>
+    </article>
+    <article>
+      <h3>{{ text('Solicitudes HTTP', 'HTTP requests') }}</h3>
+      <strong>{{ requests() === null ? '—' : (requests() | number:'1.0-0') }}</strong>
+      <small>{{ text('Completadas desde el último inicio; incluye monitoreo.', 'Completed since startup; includes monitoring.') }}</small>
+    </article>
+    <article>
+      <h3>{{ text('Login centralizado', 'Centralized login') }}</h3>
+      <strong>Keycloak</strong>
+      <small>{{ text('Proveedor de esta sesión. No es una prueba de disponibilidad en tiempo real.', 'Provider for this session. This is not a live availability probe.') }}</small>
+    </article>
+  </div>
+
+  <div class="heading logs-heading">
+    <div>
+      <h3>{{ text('Logs recientes del backend', 'Recent backend logs') }}</h3>
+      <p>{{ text('Últimos 32 KiB, hasta 100 líneas. Acceso exclusivo de administración.', 'Last 32 KiB, up to 100 lines. Administrator access only.') }}</p>
+    </div>
+    <button type="button" (click)="loadLogs()" [disabled]="loadingLogs()">
+      {{ loadingLogs() ? text('Consultando…', 'Loading…') : text('Consultar logs', 'View logs') }}
+    </button>
+  </div>
+  @if (logsError()) { <p class="error" role="alert">{{ logsError() }}</p> }
+  @if (logsCheckedAt()) {
+    <p class="timestamp">{{ text('Logs consultados:', 'Logs checked:') }} {{ logsCheckedAt() | date:'HH:mm:ss' }}</p>
+    <pre tabindex="0" [attr.aria-label]="text('Logs del backend', 'Backend logs')">{{ logs() || text('Sin líneas completas disponibles.', 'No complete lines available.') }}</pre>
+  } @else {
+    <p class="hint">{{ text('Consulta los logs para revisar respuestas HTTP, tiempos y errores. Se actualizan al pulsar el botón.', 'View logs to inspect HTTP responses, timing and errors. Refresh using the button.') }}</p>
+  }
+</section>

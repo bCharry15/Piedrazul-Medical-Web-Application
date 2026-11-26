@@ -14,3 +14,6 @@ target/
 !.env.example
 *.pem
 *.key
+
+# Rotated monitoring logs
+**/logs/

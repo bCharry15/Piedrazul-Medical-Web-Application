@@ -78,6 +78,12 @@ public class SecurityConfig {
 )
 .permitAll()
 
+// Monitoring is read-only and restricted to administrators.
+.requestMatchers(HttpMethod.GET, "/api/monitoring/**")
+.hasRole("ADMIN")
+.requestMatchers("/api/monitoring/**")
+.denyAll()
+
 // Administration
 .requestMatchers(
         HttpMethod.POST,
@@ -204,6 +210,7 @@ public class SecurityConfig {
                 List.of(
                         "Authorization",
                         "Content-Type",
+                        "Range",
                         "Accept",
                         "Origin",
                         "X-Requested-With"

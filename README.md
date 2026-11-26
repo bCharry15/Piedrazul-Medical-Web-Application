@@ -1,5 +1,12 @@
 # PiedraAzul - Medical Appointment Scheduling System
 
+## Monitoreo del sistema
+
+El portal de administrador incluye salud del backend y de la base de datos,
+métricas de ejecución y consulta de logs recientes con acceso exclusivo ADMIN.
+La autenticación centralizada se mantiene en Keycloak.
+Consulta la [guía de monitoreo](docs/monitoring/README.md) para rutas, pruebas y despliegue.
+
 PiedraAzul is a medical appointment management and scheduling system developed as an academic project for Software Engineering.
 
 The application is designed for medical offices, small healthcare centers, doctors, and therapists who need to manage patients, medical staff, availability, appointments, appointment history, status changes, exports, and notifications in a secure and traceable way.

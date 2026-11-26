@@ -73,6 +73,42 @@ class AgendaIntegrationTest {
     private SynchronizeUsersKeycloakService synchronizeUsersKeycloakService;
 
     @Test
+    void shouldExposeOnlyPublicHealthSummary() throws Exception {
+        mockMvc.perform(get("/api/agenda/health"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("UP"))
+                .andExpect(jsonPath("$.components").doesNotExist());
+    }
+
+    @Test
+    void shouldRequireAdminForHealthMetricsAndLogs() throws Exception {
+        for (String path : new String[]{"health", "metrics", "logfile"}) {
+            mockMvc.perform(get("/api/monitoring/" + path))
+                    .andExpect(status().isUnauthorized());
+            for (String role : new String[]{"PATIENT", "DOCTOR", "SCHEDULER"}) {
+                mockMvc.perform(get("/api/monitoring/" + path)
+                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_" + role))))
+                        .andExpect(status().isForbidden());
+            }
+        }
+    }
+
+    @Test
+    void shouldAllowAdminToReadDatabaseHealthAndUptime() throws Exception {
+        var admin = jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        mockMvc.perform(get("/api/monitoring/health").with(admin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.components.db.status").value("UP"));
+        mockMvc.perform(get("/api/monitoring/metrics/process.uptime").with(admin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.measurements[0].value").isNumber());
+        mockMvc.perform(get("/api/monitoring/logfile").with(admin).header("Range", "bytes=-1024"))
+                .andExpect(status().isPartialContent());
+        mockMvc.perform(post("/api/monitoring/health").with(admin))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     @DisplayName("Rechaza la consulta de la agenda sin token")
     void shouldRejectAgendaRequestWithoutToken() throws Exception {
         mockMvc.perform(get("/api/appointments")
