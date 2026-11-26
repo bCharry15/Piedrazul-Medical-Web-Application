@@ -107,11 +107,21 @@ services:
     ports:
       - "8081:8081"
 
+    volumes:
+      - agenda_logs:/app/logs
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
     networks:
       - piedraazul-network
 
 
 volumes:
+  agenda_logs:
   mariadb_agenda_data:
   keycloak_data:
 

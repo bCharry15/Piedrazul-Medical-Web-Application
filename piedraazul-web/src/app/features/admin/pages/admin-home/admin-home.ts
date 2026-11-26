@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { MonitoringPanel } from '../../components/monitoring-panel/monitoring-panel';
 
 import {
   ChangeDetectorRef,
@@ -43,6 +44,7 @@ import {
   imports: [
     CommonModule,
     FormsModule,
+    MonitoringPanel,
   ],
 
   selector: 'app-admin-home',
