@@ -48,7 +48,7 @@ services:
       KC_HOSTNAME: https://${PIEDRAAZUL_DOMAIN:?Defina PIEDRAAZUL_DOMAIN en .env}/auth
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
       KC_PROXY_HEADERS: xforwarded
-      JAVA_OPTS_KC_HEAP: "-XX:MaxHeapFreeRatio=30 -Xms256m -Xmx768m"
+      JAVA_OPTS_KC_HEAP: "-Xms256m -Xmx768m"
 
     volumes:
       - keycloak_data:/opt/keycloak/data
