@@ -296,6 +296,16 @@
 
     <#elseif section = "info">
 
+        <#--
+            En local, Keycloak (puerto 8085) y Angular (puerto 4200) usan origenes distintos.
+            En produccion ambos comparten dominio, por lo que basta una ruta relativa.
+        -->
+        <#if url.loginAction?contains("://localhost:")>
+            <#assign piedraazulRegisterUrl = "http://localhost:4200/register">
+        <#else>
+            <#assign piedraazulRegisterUrl = "/register">
+        </#if>
+
         <div
             id="kc-registration"
             class="piedraazul-registration"
@@ -306,7 +316,7 @@
             </span>
 
             <a
-                href="http://localhost:4200/register"
+                href="${piedraazulRegisterUrl}"
                 id="piedraazul-create-account"
             >
                 ${msg("createAccount")}
