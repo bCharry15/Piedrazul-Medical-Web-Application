@@ -1,8 +1,7 @@
-/*
- * Configuración de desarrollo local (ng serve).
- */
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8081',
-  keycloakUrl: 'http://localhost:8085',
+  apiUrl:
+    'https://piedraazul-julian.spaincentral.cloudapp.azure.com',
+  keycloakUrl:
+    'https://piedraazul-julian.spaincentral.cloudapp.azure.com/auth',
 };
