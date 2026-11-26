@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { Injectable } from '@angular/core';
 
 import Keycloak, {
@@ -11,7 +12,7 @@ export class Auth {
 
   private readonly keycloak =
     new Keycloak({
-      url: 'http://localhost:8085',
+      url: environment.keycloakUrl,
       realm: 'PiedrAzul',
       clientId: 'piedraazul-spa',
     });

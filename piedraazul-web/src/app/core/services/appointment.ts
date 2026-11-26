@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import {
   HttpClient,
   HttpResponse,
@@ -141,7 +142,7 @@ export class AppointmentService {
     inject(HttpClient);
 
   private readonly apiUrl =
-    'http://localhost:8081/api/appointments';
+    `${environment.apiUrl}/api/appointments`;
 
       getMonthlyReport(year: number): Observable<{ month: number; total: number }[]> {
     return this.http.get<{ month: number; total: number }[]>(

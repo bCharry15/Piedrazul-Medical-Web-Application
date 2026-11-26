@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import {
   HttpClient,
 } from '@angular/common/http';
@@ -51,7 +52,7 @@ export class AvailabilityConfigurationService {
     inject(HttpClient);
 
   private readonly apiUrl =
-    'http://localhost:8081/api/availability-configurations';
+    `${environment.apiUrl}/api/availability-configurations`;
 
   getByDoctor(
     doctorId: number

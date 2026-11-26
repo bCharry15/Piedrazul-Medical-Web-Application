@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { map, Observable } from 'rxjs';
@@ -39,7 +40,7 @@ export class DoctorService {
     inject(HttpClient);
 
   private readonly apiUrl =
-    'http://localhost:8081/api/doctors';
+    `${environment.apiUrl}/api/doctors`;
 
   getAll(): Observable<Doctor[]> {
 

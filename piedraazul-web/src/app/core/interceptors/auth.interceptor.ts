@@ -1,3 +1,4 @@
+import { environment } from '../../../environments/environment';
 import {
   inject,
 } from '@angular/core';
@@ -17,7 +18,7 @@ import {
 
 
 const API_URL =
-  'http://localhost:8081';
+  environment.apiUrl;
 
 
 /*
