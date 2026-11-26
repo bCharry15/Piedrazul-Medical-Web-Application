@@ -47,10 +47,12 @@
   "serviceAccountsEnabled": false,
   "implicitFlowEnabled": false,
   "redirectUris": [
-    "http://localhost:4200/*"
+    "http://localhost:4200/*",
+    "https://piedraazul-julian.spaincentral.cloudapp.azure.com/*"
   ],
   "webOrigins": [
-    "http://localhost:4200"
+    "http://localhost:4200",
+    "https://piedraazul-julian.spaincentral.cloudapp.azure.com"
   ],
   "attributes": {
     "pkce.code.challenge.method": "S256"
