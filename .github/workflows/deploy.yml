@@ -1,0 +1,46 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Desplegar en Azure
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Actualizar y reiniciar los contenedores en el servidor
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          command_timeout: 30m
+          script: |
+            set -e
+            cd ~/piedraazul
+            git fetch origin main
+            git checkout -B main origin/main
+            docker compose -f docker-compose.prod.yml --env-file .env up -d --build --remove-orphans
+            docker image prune -f
+
+      - name: Verificar la URL pública
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fsS https://piedraazul-julian.spaincentral.cloudapp.azure.com/api/agenda/health; then
+              echo ""
+              echo "Despliegue verificado en la URL pública"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "La URL pública no respondió después del despliegue"
+          exit 1
